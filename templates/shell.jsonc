@@ -1,0 +1,72 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "shell",
+  "description": "Basic shell and filesystem commands",
+  "detection": {
+    "always": true
+  },
+  "levels": {
+    "restrictive": [
+      { "command": "ls", "description": "List directory contents" },
+      { "command": "cat", "description": "View file contents" },
+      { "command": "head", "description": "View file beginning" },
+      { "command": "tail", "description": "View file end" },
+      { "command": "less", "description": "Page through file" },
+      { "command": "more", "description": "Page through file" },
+      { "command": "grep", "description": "Search file contents" },
+      { "command": "find", "description": "Find files" },
+      { "command": "wc", "description": "Count lines/words/chars" },
+      { "command": "tree", "description": "Display directory tree" },
+      { "command": "pwd", "description": "Print working directory" },
+      { "command": "which", "description": "Locate a command" },
+      { "command": "whereis", "description": "Locate binary/source/manual" },
+      { "command": "type", "description": "Describe command type" },
+      { "command": "file", "description": "Determine file type" },
+      { "command": "stat", "description": "Display file status" },
+      { "command": "du", "description": "Disk usage" },
+      { "command": "df", "description": "Disk free space" },
+      { "command": "echo", "description": "Print text" },
+      { "command": "printf", "description": "Format and print" },
+      { "command": "env", "description": "View environment variables" },
+      { "command": "printenv", "description": "Print environment variables" },
+      { "command": "date", "description": "Display date/time" },
+      { "command": "whoami", "description": "Print current user" },
+      { "command": "uname", "description": "System information" },
+      { "command": "hostname", "description": "Show hostname" }
+    ],
+    "standard": [
+      { "command": "mkdir", "description": "Create directories" },
+      { "command": "touch", "description": "Create empty files" },
+      { "command": "cp", "description": "Copy files" },
+      { "command": "mv", "description": "Move/rename files" },
+      { "command": "ln", "description": "Create links" },
+      { "command": "chmod", "description": "Change file permissions" },
+      { "command": "chown", "description": "Change file owner" },
+      { "command": "tar", "description": "Archive files" },
+      { "command": "zip", "description": "Compress files" },
+      { "command": "unzip", "description": "Extract zip files" },
+      { "command": "gzip", "description": "Compress files" },
+      { "command": "gunzip", "description": "Decompress files" },
+      { "command": "curl", "description": "Transfer data from URLs" },
+      { "command": "wget", "description": "Download files" },
+      { "command": "diff", "description": "Compare files" },
+      { "command": "sort", "description": "Sort lines" },
+      { "command": "uniq", "description": "Filter duplicate lines" },
+      { "command": "cut", "description": "Cut sections from lines" },
+      { "command": "awk", "description": "Pattern processing" },
+      { "command": "sed", "description": "Stream editor" },
+      { "command": "xargs", "description": "Build command lines" },
+      { "command": "tee", "description": "Read and write to files" }
+    ],
+    "permissive": [
+      { "command": "rm", "description": "Remove files" },
+      { "command": "rmdir", "description": "Remove directories" },
+      { "command": "rm -r", "description": "Remove recursively" },
+      { "command": "rm -rf", "description": "Force remove recursively" },
+      { "command": "sudo", "description": "Execute as superuser" },
+      { "command": "kill", "description": "Terminate processes" },
+      { "command": "pkill", "description": "Kill processes by name" },
+      { "command": "killall", "description": "Kill processes by name" }
+    ]
+  }
+}

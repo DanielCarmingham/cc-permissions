@@ -1,0 +1,74 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "go",
+  "description": "Go development and golangci-lint",
+  "detection": {
+    "files": ["go.mod", "go.sum"]
+  },
+  "levels": {
+    "restrictive": [
+      // go info
+      { "command": "go version", "description": "Check Go version" },
+      { "command": "go env", "description": "Show Go environment" },
+      { "command": "go help", "description": "Go help" },
+      // go module info
+      { "command": "go list", "description": "List packages" },
+      { "command": "go list -m", "description": "List modules" },
+      { "command": "go mod graph", "description": "Show module graph" },
+      { "command": "go mod why", "description": "Explain module dependency" },
+      { "command": "go mod verify", "description": "Verify dependencies" },
+      // go doc
+      { "command": "go doc", "description": "Show documentation" },
+      // golangci-lint info
+      { "command": "golangci-lint --version", "description": "Check golangci-lint version" },
+      { "command": "golangci-lint version", "description": "Check golangci-lint version" },
+      { "command": "golangci-lint linters", "description": "List available linters" },
+      { "command": "golangci-lint help", "description": "golangci-lint help" }
+    ],
+    "standard": [
+      // go build (no install)
+      { "command": "go build", "description": "Build package" },
+      { "command": "go build -v", "description": "Build with verbose" },
+      { "command": "go build -race", "description": "Build with race detector" },
+      // go test
+      { "command": "go test", "description": "Run tests" },
+      { "command": "go test -v", "description": "Run tests verbose" },
+      { "command": "go test -race", "description": "Run tests with race detector" },
+      { "command": "go test -cover", "description": "Run tests with coverage" },
+      { "command": "go test -coverprofile", "description": "Generate coverage profile" },
+      { "command": "go test -bench", "description": "Run benchmarks" },
+      // go run
+      { "command": "go run", "description": "Run Go program" },
+      // go formatting
+      { "command": "go fmt", "description": "Format code" },
+      { "command": "gofmt", "description": "Format code" },
+      { "command": "go vet", "description": "Vet code" },
+      // go mod tidy
+      { "command": "go mod tidy", "description": "Tidy modules" },
+      { "command": "go mod edit", "description": "Edit go.mod" },
+      // go generate
+      { "command": "go generate", "description": "Run go generate" },
+      // golangci-lint
+      { "command": "golangci-lint run", "description": "Run linters" },
+      { "command": "golangci-lint run --fix", "description": "Run linters with fix" }
+    ],
+    "permissive": [
+      // go install
+      { "command": "go install", "description": "Install package" },
+      { "command": "go get", "description": "Download dependencies" },
+      { "command": "go get -u", "description": "Update dependencies" },
+      // go mod download
+      { "command": "go mod download", "description": "Download modules" },
+      { "command": "go mod vendor", "description": "Vendor dependencies" },
+      // go clean
+      { "command": "go clean", "description": "Clean build cache" },
+      { "command": "go clean -cache", "description": "Clean build cache" },
+      { "command": "go clean -testcache", "description": "Clean test cache" },
+      { "command": "go clean -modcache", "description": "Clean module cache" },
+      // go work
+      { "command": "go work init", "description": "Initialize workspace" },
+      { "command": "go work use", "description": "Add module to workspace" },
+      { "command": "go work sync", "description": "Sync workspace" }
+    ]
+  }
+}

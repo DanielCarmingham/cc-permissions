@@ -1,44 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { AnalysisResult, PermissionLevel } from "./types.js";
-
-// File patterns that indicate which templates to recommend
-interface DetectionPattern {
-  files: string[];
-  template: string;
-  description: string;
-}
-
-const DETECTION_PATTERNS: DetectionPattern[] = [
-  // Web/Node.js
-  {
-    files: ["package.json", "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb"],
-    template: "web",
-    description: "Node.js/npm project detected",
-  },
-  // Python
-  {
-    files: [
-      "pyproject.toml",
-      "setup.py",
-      "setup.cfg",
-      "requirements.txt",
-      "Pipfile",
-      "poetry.lock",
-      "uv.lock",
-      "conda.yaml",
-      "environment.yml",
-    ],
-    template: "python",
-    description: "Python project detected",
-  },
-  // .NET
-  {
-    files: ["*.csproj", "*.fsproj", "*.vbproj", "*.sln", "nuget.config", "global.json"],
-    template: "dotnet",
-    description: ".NET project detected",
-  },
-];
+import { AnalysisResult, PermissionLevel, DetectionRules, TemplateRegistry } from "./types.js";
+import { loadTemplatesSync } from "./templates/loader.js";
 
 /**
  * Check if a file exists in the directory.
@@ -47,7 +10,7 @@ const DETECTION_PATTERNS: DetectionPattern[] = [
 function fileExists(dir: string, pattern: string): string | null {
   try {
     if (pattern.includes("*")) {
-      // Simple glob matching
+      // Simple glob matching for extensions
       const ext = pattern.replace("*", "");
       const files = fs.readdirSync(dir);
       const match = files.find((f) => f.endsWith(ext));
@@ -65,6 +28,104 @@ function fileExists(dir: string, pattern: string): string | null {
 }
 
 /**
+ * Check if a directory exists in the given path.
+ * Supports patterns like ".git/", ".github/workflows/", "*.xcodeproj/"
+ */
+function directoryExists(dir: string, pattern: string): string | null {
+  try {
+    // Remove trailing slash if present
+    const dirPattern = pattern.endsWith("/") ? pattern.slice(0, -1) : pattern;
+
+    if (dirPattern.includes("*")) {
+      // Simple glob matching for directory names
+      const suffix = dirPattern.replace("*", "");
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      const match = entries.find(
+        (e) => e.isDirectory() && e.name.endsWith(suffix)
+      );
+      return match ? path.join(dir, match.name) : null;
+    } else if (dirPattern.includes("/")) {
+      // Nested directory path like ".github/workflows"
+      const fullPath = path.join(dir, dirPattern);
+      if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
+        return fullPath;
+      }
+      return null;
+    } else {
+      // Simple directory name like ".git"
+      const fullPath = path.join(dir, dirPattern);
+      if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
+        return fullPath;
+      }
+      return null;
+    }
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Check if a file contains specific text.
+ */
+function fileContains(dir: string, filename: string, searchText: string): boolean {
+  const filePath = path.join(dir, filename);
+  if (!fs.existsSync(filePath)) return false;
+
+  try {
+    const stat = fs.statSync(filePath);
+    if (!stat.isFile()) return false;
+
+    const content = fs.readFileSync(filePath, "utf-8");
+    return content.includes(searchText);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Detect if a template should be recommended based on its detection rules.
+ * Returns the detected file/directory path if found, null otherwise.
+ */
+function detectTemplate(
+  dir: string,
+  detection: DetectionRules | undefined
+): string | null {
+  if (!detection) return null;
+
+  // Check if always recommended
+  if (detection.always) {
+    return "always";
+  }
+
+  // Check simple file patterns
+  if (detection.files) {
+    for (const pattern of detection.files) {
+      const found = fileExists(dir, pattern);
+      if (found) return found;
+    }
+  }
+
+  // Check directory patterns
+  if (detection.directories) {
+    for (const pattern of detection.directories) {
+      const found = directoryExists(dir, pattern);
+      if (found) return found;
+    }
+  }
+
+  // Check content patterns
+  if (detection.contentPatterns) {
+    for (const { file, contains } of detection.contentPatterns) {
+      if (fileContains(dir, file, contains)) {
+        return path.join(dir, file);
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
  * Analyze a directory to recommend templates.
  */
 export function analyzeDirectory(dir: string): AnalysisResult {
@@ -72,20 +133,37 @@ export function analyzeDirectory(dir: string): AnalysisResult {
   const detectedFiles: string[] = [];
   const recommendedTemplates: Set<string> = new Set();
 
-  // Always recommend general template
-  recommendedTemplates.add("general");
+  // Load templates to get detection rules
+  let templates: TemplateRegistry;
+  try {
+    templates = loadTemplatesSync();
+  } catch {
+    // If templates can't be loaded, return minimal result with shell
+    return {
+      detectedFiles: [],
+      recommendedTemplates: ["shell"],
+      suggestedLevel: PermissionLevel.Restrictive,
+      suggestedCommand: "cc-permissions template shell --level restrictive",
+    };
+  }
 
-  // Check each detection pattern
-  for (const pattern of DETECTION_PATTERNS) {
-    for (const file of pattern.files) {
-      const found = fileExists(absoluteDir, file);
-      if (found) {
-        detectedFiles.push(path.relative(absoluteDir, found) || file);
-        recommendedTemplates.add(pattern.template);
-        break; // Only need to detect one file per pattern
+  // Check each template's detection rules
+  for (const [name, template] of Object.entries(templates)) {
+    const detected = detectTemplate(absoluteDir, template.detection);
+    if (detected) {
+      recommendedTemplates.add(name);
+      // Track detected files/directories (but not "always" marker)
+      if (detected !== "always") {
+        const relativePath = path.relative(absoluteDir, detected) || detected;
+        if (!detectedFiles.includes(relativePath)) {
+          detectedFiles.push(relativePath);
+        }
       }
     }
   }
+
+  // Ensure shell is always included (even if template loading worked but shell wasn't auto-detected)
+  recommendedTemplates.add("shell");
 
   // Determine suggested level based on number of templates
   // More templates = more complex project = likely needs standard
@@ -123,7 +201,7 @@ export function formatAnalysisResult(result: AnalysisResult): string {
 
   if (result.detectedFiles.length === 0) {
     lines.push(`No specific project files detected.`);
-    lines.push(`Recommending general template only.`);
+    lines.push(`Recommending shell template only.`);
   } else {
     lines.push(`Detected Files:`);
     for (const file of result.detectedFiles) {

@@ -1,0 +1,114 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "docker",
+  "description": "Docker, Docker Compose, and Buildx",
+  "detection": {
+    "files": ["Dockerfile", "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"]
+  },
+  "levels": {
+    "restrictive": [
+      // docker info
+      { "command": "docker --version", "description": "Check Docker version" },
+      { "command": "docker version", "description": "Show Docker version details" },
+      { "command": "docker info", "description": "Show Docker system info" },
+      // container read-only
+      { "command": "docker ps", "description": "List running containers" },
+      { "command": "docker container ls", "description": "List containers" },
+      { "command": "docker container inspect", "description": "Inspect container" },
+      { "command": "docker logs", "description": "View container logs" },
+      { "command": "docker top", "description": "Show container processes" },
+      { "command": "docker stats", "description": "Show container stats" },
+      { "command": "docker port", "description": "Show port mappings" },
+      { "command": "docker diff", "description": "Show container changes" },
+      // image read-only
+      { "command": "docker images", "description": "List images" },
+      { "command": "docker image ls", "description": "List images" },
+      { "command": "docker image inspect", "description": "Inspect image" },
+      { "command": "docker image history", "description": "Show image history" },
+      { "command": "docker search", "description": "Search Docker Hub" },
+      // network read-only
+      { "command": "docker network ls", "description": "List networks" },
+      { "command": "docker network inspect", "description": "Inspect network" },
+      // volume read-only
+      { "command": "docker volume ls", "description": "List volumes" },
+      { "command": "docker volume inspect", "description": "Inspect volume" },
+      // docker-compose info
+      { "command": "docker-compose --version", "description": "Check Compose version" },
+      { "command": "docker-compose version", "description": "Check Compose version" },
+      { "command": "docker compose version", "description": "Check Compose v2 version" },
+      { "command": "docker-compose config", "description": "Validate Compose config" },
+      { "command": "docker compose config", "description": "Validate Compose v2 config" },
+      { "command": "docker-compose ps", "description": "List Compose containers" },
+      { "command": "docker compose ps", "description": "List Compose v2 containers" },
+      // buildx info
+      { "command": "docker buildx version", "description": "Check Buildx version" },
+      { "command": "docker buildx ls", "description": "List Buildx builders" },
+      { "command": "docker buildx inspect", "description": "Inspect Buildx builder" }
+    ],
+    "standard": [
+      // build
+      { "command": "docker build", "description": "Build Docker image" },
+      { "command": "docker image build", "description": "Build Docker image" },
+      { "command": "docker buildx build", "description": "Build with Buildx" },
+      { "command": "docker buildx bake", "description": "Build with Bake" },
+      // run containers
+      { "command": "docker run", "description": "Run container" },
+      { "command": "docker container run", "description": "Run container" },
+      { "command": "docker start", "description": "Start container" },
+      { "command": "docker stop", "description": "Stop container" },
+      { "command": "docker restart", "description": "Restart container" },
+      { "command": "docker exec", "description": "Execute in container" },
+      { "command": "docker attach", "description": "Attach to container" },
+      { "command": "docker cp", "description": "Copy files to/from container" },
+      // docker-compose operations
+      { "command": "docker-compose up", "description": "Start Compose services" },
+      { "command": "docker compose up", "description": "Start Compose v2 services" },
+      { "command": "docker-compose down", "description": "Stop Compose services" },
+      { "command": "docker compose down", "description": "Stop Compose v2 services" },
+      { "command": "docker-compose build", "description": "Build Compose services" },
+      { "command": "docker compose build", "description": "Build Compose v2 services" },
+      { "command": "docker-compose logs", "description": "View Compose logs" },
+      { "command": "docker compose logs", "description": "View Compose v2 logs" },
+      { "command": "docker-compose exec", "description": "Execute in Compose service" },
+      { "command": "docker compose exec", "description": "Execute in Compose v2 service" },
+      { "command": "docker-compose run", "description": "Run Compose command" },
+      { "command": "docker compose run", "description": "Run Compose v2 command" },
+      // buildx builders
+      { "command": "docker buildx create", "description": "Create Buildx builder" },
+      { "command": "docker buildx use", "description": "Switch Buildx builder" }
+    ],
+    "permissive": [
+      // registry operations
+      { "command": "docker push", "description": "Push image to registry" },
+      { "command": "docker pull", "description": "Pull image from registry" },
+      { "command": "docker login", "description": "Login to registry" },
+      { "command": "docker logout", "description": "Logout from registry" },
+      { "command": "docker tag", "description": "Tag image" },
+      // remove containers
+      { "command": "docker rm", "description": "Remove container" },
+      { "command": "docker container rm", "description": "Remove container" },
+      { "command": "docker container prune", "description": "Remove stopped containers" },
+      { "command": "docker kill", "description": "Kill container" },
+      // remove images
+      { "command": "docker rmi", "description": "Remove image" },
+      { "command": "docker image rm", "description": "Remove image" },
+      { "command": "docker image prune", "description": "Remove unused images" },
+      // network operations
+      { "command": "docker network create", "description": "Create network" },
+      { "command": "docker network rm", "description": "Remove network" },
+      { "command": "docker network prune", "description": "Remove unused networks" },
+      { "command": "docker network connect", "description": "Connect to network" },
+      { "command": "docker network disconnect", "description": "Disconnect from network" },
+      // volume operations
+      { "command": "docker volume create", "description": "Create volume" },
+      { "command": "docker volume rm", "description": "Remove volume" },
+      { "command": "docker volume prune", "description": "Remove unused volumes" },
+      // system operations
+      { "command": "docker system prune", "description": "Remove unused data" },
+      { "command": "docker builder prune", "description": "Remove build cache" },
+      // buildx operations
+      { "command": "docker buildx rm", "description": "Remove Buildx builder" },
+      { "command": "docker buildx prune", "description": "Remove Buildx cache" }
+    ]
+  }
+}

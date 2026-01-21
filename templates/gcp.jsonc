@@ -1,0 +1,109 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "gcp",
+  "description": "Google Cloud CLI, gsutil, Firebase, and BigQuery",
+  "detection": {
+    "files": ["firebase.json", "app.yaml", "cloudbuild.yaml"]
+  },
+  "levels": {
+    "restrictive": [
+      // gcloud info
+      { "command": "gcloud --version", "description": "Check gcloud version" },
+      { "command": "gcloud version", "description": "Check gcloud version" },
+      { "command": "gcloud config list", "description": "List gcloud config" },
+      { "command": "gcloud config get", "description": "Get gcloud config value" },
+      { "command": "gcloud auth list", "description": "List authenticated accounts" },
+      { "command": "gcloud info", "description": "Show gcloud info" },
+      // projects
+      { "command": "gcloud projects list", "description": "List GCP projects" },
+      { "command": "gcloud projects describe", "description": "Describe project" },
+      // compute
+      { "command": "gcloud compute instances list", "description": "List compute instances" },
+      { "command": "gcloud compute instances describe", "description": "Describe instance" },
+      { "command": "gcloud compute zones list", "description": "List zones" },
+      { "command": "gcloud compute regions list", "description": "List regions" },
+      // cloud run
+      { "command": "gcloud run services list", "description": "List Cloud Run services" },
+      { "command": "gcloud run services describe", "description": "Describe Cloud Run service" },
+      { "command": "gcloud run revisions list", "description": "List Cloud Run revisions" },
+      // app engine
+      { "command": "gcloud app describe", "description": "Describe App Engine app" },
+      { "command": "gcloud app versions list", "description": "List App Engine versions" },
+      { "command": "gcloud app services list", "description": "List App Engine services" },
+      // functions
+      { "command": "gcloud functions list", "description": "List Cloud Functions" },
+      { "command": "gcloud functions describe", "description": "Describe function" },
+      // gsutil info
+      { "command": "gsutil --version", "description": "Check gsutil version" },
+      { "command": "gsutil ls", "description": "List GCS buckets/objects" },
+      { "command": "gsutil du", "description": "Show disk usage" },
+      { "command": "gsutil stat", "description": "Show object info" },
+      // firebase info
+      { "command": "firebase --version", "description": "Check Firebase CLI version" },
+      { "command": "firebase projects:list", "description": "List Firebase projects" },
+      { "command": "firebase apps:list", "description": "List Firebase apps" },
+      { "command": "firebase hosting:sites:list", "description": "List Hosting sites" },
+      // bq info
+      { "command": "bq --version", "description": "Check BigQuery CLI version" },
+      { "command": "bq show", "description": "Show dataset/table info" },
+      { "command": "bq ls", "description": "List datasets/tables" }
+    ],
+    "standard": [
+      // gcloud builds (no deploy)
+      { "command": "gcloud builds submit", "description": "Submit Cloud Build" },
+      { "command": "gcloud builds list", "description": "List builds" },
+      { "command": "gcloud builds describe", "description": "Describe build" },
+      { "command": "gcloud builds log", "description": "View build logs" },
+      // cloud run (dry-run)
+      { "command": "gcloud run deploy --dry-run", "description": "Dry-run Cloud Run deploy" },
+      // logs
+      { "command": "gcloud logging read", "description": "Read logs" },
+      { "command": "gcloud functions logs read", "description": "Read function logs" },
+      { "command": "gcloud run services logs read", "description": "Read Cloud Run logs" },
+      // gsutil copy (no delete)
+      { "command": "gsutil cat", "description": "Cat GCS object" },
+      // firebase local
+      { "command": "firebase emulators:start", "description": "Start Firebase emulators" },
+      { "command": "firebase emulators:exec", "description": "Run command with emulators" },
+      { "command": "firebase serve", "description": "Serve Firebase locally" },
+      { "command": "firebase init", "description": "Initialize Firebase project" },
+      // bq queries (read-only)
+      { "command": "bq head", "description": "Preview table rows" },
+      { "command": "bq extract", "description": "Extract table to GCS" },
+      // config set
+      { "command": "gcloud config set", "description": "Set gcloud config" }
+    ],
+    "permissive": [
+      // cloud run deploy
+      { "command": "gcloud run deploy", "description": "Deploy to Cloud Run" },
+      { "command": "gcloud run services delete", "description": "Delete Cloud Run service" },
+      // app engine deploy
+      { "command": "gcloud app deploy", "description": "Deploy to App Engine" },
+      { "command": "gcloud app versions delete", "description": "Delete App Engine version" },
+      // functions deploy
+      { "command": "gcloud functions deploy", "description": "Deploy Cloud Function" },
+      { "command": "gcloud functions delete", "description": "Delete Cloud Function" },
+      // compute instances
+      { "command": "gcloud compute instances create", "description": "Create compute instance" },
+      { "command": "gcloud compute instances delete", "description": "Delete compute instance" },
+      { "command": "gcloud compute instances start", "description": "Start instance" },
+      { "command": "gcloud compute instances stop", "description": "Stop instance" },
+      // gsutil write/delete
+      { "command": "gsutil cp", "description": "Copy to/from GCS" },
+      { "command": "gsutil mv", "description": "Move in GCS" },
+      { "command": "gsutil rm", "description": "Remove from GCS" },
+      { "command": "gsutil rsync", "description": "Sync with GCS" },
+      { "command": "gsutil mb", "description": "Make GCS bucket" },
+      { "command": "gsutil rb", "description": "Remove GCS bucket" },
+      // firebase deploy
+      { "command": "firebase deploy", "description": "Deploy to Firebase" },
+      { "command": "firebase hosting:disable", "description": "Disable hosting" },
+      { "command": "firebase functions:delete", "description": "Delete function" },
+      // bq write
+      { "command": "bq query", "description": "Run BigQuery query" },
+      { "command": "bq load", "description": "Load data into BigQuery" },
+      { "command": "bq mk", "description": "Create dataset/table" },
+      { "command": "bq rm", "description": "Remove dataset/table" }
+    ]
+  }
+}

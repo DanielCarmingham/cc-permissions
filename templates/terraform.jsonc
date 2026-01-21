@@ -1,0 +1,95 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "terraform",
+  "description": "Terraform, Terragrunt, and tflint",
+  "detection": {
+    "files": ["*.tf", ".terraform.lock.hcl", "terragrunt.hcl"]
+  },
+  "levels": {
+    "restrictive": [
+      // terraform info
+      { "command": "terraform version", "description": "Check Terraform version" },
+      { "command": "terraform -version", "description": "Check Terraform version" },
+      { "command": "terraform providers", "description": "List providers" },
+      { "command": "terraform providers schema", "description": "Show provider schema" },
+      // terraform read-only
+      { "command": "terraform fmt -check", "description": "Check formatting" },
+      { "command": "terraform fmt -diff", "description": "Show format diff" },
+      { "command": "terraform validate", "description": "Validate configuration" },
+      { "command": "terraform show", "description": "Show state or plan" },
+      { "command": "terraform output", "description": "Show outputs" },
+      { "command": "terraform graph", "description": "Generate graph" },
+      { "command": "terraform state list", "description": "List state resources" },
+      { "command": "terraform state show", "description": "Show state resource" },
+      // terraform workspace read
+      { "command": "terraform workspace list", "description": "List workspaces" },
+      { "command": "terraform workspace show", "description": "Show current workspace" },
+      // terragrunt info
+      { "command": "terragrunt --version", "description": "Check Terragrunt version" },
+      { "command": "terragrunt graph-dependencies", "description": "Show dependency graph" },
+      { "command": "terragrunt output", "description": "Show Terragrunt outputs" },
+      { "command": "terragrunt validate", "description": "Validate Terragrunt config" },
+      // tflint info
+      { "command": "tflint --version", "description": "Check tflint version" }
+    ],
+    "standard": [
+      // terraform format
+      { "command": "terraform fmt", "description": "Format configuration" },
+      // terraform init (downloads providers, no changes)
+      { "command": "terraform init", "description": "Initialize configuration" },
+      { "command": "terraform init -upgrade", "description": "Upgrade providers" },
+      { "command": "terraform get", "description": "Download modules" },
+      // terraform plan (no changes)
+      { "command": "terraform plan", "description": "Create execution plan" },
+      { "command": "terraform plan -out", "description": "Save plan to file" },
+      { "command": "terraform plan -target", "description": "Plan specific resource" },
+      // terraform workspace management
+      { "command": "terraform workspace select", "description": "Select workspace" },
+      { "command": "terraform workspace new", "description": "Create workspace" },
+      // terraform console
+      { "command": "terraform console", "description": "Interactive console" },
+      // terragrunt commands (no apply/destroy)
+      { "command": "terragrunt init", "description": "Initialize Terragrunt" },
+      { "command": "terragrunt plan", "description": "Plan with Terragrunt" },
+      { "command": "terragrunt plan-all", "description": "Plan all modules" },
+      { "command": "terragrunt run-all plan", "description": "Plan all modules" },
+      { "command": "terragrunt fmt", "description": "Format Terragrunt config" },
+      // tflint
+      { "command": "tflint", "description": "Run tflint" },
+      { "command": "tflint --init", "description": "Initialize tflint plugins" },
+      { "command": "tflint --fix", "description": "Fix tflint issues" }
+    ],
+    "permissive": [
+      // terraform apply
+      { "command": "terraform apply", "description": "Apply changes" },
+      { "command": "terraform apply -auto-approve", "description": "Apply without prompt" },
+      { "command": "terraform apply -target", "description": "Apply specific resource" },
+      // terraform destroy
+      { "command": "terraform destroy", "description": "Destroy infrastructure" },
+      { "command": "terraform destroy -auto-approve", "description": "Destroy without prompt" },
+      { "command": "terraform destroy -target", "description": "Destroy specific resource" },
+      // terraform state management
+      { "command": "terraform state mv", "description": "Move state resource" },
+      { "command": "terraform state rm", "description": "Remove from state" },
+      { "command": "terraform state pull", "description": "Pull remote state" },
+      { "command": "terraform state push", "description": "Push state" },
+      { "command": "terraform state replace-provider", "description": "Replace provider" },
+      // terraform import
+      { "command": "terraform import", "description": "Import resource" },
+      // terraform taint/untaint
+      { "command": "terraform taint", "description": "Mark resource for recreation" },
+      { "command": "terraform untaint", "description": "Unmark resource" },
+      // terraform workspace delete
+      { "command": "terraform workspace delete", "description": "Delete workspace" },
+      // terraform refresh
+      { "command": "terraform refresh", "description": "Refresh state" },
+      // terragrunt apply/destroy
+      { "command": "terragrunt apply", "description": "Apply with Terragrunt" },
+      { "command": "terragrunt destroy", "description": "Destroy with Terragrunt" },
+      { "command": "terragrunt apply-all", "description": "Apply all modules" },
+      { "command": "terragrunt destroy-all", "description": "Destroy all modules" },
+      { "command": "terragrunt run-all apply", "description": "Apply all modules" },
+      { "command": "terragrunt run-all destroy", "description": "Destroy all modules" }
+    ]
+  }
+}

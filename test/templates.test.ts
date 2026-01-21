@@ -29,13 +29,13 @@ describe("templates", () => {
 
   describe("getTemplate", () => {
     it("should return existing templates by name", () => {
-      const general = getTemplate("general");
-      assert.ok(general);
-      assert.equal(general.name, "general");
+      const shell = getTemplate("shell");
+      assert.ok(shell);
+      assert.equal(shell.name, "shell");
 
-      const web = getTemplate("web");
-      assert.ok(web);
-      assert.equal(web.name, "web");
+      const nodejs = getTemplate("nodejs");
+      assert.ok(nodejs);
+      assert.equal(nodejs.name, "nodejs");
 
       const python = getTemplate("python");
       assert.ok(python);
@@ -47,40 +47,41 @@ describe("templates", () => {
     });
 
     it("should be case insensitive", () => {
-      const general1 = getTemplate("general");
-      const general2 = getTemplate("GENERAL");
-      const general3 = getTemplate("General");
-      const general4 = getTemplate("GeNeRaL");
+      const shell1 = getTemplate("shell");
+      const shell2 = getTemplate("SHELL");
+      const shell3 = getTemplate("Shell");
+      const shell4 = getTemplate("ShElL");
 
-      assert.ok(general1);
-      assert.deepEqual(general1, general2);
-      assert.deepEqual(general2, general3);
-      assert.deepEqual(general3, general4);
+      assert.ok(shell1);
+      assert.deepEqual(shell1, shell2);
+      assert.deepEqual(shell2, shell3);
+      assert.deepEqual(shell3, shell4);
     });
 
     it("should return undefined for non-existent templates", () => {
       assert.equal(getTemplate("nonexistent"), undefined);
       assert.equal(getTemplate(""), undefined);
-      assert.equal(getTemplate("java"), undefined);
-      assert.equal(getTemplate("rust"), undefined);
+      // These templates now exist, so we use other non-existent names
+      assert.equal(getTemplate("foobar"), undefined);
+      assert.equal(getTemplate("notatemplate"), undefined);
     });
   });
 
   describe("getTemplates", () => {
     it("should return found templates and track not found", () => {
-      const result = getTemplates(["general", "web", "invalid"]);
+      const result = getTemplates(["shell", "nodejs", "invalid"]);
 
       assert.equal(result.found.length, 2);
       assert.equal(result.notFound.length, 1);
       assert.ok(result.notFound.includes("invalid"));
 
       const names = result.found.map((t) => t.name);
-      assert.ok(names.includes("general"));
-      assert.ok(names.includes("web"));
+      assert.ok(names.includes("shell"));
+      assert.ok(names.includes("nodejs"));
     });
 
     it("should handle all valid templates", () => {
-      const result = getTemplates(["general", "web", "python", "dotnet"]);
+      const result = getTemplates(["shell", "nodejs", "python", "dotnet"]);
 
       assert.equal(result.found.length, 4);
       assert.equal(result.notFound.length, 0);
@@ -101,7 +102,7 @@ describe("templates", () => {
     });
 
     it("should be case insensitive", () => {
-      const result = getTemplates(["GENERAL", "Web", "PYTHON"]);
+      const result = getTemplates(["SHELL", "NodeJS", "PYTHON"]);
 
       assert.equal(result.found.length, 3);
       assert.equal(result.notFound.length, 0);
@@ -113,8 +114,8 @@ describe("templates", () => {
       const names = listTemplateNames();
 
       assert.ok(Array.isArray(names));
-      assert.ok(names.includes("general"));
-      assert.ok(names.includes("web"));
+      assert.ok(names.includes("shell"));
+      assert.ok(names.includes("nodejs"));
       assert.ok(names.includes("python"));
       assert.ok(names.includes("dotnet"));
     });
@@ -144,8 +145,8 @@ describe("templates", () => {
       const templateList = listTemplates();
       const names = templateList.map((t) => t.name);
 
-      assert.ok(names.includes("general"));
-      assert.ok(names.includes("web"));
+      assert.ok(names.includes("shell"));
+      assert.ok(names.includes("nodejs"));
       assert.ok(names.includes("python"));
       assert.ok(names.includes("dotnet"));
     });
@@ -192,14 +193,14 @@ describe("templates", () => {
       }
     });
 
-    it("general template should have basic git commands", () => {
-      const general = getTemplate("general");
-      assert.ok(general);
+    it("git template should have basic git commands", () => {
+      const git = getTemplate("git");
+      assert.ok(git);
 
       const allCommands = [
-        ...general.levels.restrictive,
-        ...general.levels.standard,
-        ...general.levels.permissive,
+        ...git.levels.restrictive,
+        ...git.levels.standard,
+        ...git.levels.permissive,
       ].map((p) => p.command);
 
       assert.ok(allCommands.includes("git status"));
@@ -207,19 +208,19 @@ describe("templates", () => {
       assert.ok(allCommands.includes("git diff"));
     });
 
-    it("web template should have npm commands", () => {
-      const web = getTemplate("web");
-      assert.ok(web);
+    it("nodejs template should have npm commands", () => {
+      const nodejs = getTemplate("nodejs");
+      assert.ok(nodejs);
 
       const allCommands = [
-        ...web.levels.restrictive,
-        ...web.levels.standard,
-        ...web.levels.permissive,
+        ...nodejs.levels.restrictive,
+        ...nodejs.levels.standard,
+        ...nodejs.levels.permissive,
       ].map((p) => p.command);
 
       // Check for npm-related commands
       const hasNpmCommands = allCommands.some((cmd) => cmd.includes("npm"));
-      assert.ok(hasNpmCommands, "Web template should include npm commands");
+      assert.ok(hasNpmCommands, "nodejs template should include npm commands");
     });
 
     it("python template should have python commands", () => {
@@ -253,6 +254,21 @@ describe("templates", () => {
       const hasDotnetCommands = allCommands.some((cmd) => cmd.includes("dotnet"));
       assert.ok(hasDotnetCommands, "Dotnet template should include dotnet commands");
     });
+
+    it("shell template should have basic shell commands", () => {
+      const shell = getTemplate("shell");
+      assert.ok(shell);
+
+      const allCommands = [
+        ...shell.levels.restrictive,
+        ...shell.levels.standard,
+        ...shell.levels.permissive,
+      ].map((p) => p.command);
+
+      assert.ok(allCommands.includes("ls"), "Shell template should include ls");
+      assert.ok(allCommands.includes("cat"), "Shell template should include cat");
+      assert.ok(allCommands.includes("pwd"), "Shell template should include pwd");
+    });
   });
 });
 
@@ -269,8 +285,8 @@ describe("getTemplatesSync", () => {
     const registry = getTemplatesSync();
 
     assert.ok(registry);
-    assert.ok(registry.general);
-    assert.ok(registry.web);
+    assert.ok(registry.shell);
+    assert.ok(registry.nodejs);
     assert.ok(registry.python);
     assert.ok(registry.dotnet);
   });

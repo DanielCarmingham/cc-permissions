@@ -1,0 +1,97 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "ios",
+  "description": "Xcode, Swift, CocoaPods, and iOS development",
+  "detection": {
+    "files": ["Podfile", "Podfile.lock", "Package.swift"],
+    "directories": ["*.xcodeproj/", "*.xcworkspace/"]
+  },
+  "levels": {
+    "restrictive": [
+      // xcodebuild info
+      { "command": "xcodebuild -version", "description": "Check Xcode version" },
+      { "command": "xcodebuild -showsdks", "description": "List available SDKs" },
+      { "command": "xcodebuild -list", "description": "List targets and schemes" },
+      { "command": "xcodebuild -showBuildSettings", "description": "Show build settings" },
+      // swift info
+      { "command": "swift --version", "description": "Check Swift version" },
+      { "command": "swift -version", "description": "Check Swift version" },
+      { "command": "swift package describe", "description": "Describe Swift package" },
+      { "command": "swift package show-dependencies", "description": "Show dependencies" },
+      { "command": "swift package dump-package", "description": "Dump package manifest" },
+      // xcrun info
+      { "command": "xcrun --version", "description": "Check xcrun version" },
+      { "command": "xcrun --find", "description": "Find Xcode tool" },
+      { "command": "xcrun --show-sdk-path", "description": "Show SDK path" },
+      { "command": "xcrun --show-sdk-version", "description": "Show SDK version" },
+      // simulator info
+      { "command": "xcrun simctl list", "description": "List simulators" },
+      { "command": "xcrun simctl status_bar", "description": "Get status bar info" },
+      // cocoapods info
+      { "command": "pod --version", "description": "Check CocoaPods version" },
+      { "command": "pod env", "description": "Show CocoaPods environment" },
+      { "command": "pod search", "description": "Search for pods" },
+      { "command": "pod spec cat", "description": "Show pod spec" },
+      { "command": "pod outdated", "description": "List outdated pods" },
+      { "command": "pod list", "description": "List all pods" },
+      // xcode-select
+      { "command": "xcode-select --print-path", "description": "Show Xcode path" },
+      { "command": "xcode-select --version", "description": "Check xcode-select version" }
+    ],
+    "standard": [
+      // xcodebuild (no archive/export)
+      { "command": "xcodebuild build", "description": "Build project" },
+      { "command": "xcodebuild clean", "description": "Clean build" },
+      { "command": "xcodebuild test", "description": "Run tests" },
+      { "command": "xcodebuild analyze", "description": "Analyze code" },
+      { "command": "xcodebuild build-for-testing", "description": "Build for testing" },
+      { "command": "xcodebuild test-without-building", "description": "Test without building" },
+      // swift build/test
+      { "command": "swift build", "description": "Build Swift package" },
+      { "command": "swift test", "description": "Run Swift tests" },
+      { "command": "swift run", "description": "Run Swift package" },
+      { "command": "swift package resolve", "description": "Resolve dependencies" },
+      { "command": "swift package generate-xcodeproj", "description": "Generate Xcode project" },
+      // simulator management
+      { "command": "xcrun simctl create", "description": "Create simulator" },
+      { "command": "xcrun simctl delete", "description": "Delete simulator" },
+      { "command": "xcrun simctl erase", "description": "Erase simulator" },
+      { "command": "xcrun simctl launch", "description": "Launch app in simulator" },
+      { "command": "xcrun simctl terminate", "description": "Terminate app in simulator" },
+      { "command": "xcrun simctl openurl", "description": "Open URL in simulator" },
+      // cocoapods dry-run
+      { "command": "pod install --dry-run", "description": "Dry-run pod install" },
+      { "command": "pod update --dry-run", "description": "Dry-run pod update" },
+      { "command": "pod deintegrate", "description": "Deintegrate pods" },
+      // swiftlint/swiftformat
+      { "command": "swiftlint", "description": "Run SwiftLint" },
+      { "command": "swiftlint lint", "description": "Lint Swift code" },
+      { "command": "swiftlint autocorrect", "description": "Auto-fix lint issues" },
+      { "command": "swiftformat", "description": "Format Swift code" }
+    ],
+    "permissive": [
+      // cocoapods install
+      { "command": "pod install", "description": "Install pods" },
+      { "command": "pod update", "description": "Update pods" },
+      { "command": "pod repo update", "description": "Update pod repos" },
+      { "command": "pod cache clean", "description": "Clean pod cache" },
+      // swift package management
+      { "command": "swift package update", "description": "Update dependencies" },
+      { "command": "swift package clean", "description": "Clean build artifacts" },
+      { "command": "swift package reset", "description": "Reset package" },
+      { "command": "swift package init", "description": "Initialize package" },
+      // xcodebuild archive/export
+      { "command": "xcodebuild archive", "description": "Create archive" },
+      { "command": "xcodebuild -exportArchive", "description": "Export archive" },
+      // simulator boot/shutdown
+      { "command": "xcrun simctl boot", "description": "Boot simulator" },
+      { "command": "xcrun simctl shutdown", "description": "Shutdown simulator" },
+      { "command": "xcrun simctl install", "description": "Install app on simulator" },
+      { "command": "xcrun simctl uninstall", "description": "Uninstall app from simulator" },
+      // carthage (if used)
+      { "command": "carthage bootstrap", "description": "Bootstrap Carthage" },
+      { "command": "carthage update", "description": "Update Carthage deps" },
+      { "command": "carthage build", "description": "Build Carthage deps" }
+    ]
+  }
+}

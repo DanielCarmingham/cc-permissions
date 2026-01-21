@@ -1,7 +1,10 @@
 {
-  "$schema": "./template.schema.json",
-  "name": "web",
-  "description": "Node.js, npm, and common frontend tooling",
+  "$schema": "../template.schema.json",
+  "name": "nodejs",
+  "description": "Node.js, npm, pnpm, yarn, and bun",
+  "detection": {
+    "files": ["package.json", "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb"]
+  },
   "levels": {
     "restrictive": [
       // npm read-only

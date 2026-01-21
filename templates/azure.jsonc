@@ -1,0 +1,102 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "azure",
+  "description": "Azure CLI, Functions, Bicep, and Azure Developer CLI",
+  "detection": {
+    "files": ["*.bicep", "azure.yaml", "azure-pipelines.yml"]
+  },
+  "levels": {
+    "restrictive": [
+      // az cli info
+      { "command": "az --version", "description": "Check Azure CLI version" },
+      { "command": "az account show", "description": "Show current account" },
+      { "command": "az account list", "description": "List Azure accounts" },
+      { "command": "az configure --list-defaults", "description": "List default config" },
+      // resource groups
+      { "command": "az group list", "description": "List resource groups" },
+      { "command": "az group show", "description": "Show resource group details" },
+      // resources
+      { "command": "az resource list", "description": "List resources" },
+      { "command": "az resource show", "description": "Show resource details" },
+      // storage
+      { "command": "az storage account list", "description": "List storage accounts" },
+      { "command": "az storage blob list", "description": "List blobs" },
+      { "command": "az storage container list", "description": "List containers" },
+      // webapp
+      { "command": "az webapp list", "description": "List web apps" },
+      { "command": "az webapp show", "description": "Show web app details" },
+      // functions
+      { "command": "az functionapp list", "description": "List function apps" },
+      { "command": "az functionapp show", "description": "Show function app details" },
+      { "command": "func --version", "description": "Check Azure Functions Core Tools version" },
+      // container
+      { "command": "az acr list", "description": "List container registries" },
+      { "command": "az aks list", "description": "List AKS clusters" },
+      // bicep
+      { "command": "az bicep version", "description": "Check Bicep version" },
+      // azd info
+      { "command": "azd version", "description": "Check Azure Developer CLI version" },
+      { "command": "azd config list", "description": "List azd config" },
+      { "command": "azd env list", "description": "List azd environments" }
+    ],
+    "standard": [
+      // resource group management
+      { "command": "az group create", "description": "Create resource group" },
+      // functions local dev
+      { "command": "func start", "description": "Start Functions locally" },
+      { "command": "func new", "description": "Create new function" },
+      { "command": "func init", "description": "Initialize Functions project" },
+      { "command": "func extensions install", "description": "Install function extensions" },
+      // bicep development
+      { "command": "az bicep build", "description": "Build Bicep file" },
+      { "command": "az bicep decompile", "description": "Decompile ARM to Bicep" },
+      { "command": "az bicep format", "description": "Format Bicep file" },
+      { "command": "az bicep lint", "description": "Lint Bicep file" },
+      // azd local dev
+      { "command": "azd init", "description": "Initialize azd project" },
+      { "command": "azd env new", "description": "Create azd environment" },
+      { "command": "azd env set", "description": "Set azd environment variable" },
+      { "command": "azd env get-values", "description": "Get environment values" },
+      { "command": "azd restore", "description": "Restore dependencies" },
+      { "command": "azd build", "description": "Build application" },
+      // storage operations
+      { "command": "az storage blob download", "description": "Download blob" },
+      { "command": "az storage blob download-batch", "description": "Download blobs batch" },
+      // logs
+      { "command": "az webapp log tail", "description": "Tail webapp logs" },
+      { "command": "az functionapp log tail", "description": "Tail function logs" },
+      { "command": "az monitor log-analytics query", "description": "Query logs" }
+    ],
+    "permissive": [
+      // deployment
+      { "command": "az deployment group create", "description": "Create resource group deployment" },
+      { "command": "az deployment sub create", "description": "Create subscription deployment" },
+      { "command": "az deployment group delete", "description": "Delete deployment" },
+      // webapp deploy
+      { "command": "az webapp deploy", "description": "Deploy to web app" },
+      { "command": "az webapp create", "description": "Create web app" },
+      { "command": "az webapp delete", "description": "Delete web app" },
+      { "command": "az webapp up", "description": "Quick deploy web app" },
+      // functions deploy
+      { "command": "func azure functionapp publish", "description": "Publish to Azure Functions" },
+      { "command": "az functionapp create", "description": "Create function app" },
+      { "command": "az functionapp delete", "description": "Delete function app" },
+      // azd deploy
+      { "command": "azd up", "description": "Provision and deploy with azd" },
+      { "command": "azd deploy", "description": "Deploy with azd" },
+      { "command": "azd provision", "description": "Provision Azure resources" },
+      { "command": "azd down", "description": "Delete azd resources" },
+      // storage destructive
+      { "command": "az storage blob upload", "description": "Upload blob" },
+      { "command": "az storage blob upload-batch", "description": "Upload blobs batch" },
+      { "command": "az storage blob delete", "description": "Delete blob" },
+      { "command": "az storage container create", "description": "Create container" },
+      { "command": "az storage container delete", "description": "Delete container" },
+      // resource group delete
+      { "command": "az group delete", "description": "Delete resource group" },
+      // acr
+      { "command": "az acr build", "description": "Build with ACR" },
+      { "command": "az acr login", "description": "Login to ACR" }
+    ]
+  }
+}

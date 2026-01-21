@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import stripJsonComments from "strip-json-comments";
-import { TemplateDefinition, TemplateRegistry, Permission } from "../types.js";
+import { TemplateDefinition, TemplateRegistry, Permission, DetectionRules, ContentPattern } from "../types.js";
 import {
   cacheExists,
   getCacheTemplatesDir,
@@ -70,6 +70,115 @@ function validatePermission(
 }
 
 /**
+ * Validate a content pattern object.
+ */
+function validateContentPattern(
+  pattern: unknown,
+  templateName: string,
+  index: number
+): ContentPattern {
+  if (typeof pattern !== "object" || pattern === null) {
+    throw new Error(
+      `Template "${templateName}": detection.contentPatterns[${index}] must be an object`
+    );
+  }
+
+  const p = pattern as Record<string, unknown>;
+
+  if (typeof p.file !== "string" || p.file.trim() === "") {
+    throw new Error(
+      `Template "${templateName}": detection.contentPatterns[${index}].file must be a non-empty string`
+    );
+  }
+
+  if (typeof p.contains !== "string" || p.contains.trim() === "") {
+    throw new Error(
+      `Template "${templateName}": detection.contentPatterns[${index}].contains must be a non-empty string`
+    );
+  }
+
+  return {
+    file: p.file,
+    contains: p.contains,
+  };
+}
+
+/**
+ * Validate detection rules object.
+ */
+function validateDetection(
+  detection: unknown,
+  templateName: string
+): DetectionRules | undefined {
+  if (detection === undefined) {
+    return undefined;
+  }
+
+  if (typeof detection !== "object" || detection === null) {
+    throw new Error(
+      `Template "${templateName}": detection must be an object`
+    );
+  }
+
+  const d = detection as Record<string, unknown>;
+  const result: DetectionRules = {};
+
+  if (d.files !== undefined) {
+    if (!Array.isArray(d.files)) {
+      throw new Error(
+        `Template "${templateName}": detection.files must be an array`
+      );
+    }
+    for (let i = 0; i < d.files.length; i++) {
+      if (typeof d.files[i] !== "string") {
+        throw new Error(
+          `Template "${templateName}": detection.files[${i}] must be a string`
+        );
+      }
+    }
+    result.files = d.files as string[];
+  }
+
+  if (d.directories !== undefined) {
+    if (!Array.isArray(d.directories)) {
+      throw new Error(
+        `Template "${templateName}": detection.directories must be an array`
+      );
+    }
+    for (let i = 0; i < d.directories.length; i++) {
+      if (typeof d.directories[i] !== "string") {
+        throw new Error(
+          `Template "${templateName}": detection.directories[${i}] must be a string`
+        );
+      }
+    }
+    result.directories = d.directories as string[];
+  }
+
+  if (d.contentPatterns !== undefined) {
+    if (!Array.isArray(d.contentPatterns)) {
+      throw new Error(
+        `Template "${templateName}": detection.contentPatterns must be an array`
+      );
+    }
+    result.contentPatterns = d.contentPatterns.map((p, i) =>
+      validateContentPattern(p, templateName, i)
+    );
+  }
+
+  if (d.always !== undefined) {
+    if (typeof d.always !== "boolean") {
+      throw new Error(
+        `Template "${templateName}": detection.always must be a boolean`
+      );
+    }
+    result.always = d.always;
+  }
+
+  return result;
+}
+
+/**
  * Validate a template definition loaded from JSONC.
  */
 function validateTemplate(data: unknown, filename: string): TemplateDefinition {
@@ -115,8 +224,9 @@ function validateTemplate(data: unknown, filename: string): TemplateDefinition {
 
   const name = obj.name as string;
   const description = obj.description as string;
+  const detection = validateDetection(obj.detection, name);
 
-  return {
+  const template: TemplateDefinition = {
     name,
     description,
     levels: {
@@ -131,6 +241,12 @@ function validateTemplate(data: unknown, filename: string): TemplateDefinition {
       ),
     },
   };
+
+  if (detection) {
+    template.detection = detection;
+  }
+
+  return template;
 }
 
 /**

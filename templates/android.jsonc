@@ -1,0 +1,98 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "android",
+  "description": "Gradle, ADB, and Android development",
+  "detection": {
+    "files": ["AndroidManifest.xml"],
+    "contentPatterns": [
+      { "file": "build.gradle", "contains": "com.android" },
+      { "file": "build.gradle.kts", "contains": "com.android" }
+    ]
+  },
+  "levels": {
+    "restrictive": [
+      // gradle info
+      { "command": "gradle --version", "description": "Check Gradle version" },
+      { "command": "./gradlew --version", "description": "Check Gradle wrapper version" },
+      { "command": "gradle tasks", "description": "List Gradle tasks" },
+      { "command": "./gradlew tasks", "description": "List Gradle wrapper tasks" },
+      { "command": "gradle dependencies", "description": "Show dependencies" },
+      { "command": "./gradlew dependencies", "description": "Show dependencies" },
+      { "command": "gradle projects", "description": "List projects" },
+      { "command": "./gradlew projects", "description": "List projects" },
+      // adb info
+      { "command": "adb version", "description": "Check ADB version" },
+      { "command": "adb devices", "description": "List connected devices" },
+      { "command": "adb get-state", "description": "Get device state" },
+      { "command": "adb get-serialno", "description": "Get device serial" },
+      { "command": "adb shell getprop", "description": "Get device properties" },
+      { "command": "adb shell pm list packages", "description": "List installed packages" },
+      { "command": "adb shell dumpsys", "description": "Dump system info" },
+      // emulator info
+      { "command": "emulator -list-avds", "description": "List AVDs" },
+      { "command": "emulator -version", "description": "Check emulator version" },
+      // sdkmanager info
+      { "command": "sdkmanager --list", "description": "List SDK packages" },
+      { "command": "sdkmanager --version", "description": "Check SDK manager version" },
+      // android studio
+      { "command": "studio --version", "description": "Check Android Studio version" }
+    ],
+    "standard": [
+      // gradle build (debug only)
+      { "command": "gradle assembleDebug", "description": "Build debug APK" },
+      { "command": "./gradlew assembleDebug", "description": "Build debug APK" },
+      { "command": "gradle bundleDebug", "description": "Build debug AAB" },
+      { "command": "./gradlew bundleDebug", "description": "Build debug AAB" },
+      // gradle test
+      { "command": "gradle test", "description": "Run unit tests" },
+      { "command": "./gradlew test", "description": "Run unit tests" },
+      { "command": "gradle connectedAndroidTest", "description": "Run instrumented tests" },
+      { "command": "./gradlew connectedAndroidTest", "description": "Run instrumented tests" },
+      // gradle lint
+      { "command": "gradle lint", "description": "Run lint" },
+      { "command": "./gradlew lint", "description": "Run lint" },
+      { "command": "gradle lintDebug", "description": "Lint debug build" },
+      { "command": "./gradlew lintDebug", "description": "Lint debug build" },
+      // adb logcat (read-only)
+      { "command": "adb logcat", "description": "View device logs" },
+      { "command": "adb bugreport", "description": "Capture bug report" },
+      { "command": "adb shell screencap", "description": "Take screenshot" },
+      { "command": "adb shell screenrecord", "description": "Record screen" },
+      // adb shell (read-only queries)
+      { "command": "adb shell am", "description": "Activity manager commands" },
+      { "command": "adb shell pm path", "description": "Get package path" },
+      // emulator start
+      { "command": "emulator @", "description": "Start emulator" },
+      { "command": "emulator -avd", "description": "Start specific AVD" }
+    ],
+    "permissive": [
+      // gradle release builds
+      { "command": "gradle assembleRelease", "description": "Build release APK" },
+      { "command": "./gradlew assembleRelease", "description": "Build release APK" },
+      { "command": "gradle bundleRelease", "description": "Build release AAB" },
+      { "command": "./gradlew bundleRelease", "description": "Build release AAB" },
+      // gradle clean
+      { "command": "gradle clean", "description": "Clean project" },
+      { "command": "./gradlew clean", "description": "Clean project" },
+      // adb install/push/pull
+      { "command": "adb install", "description": "Install APK" },
+      { "command": "adb uninstall", "description": "Uninstall app" },
+      { "command": "adb push", "description": "Push file to device" },
+      { "command": "adb pull", "description": "Pull file from device" },
+      // adb shell write operations
+      { "command": "adb shell pm clear", "description": "Clear app data" },
+      { "command": "adb shell settings put", "description": "Change settings" },
+      // sdkmanager
+      { "command": "sdkmanager", "description": "Manage SDK packages" },
+      { "command": "sdkmanager --install", "description": "Install SDK package" },
+      { "command": "sdkmanager --uninstall", "description": "Uninstall SDK package" },
+      { "command": "sdkmanager --update", "description": "Update SDK packages" },
+      // avdmanager
+      { "command": "avdmanager create", "description": "Create AVD" },
+      { "command": "avdmanager delete", "description": "Delete AVD" },
+      // adb reboot
+      { "command": "adb reboot", "description": "Reboot device" },
+      { "command": "adb root", "description": "Restart ADB as root" }
+    ]
+  }
+}

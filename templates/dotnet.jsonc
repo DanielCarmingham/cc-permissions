@@ -1,7 +1,10 @@
 {
-  "$schema": "./template.schema.json",
+  "$schema": "../template.schema.json",
   "name": "dotnet",
   "description": "dotnet CLI, NuGet, MSBuild",
+  "detection": {
+    "files": ["*.csproj", "*.fsproj", "*.vbproj", "*.sln", "nuget.config", "global.json"]
+  },
   "levels": {
     "restrictive": [
       // dotnet info/version

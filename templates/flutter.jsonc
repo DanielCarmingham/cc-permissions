@@ -1,0 +1,105 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "flutter",
+  "description": "Flutter SDK and Dart development",
+  "detection": {
+    "contentPatterns": [
+      { "file": "pubspec.yaml", "contains": "flutter:" }
+    ]
+  },
+  "levels": {
+    "restrictive": [
+      // flutter info
+      { "command": "flutter --version", "description": "Check Flutter version" },
+      { "command": "flutter doctor", "description": "Check Flutter environment" },
+      { "command": "flutter doctor -v", "description": "Verbose Flutter doctor" },
+      { "command": "flutter devices", "description": "List connected devices" },
+      { "command": "flutter emulators", "description": "List available emulators" },
+      { "command": "flutter config", "description": "Show Flutter config" },
+      { "command": "flutter channel", "description": "Show Flutter channel" },
+      { "command": "flutter --help", "description": "Flutter help" },
+      // flutter project info
+      { "command": "flutter pub deps", "description": "Show dependencies" },
+      { "command": "flutter pub outdated", "description": "List outdated packages" },
+      { "command": "flutter pub cache list", "description": "List cached packages" },
+      // dart info
+      { "command": "dart --version", "description": "Check Dart version" },
+      { "command": "dart info", "description": "Show Dart info" },
+      { "command": "dart pub deps", "description": "Show Dart dependencies" },
+      { "command": "dart pub outdated", "description": "List outdated packages" },
+      { "command": "dart --help", "description": "Dart help" },
+      // dart analyze (read-only)
+      { "command": "dart analyze", "description": "Analyze Dart code" },
+      { "command": "flutter analyze", "description": "Analyze Flutter project" }
+    ],
+    "standard": [
+      // flutter run
+      { "command": "flutter run", "description": "Run Flutter app" },
+      { "command": "flutter run --debug", "description": "Run debug build" },
+      { "command": "flutter run --profile", "description": "Run profile build" },
+      { "command": "flutter run --release", "description": "Run release build" },
+      // flutter build
+      { "command": "flutter build", "description": "Build Flutter app" },
+      { "command": "flutter build apk", "description": "Build Android APK" },
+      { "command": "flutter build appbundle", "description": "Build Android AAB" },
+      { "command": "flutter build ios", "description": "Build iOS app" },
+      { "command": "flutter build ipa", "description": "Build iOS IPA" },
+      { "command": "flutter build web", "description": "Build web app" },
+      { "command": "flutter build macos", "description": "Build macOS app" },
+      { "command": "flutter build windows", "description": "Build Windows app" },
+      { "command": "flutter build linux", "description": "Build Linux app" },
+      // flutter test
+      { "command": "flutter test", "description": "Run Flutter tests" },
+      { "command": "flutter test --coverage", "description": "Run tests with coverage" },
+      { "command": "flutter drive", "description": "Run integration tests" },
+      // flutter format
+      { "command": "dart format", "description": "Format Dart code" },
+      { "command": "flutter format", "description": "Format Flutter code" },
+      // flutter pub get
+      { "command": "flutter pub get", "description": "Get dependencies" },
+      { "command": "dart pub get", "description": "Get Dart dependencies" },
+      // flutter gen
+      { "command": "flutter gen-l10n", "description": "Generate localizations" },
+      { "command": "flutter packages pub run build_runner build", "description": "Run build_runner" },
+      // dart run
+      { "command": "dart run", "description": "Run Dart program" },
+      { "command": "dart compile", "description": "Compile Dart code" },
+      { "command": "dart test", "description": "Run Dart tests" },
+      // emulator launch
+      { "command": "flutter emulators --launch", "description": "Launch emulator" }
+    ],
+    "permissive": [
+      // flutter pub upgrade
+      { "command": "flutter pub upgrade", "description": "Upgrade dependencies" },
+      { "command": "flutter pub add", "description": "Add dependency" },
+      { "command": "flutter pub remove", "description": "Remove dependency" },
+      { "command": "flutter pub cache clean", "description": "Clean pub cache" },
+      { "command": "flutter pub cache repair", "description": "Repair pub cache" },
+      // dart pub
+      { "command": "dart pub upgrade", "description": "Upgrade Dart dependencies" },
+      { "command": "dart pub add", "description": "Add Dart dependency" },
+      { "command": "dart pub remove", "description": "Remove Dart dependency" },
+      { "command": "dart pub cache clean", "description": "Clean Dart pub cache" },
+      // flutter clean
+      { "command": "flutter clean", "description": "Clean Flutter project" },
+      // flutter publish
+      { "command": "flutter pub publish", "description": "Publish Flutter package" },
+      { "command": "dart pub publish", "description": "Publish Dart package" },
+      // flutter create
+      { "command": "flutter create", "description": "Create new project" },
+      // flutter upgrade
+      { "command": "flutter upgrade", "description": "Upgrade Flutter SDK" },
+      { "command": "flutter downgrade", "description": "Downgrade Flutter SDK" },
+      { "command": "flutter channel stable", "description": "Switch to stable channel" },
+      { "command": "flutter channel beta", "description": "Switch to beta channel" },
+      { "command": "flutter channel master", "description": "Switch to master channel" },
+      // flutter precache
+      { "command": "flutter precache", "description": "Precache Flutter artifacts" },
+      // flutter config set
+      { "command": "flutter config --enable-web", "description": "Enable web support" },
+      { "command": "flutter config --enable-macos-desktop", "description": "Enable macOS support" },
+      { "command": "flutter config --enable-windows-desktop", "description": "Enable Windows support" },
+      { "command": "flutter config --enable-linux-desktop", "description": "Enable Linux support" }
+    ]
+  }
+}

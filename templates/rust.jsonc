@@ -1,0 +1,96 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "rust",
+  "description": "Cargo, rustc, and rustup",
+  "detection": {
+    "files": ["Cargo.toml", "Cargo.lock"]
+  },
+  "levels": {
+    "restrictive": [
+      // rust info
+      { "command": "rustc --version", "description": "Check rustc version" },
+      { "command": "rustc -V", "description": "Check rustc version" },
+      { "command": "rustc --print", "description": "Print compiler info" },
+      // cargo info
+      { "command": "cargo --version", "description": "Check Cargo version" },
+      { "command": "cargo -V", "description": "Check Cargo version" },
+      { "command": "cargo version", "description": "Check Cargo version" },
+      { "command": "cargo help", "description": "Cargo help" },
+      // cargo read-only
+      { "command": "cargo tree", "description": "Show dependency tree" },
+      { "command": "cargo metadata", "description": "Show package metadata" },
+      { "command": "cargo search", "description": "Search crates.io" },
+      { "command": "cargo locate-project", "description": "Locate Cargo.toml" },
+      { "command": "cargo read-manifest", "description": "Read package manifest" },
+      { "command": "cargo pkgid", "description": "Show package ID" },
+      // cargo audit
+      { "command": "cargo audit", "description": "Audit dependencies" },
+      { "command": "cargo outdated", "description": "Check outdated dependencies" },
+      { "command": "cargo deny check", "description": "Check dependency policies" },
+      // rustup info
+      { "command": "rustup --version", "description": "Check rustup version" },
+      { "command": "rustup show", "description": "Show installed toolchains" },
+      { "command": "rustup which", "description": "Show which binary will run" },
+      { "command": "rustup target list", "description": "List available targets" },
+      { "command": "rustup component list", "description": "List available components" }
+    ],
+    "standard": [
+      // cargo build (no install)
+      { "command": "cargo build", "description": "Build package" },
+      { "command": "cargo build --release", "description": "Build release" },
+      { "command": "cargo build --target", "description": "Build for target" },
+      // cargo check
+      { "command": "cargo check", "description": "Check package" },
+      { "command": "cargo check --all-targets", "description": "Check all targets" },
+      // cargo test
+      { "command": "cargo test", "description": "Run tests" },
+      { "command": "cargo test --release", "description": "Run release tests" },
+      { "command": "cargo test --doc", "description": "Run doc tests" },
+      { "command": "cargo bench", "description": "Run benchmarks" },
+      // cargo run
+      { "command": "cargo run", "description": "Run package" },
+      { "command": "cargo run --release", "description": "Run release build" },
+      { "command": "cargo run --example", "description": "Run example" },
+      // cargo formatting
+      { "command": "cargo fmt", "description": "Format code" },
+      { "command": "cargo fmt --check", "description": "Check formatting" },
+      // cargo linting
+      { "command": "cargo clippy", "description": "Run Clippy linter" },
+      { "command": "cargo clippy --fix", "description": "Apply Clippy fixes" },
+      // cargo doc
+      { "command": "cargo doc", "description": "Build documentation" },
+      { "command": "cargo doc --open", "description": "Build and open docs" },
+      // cargo fix
+      { "command": "cargo fix", "description": "Apply compiler fixes" }
+    ],
+    "permissive": [
+      // cargo install
+      { "command": "cargo install", "description": "Install binary" },
+      { "command": "cargo uninstall", "description": "Uninstall binary" },
+      // cargo publish
+      { "command": "cargo publish", "description": "Publish to crates.io" },
+      { "command": "cargo package", "description": "Package crate" },
+      { "command": "cargo yank", "description": "Yank published version" },
+      // cargo update
+      { "command": "cargo update", "description": "Update dependencies" },
+      { "command": "cargo add", "description": "Add dependency" },
+      { "command": "cargo remove", "description": "Remove dependency" },
+      // cargo clean
+      { "command": "cargo clean", "description": "Clean target directory" },
+      // cargo vendor
+      { "command": "cargo vendor", "description": "Vendor dependencies" },
+      // cargo new/init
+      { "command": "cargo new", "description": "Create new package" },
+      { "command": "cargo init", "description": "Initialize package" },
+      // rustup management
+      { "command": "rustup update", "description": "Update toolchains" },
+      { "command": "rustup default", "description": "Set default toolchain" },
+      { "command": "rustup toolchain install", "description": "Install toolchain" },
+      { "command": "rustup toolchain uninstall", "description": "Uninstall toolchain" },
+      { "command": "rustup target add", "description": "Add target" },
+      { "command": "rustup target remove", "description": "Remove target" },
+      { "command": "rustup component add", "description": "Add component" },
+      { "command": "rustup component remove", "description": "Remove component" }
+    ]
+  }
+}

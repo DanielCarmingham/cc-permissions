@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/DanielCarmingham/cc-permissions/blob/main/templates/template.schema.json",
+  "$id": "https://github.com/DanielCarmingham/cc-permissions-templates/blob/main/template.schema.json",
   "title": "CC-Permissions Template",
   "description": "Schema for permission templates in cc-permissions",
   "type": "object",
@@ -19,6 +19,40 @@
     "description": {
       "type": "string",
       "description": "Brief description of what this template covers"
+    },
+    "detection": {
+      "type": "object",
+      "description": "Optional rules for auto-detecting when this template should be recommended",
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "type": "array",
+          "description": "File patterns that indicate this template (supports globs like *.csproj)",
+          "items": { "type": "string" }
+        },
+        "directories": {
+          "type": "array",
+          "description": "Directory patterns that indicate this template (e.g., .git/, .github/workflows/)",
+          "items": { "type": "string" }
+        },
+        "contentPatterns": {
+          "type": "array",
+          "description": "File + content patterns for ambiguous detection",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "file": { "type": "string", "description": "File to check" },
+              "contains": { "type": "string", "description": "Text that must be present in the file" }
+            },
+            "required": ["file", "contains"]
+          }
+        },
+        "always": {
+          "type": "boolean",
+          "description": "If true, this template is always recommended (e.g., shell baseline)"
+        }
+      }
     },
     "levels": {
       "type": "object",

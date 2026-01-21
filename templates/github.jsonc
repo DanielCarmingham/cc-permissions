@@ -1,0 +1,131 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "github",
+  "description": "GitHub CLI (gh) for repository and workflow management",
+  "detection": {
+    "directories": [".github/workflows/", ".github/"]
+  },
+  "levels": {
+    "restrictive": [
+      // gh info
+      { "command": "gh --version", "description": "Check GitHub CLI version" },
+      { "command": "gh version", "description": "Check GitHub CLI version" },
+      { "command": "gh help", "description": "GitHub CLI help" },
+      { "command": "gh auth status", "description": "Check authentication status" },
+      { "command": "gh config list", "description": "List GitHub CLI config" },
+      // repo read
+      { "command": "gh repo view", "description": "View repository" },
+      { "command": "gh repo list", "description": "List repositories" },
+      { "command": "gh repo clone", "description": "Clone repository" },
+      // pr read
+      { "command": "gh pr list", "description": "List pull requests" },
+      { "command": "gh pr view", "description": "View pull request" },
+      { "command": "gh pr status", "description": "Show PR status" },
+      { "command": "gh pr diff", "description": "View PR diff" },
+      { "command": "gh pr checks", "description": "View PR checks" },
+      { "command": "gh pr comments", "description": "View PR comments" },
+      // issue read
+      { "command": "gh issue list", "description": "List issues" },
+      { "command": "gh issue view", "description": "View issue" },
+      { "command": "gh issue status", "description": "Show issue status" },
+      // run read
+      { "command": "gh run list", "description": "List workflow runs" },
+      { "command": "gh run view", "description": "View workflow run" },
+      { "command": "gh run download", "description": "Download run artifacts" },
+      // release read
+      { "command": "gh release list", "description": "List releases" },
+      { "command": "gh release view", "description": "View release" },
+      { "command": "gh release download", "description": "Download release assets" },
+      // gist read
+      { "command": "gh gist list", "description": "List gists" },
+      { "command": "gh gist view", "description": "View gist" },
+      { "command": "gh gist clone", "description": "Clone gist" },
+      // api read
+      { "command": "gh api", "description": "GitHub API calls" },
+      // search
+      { "command": "gh search repos", "description": "Search repositories" },
+      { "command": "gh search issues", "description": "Search issues" },
+      { "command": "gh search prs", "description": "Search pull requests" },
+      { "command": "gh search commits", "description": "Search commits" },
+      { "command": "gh search code", "description": "Search code" }
+    ],
+    "standard": [
+      // pr create/edit
+      { "command": "gh pr create", "description": "Create pull request" },
+      { "command": "gh pr checkout", "description": "Checkout PR branch" },
+      { "command": "gh pr edit", "description": "Edit pull request" },
+      { "command": "gh pr comment", "description": "Comment on PR" },
+      { "command": "gh pr review", "description": "Review pull request" },
+      { "command": "gh pr ready", "description": "Mark PR as ready" },
+      // issue create/edit
+      { "command": "gh issue create", "description": "Create issue" },
+      { "command": "gh issue edit", "description": "Edit issue" },
+      { "command": "gh issue comment", "description": "Comment on issue" },
+      { "command": "gh issue develop", "description": "Create branch for issue" },
+      { "command": "gh issue pin", "description": "Pin issue" },
+      { "command": "gh issue unpin", "description": "Unpin issue" },
+      // run watch/cancel
+      { "command": "gh run watch", "description": "Watch workflow run" },
+      // gist create
+      { "command": "gh gist create", "description": "Create gist" },
+      { "command": "gh gist edit", "description": "Edit gist" },
+      // project
+      { "command": "gh project list", "description": "List projects" },
+      { "command": "gh project view", "description": "View project" },
+      { "command": "gh project create", "description": "Create project" },
+      // label
+      { "command": "gh label list", "description": "List labels" },
+      { "command": "gh label create", "description": "Create label" },
+      // codespace
+      { "command": "gh codespace list", "description": "List codespaces" },
+      { "command": "gh codespace create", "description": "Create codespace" },
+      { "command": "gh codespace code", "description": "Open codespace in VS Code" },
+      { "command": "gh codespace ssh", "description": "SSH to codespace" }
+    ],
+    "permissive": [
+      // pr merge/close
+      { "command": "gh pr merge", "description": "Merge pull request" },
+      { "command": "gh pr close", "description": "Close pull request" },
+      { "command": "gh pr reopen", "description": "Reopen pull request" },
+      // issue close
+      { "command": "gh issue close", "description": "Close issue" },
+      { "command": "gh issue reopen", "description": "Reopen issue" },
+      { "command": "gh issue delete", "description": "Delete issue" },
+      { "command": "gh issue transfer", "description": "Transfer issue" },
+      // repo management
+      { "command": "gh repo create", "description": "Create repository" },
+      { "command": "gh repo delete", "description": "Delete repository" },
+      { "command": "gh repo fork", "description": "Fork repository" },
+      { "command": "gh repo rename", "description": "Rename repository" },
+      { "command": "gh repo archive", "description": "Archive repository" },
+      { "command": "gh repo edit", "description": "Edit repository" },
+      { "command": "gh repo sync", "description": "Sync repository" },
+      // release management
+      { "command": "gh release create", "description": "Create release" },
+      { "command": "gh release delete", "description": "Delete release" },
+      { "command": "gh release edit", "description": "Edit release" },
+      { "command": "gh release upload", "description": "Upload release assets" },
+      // run management
+      { "command": "gh run rerun", "description": "Rerun workflow" },
+      { "command": "gh run cancel", "description": "Cancel workflow run" },
+      { "command": "gh run delete", "description": "Delete workflow run" },
+      // workflow management
+      { "command": "gh workflow run", "description": "Run workflow" },
+      { "command": "gh workflow enable", "description": "Enable workflow" },
+      { "command": "gh workflow disable", "description": "Disable workflow" },
+      // gist delete
+      { "command": "gh gist delete", "description": "Delete gist" },
+      // codespace delete
+      { "command": "gh codespace delete", "description": "Delete codespace" },
+      { "command": "gh codespace stop", "description": "Stop codespace" },
+      // secret management
+      { "command": "gh secret list", "description": "List secrets" },
+      { "command": "gh secret set", "description": "Set secret" },
+      { "command": "gh secret delete", "description": "Delete secret" },
+      // variable management
+      { "command": "gh variable list", "description": "List variables" },
+      { "command": "gh variable set", "description": "Set variable" },
+      { "command": "gh variable delete", "description": "Delete variable" }
+    ]
+  }
+}

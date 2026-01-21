@@ -17,12 +17,12 @@ const fixturesDir = path.join(import.meta.dirname, "fixtures");
 
 describe("analyzeDirectory", () => {
   describe("with fixture directories", () => {
-    it("should detect web project from package.json", () => {
+    it("should detect nodejs project from package.json", () => {
       const webProjectDir = path.join(fixturesDir, "mock-project-web");
       const result = analyzeDirectory(webProjectDir);
 
-      assert.ok(result.recommendedTemplates.includes("web"));
-      assert.ok(result.recommendedTemplates.includes("general"));
+      assert.ok(result.recommendedTemplates.includes("nodejs"));
+      assert.ok(result.recommendedTemplates.includes("shell"));
       assert.ok(result.detectedFiles.some((f) => f.includes("package.json")));
     });
 
@@ -31,7 +31,7 @@ describe("analyzeDirectory", () => {
       const result = analyzeDirectory(pythonProjectDir);
 
       assert.ok(result.recommendedTemplates.includes("python"));
-      assert.ok(result.recommendedTemplates.includes("general"));
+      assert.ok(result.recommendedTemplates.includes("shell"));
       assert.ok(result.detectedFiles.some((f) => f.includes("requirements.txt")));
     });
 
@@ -40,7 +40,7 @@ describe("analyzeDirectory", () => {
       const result = analyzeDirectory(dotnetProjectDir);
 
       assert.ok(result.recommendedTemplates.includes("dotnet"));
-      assert.ok(result.recommendedTemplates.includes("general"));
+      assert.ok(result.recommendedTemplates.includes("shell"));
       assert.ok(result.detectedFiles.some((f) => f.includes(".csproj")));
     });
   });
@@ -60,45 +60,45 @@ describe("analyzeDirectory", () => {
       }
     });
 
-    it("should always include general template", () => {
+    it("should always include shell template", () => {
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("general"));
+      assert.ok(result.recommendedTemplates.includes("shell"));
     });
 
     it("should handle empty directory", () => {
       const result = analyzeDirectory(tempDir);
 
       assert.equal(result.detectedFiles.length, 0);
-      assert.deepEqual(result.recommendedTemplates, ["general"]);
+      assert.ok(result.recommendedTemplates.includes("shell"));
       assert.equal(result.suggestedLevel, PermissionLevel.Restrictive);
     });
 
-    it("should detect package-lock.json as web project", () => {
+    it("should detect package-lock.json as nodejs project", () => {
       fs.writeFileSync(path.join(tempDir, "package-lock.json"), "{}");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("web"));
+      assert.ok(result.recommendedTemplates.includes("nodejs"));
     });
 
-    it("should detect yarn.lock as web project", () => {
+    it("should detect yarn.lock as nodejs project", () => {
       fs.writeFileSync(path.join(tempDir, "yarn.lock"), "");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("web"));
+      assert.ok(result.recommendedTemplates.includes("nodejs"));
     });
 
-    it("should detect pnpm-lock.yaml as web project", () => {
+    it("should detect pnpm-lock.yaml as nodejs project", () => {
       fs.writeFileSync(path.join(tempDir, "pnpm-lock.yaml"), "");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("web"));
+      assert.ok(result.recommendedTemplates.includes("nodejs"));
     });
 
-    it("should detect bun.lockb as web project", () => {
+    it("should detect bun.lockb as nodejs project", () => {
       fs.writeFileSync(path.join(tempDir, "bun.lockb"), "");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("web"));
+      assert.ok(result.recommendedTemplates.includes("nodejs"));
     });
 
     it("should detect pyproject.toml as python project", () => {
@@ -162,9 +162,135 @@ describe("analyzeDirectory", () => {
       fs.writeFileSync(path.join(tempDir, "requirements.txt"), "");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("web"));
+      assert.ok(result.recommendedTemplates.includes("nodejs"));
       assert.ok(result.recommendedTemplates.includes("python"));
-      assert.ok(result.recommendedTemplates.includes("general"));
+      assert.ok(result.recommendedTemplates.includes("shell"));
+    });
+
+    it("should detect go project from go.mod", () => {
+      fs.writeFileSync(path.join(tempDir, "go.mod"), "module test");
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("go"));
+    });
+
+    it("should detect rust project from Cargo.toml", () => {
+      fs.writeFileSync(path.join(tempDir, "Cargo.toml"), "");
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("rust"));
+    });
+
+    it("should detect ruby project from Gemfile", () => {
+      fs.writeFileSync(path.join(tempDir, "Gemfile"), "");
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("ruby"));
+    });
+
+    it("should detect php project from composer.json", () => {
+      fs.writeFileSync(path.join(tempDir, "composer.json"), "{}");
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("php"));
+    });
+
+    it("should detect docker project from Dockerfile", () => {
+      fs.writeFileSync(path.join(tempDir, "Dockerfile"), "FROM node:18");
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("docker"));
+    });
+
+    it("should detect java project from pom.xml", () => {
+      fs.writeFileSync(path.join(tempDir, "pom.xml"), "<project></project>");
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("java"));
+    });
+
+    it("should detect git repository from .git directory", () => {
+      fs.mkdirSync(path.join(tempDir, ".git"));
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("git"));
+    });
+
+    it("should detect github project from .github directory", () => {
+      fs.mkdirSync(path.join(tempDir, ".github"));
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("github"));
+    });
+  });
+
+  describe("content pattern detection", () => {
+    let tempDir: string;
+
+    beforeEach(() => {
+      tempDir = createTempDir();
+    });
+
+    afterEach(() => {
+      try {
+        rmSync(tempDir, { recursive: true, force: true });
+      } catch {
+        // Ignore cleanup errors
+      }
+    });
+
+    it("should detect flutter project from pubspec.yaml with flutter:", () => {
+      fs.writeFileSync(
+        path.join(tempDir, "pubspec.yaml"),
+        `name: my_app
+flutter:
+  sdk: flutter
+`
+      );
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("flutter"));
+    });
+
+    it("should NOT detect flutter for dart-only project", () => {
+      fs.writeFileSync(
+        path.join(tempDir, "pubspec.yaml"),
+        `name: my_dart_app
+dependencies:
+  http: ^0.13.0
+`
+      );
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(!result.recommendedTemplates.includes("flutter"));
+    });
+
+    it("should detect android project from build.gradle with com.android", () => {
+      fs.writeFileSync(
+        path.join(tempDir, "build.gradle"),
+        `plugins {
+    id 'com.android.application'
+}
+`
+      );
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(result.recommendedTemplates.includes("android"));
+    });
+
+    it("should NOT detect android for plain gradle project", () => {
+      fs.writeFileSync(
+        path.join(tempDir, "build.gradle"),
+        `plugins {
+    id 'java'
+}
+`
+      );
+
+      const result = analyzeDirectory(tempDir);
+      assert.ok(!result.recommendedTemplates.includes("android"));
+      // But should detect java
+      assert.ok(result.recommendedTemplates.includes("java"));
     });
   });
 
@@ -192,7 +318,7 @@ describe("analyzeDirectory", () => {
       fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
 
       const result = analyzeDirectory(tempDir);
-      // general + web = 2 templates -> standard
+      // shell + nodejs = 2 templates -> standard
       assert.equal(result.suggestedLevel, PermissionLevel.Standard);
     });
 
@@ -202,7 +328,7 @@ describe("analyzeDirectory", () => {
       fs.writeFileSync(path.join(tempDir, "MyApp.csproj"), "");
 
       const result = analyzeDirectory(tempDir);
-      // general + web + python + dotnet = 4 templates, but should still be standard
+      // shell + nodejs + python + dotnet = 4 templates, but should still be standard
       assert.equal(result.suggestedLevel, PermissionLevel.Standard);
     });
   });
@@ -226,7 +352,7 @@ describe("analyzeDirectory", () => {
       const result = analyzeDirectory(tempDir);
 
       assert.ok(result.suggestedCommand.includes("cc-permissions template"));
-      assert.ok(result.suggestedCommand.includes("general"));
+      assert.ok(result.suggestedCommand.includes("shell"));
       assert.ok(result.suggestedCommand.includes("--level"));
     });
 
@@ -236,8 +362,8 @@ describe("analyzeDirectory", () => {
 
       const result = analyzeDirectory(tempDir);
 
-      assert.ok(result.suggestedCommand.includes("general"));
-      assert.ok(result.suggestedCommand.includes("web"));
+      assert.ok(result.suggestedCommand.includes("shell"));
+      assert.ok(result.suggestedCommand.includes("nodejs"));
       assert.ok(result.suggestedCommand.includes("python"));
     });
   });
@@ -247,24 +373,24 @@ describe("formatAnalysisResult", () => {
   it("should format empty analysis", () => {
     const result = {
       detectedFiles: [],
-      recommendedTemplates: ["general"],
+      recommendedTemplates: ["shell"],
       suggestedLevel: PermissionLevel.Restrictive,
-      suggestedCommand: "cc-permissions template general --level restrictive",
+      suggestedCommand: "cc-permissions template shell --level restrictive",
     };
 
     const formatted = formatAnalysisResult(result);
 
     assert.ok(formatted.includes("Project Analysis"));
     assert.ok(formatted.includes("No specific project files detected"));
-    assert.ok(formatted.includes("general"));
+    assert.ok(formatted.includes("shell"));
   });
 
   it("should list detected files", () => {
     const result = {
       detectedFiles: ["package.json", "tsconfig.json"],
-      recommendedTemplates: ["general", "web"],
+      recommendedTemplates: ["shell", "nodejs"],
       suggestedLevel: PermissionLevel.Standard,
-      suggestedCommand: "cc-permissions template general,web --level standard",
+      suggestedCommand: "cc-permissions template shell,nodejs --level standard",
     };
 
     const formatted = formatAnalysisResult(result);
@@ -276,24 +402,24 @@ describe("formatAnalysisResult", () => {
   it("should list recommended templates", () => {
     const result = {
       detectedFiles: ["package.json"],
-      recommendedTemplates: ["general", "web"],
+      recommendedTemplates: ["shell", "nodejs"],
       suggestedLevel: PermissionLevel.Standard,
-      suggestedCommand: "cc-permissions template general,web --level standard",
+      suggestedCommand: "cc-permissions template shell,nodejs --level standard",
     };
 
     const formatted = formatAnalysisResult(result);
 
     assert.ok(formatted.includes("Recommended Templates:"));
-    assert.ok(formatted.includes("general"));
-    assert.ok(formatted.includes("web"));
+    assert.ok(formatted.includes("shell"));
+    assert.ok(formatted.includes("nodejs"));
   });
 
   it("should show suggested level", () => {
     const result = {
       detectedFiles: [],
-      recommendedTemplates: ["general"],
+      recommendedTemplates: ["shell"],
       suggestedLevel: PermissionLevel.Standard,
-      suggestedCommand: "cc-permissions template general --level standard",
+      suggestedCommand: "cc-permissions template shell --level standard",
     };
 
     const formatted = formatAnalysisResult(result);
@@ -304,14 +430,14 @@ describe("formatAnalysisResult", () => {
   it("should show suggested command", () => {
     const result = {
       detectedFiles: [],
-      recommendedTemplates: ["general"],
+      recommendedTemplates: ["shell"],
       suggestedLevel: PermissionLevel.Restrictive,
-      suggestedCommand: "cc-permissions template general --level restrictive",
+      suggestedCommand: "cc-permissions template shell --level restrictive",
     };
 
     const formatted = formatAnalysisResult(result);
 
     assert.ok(formatted.includes("Suggested Command:"));
-    assert.ok(formatted.includes("cc-permissions template general --level restrictive"));
+    assert.ok(formatted.includes("cc-permissions template shell --level restrictive"));
   });
 });

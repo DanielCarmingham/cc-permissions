@@ -1,0 +1,113 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "kubernetes",
+  "description": "kubectl, Helm, k9s, and Minikube",
+  "detection": {
+    "files": ["Chart.yaml", "helmfile.yaml", "kustomization.yaml", "skaffold.yaml"]
+  },
+  "levels": {
+    "restrictive": [
+      // kubectl info
+      { "command": "kubectl version", "description": "Check kubectl version" },
+      { "command": "kubectl cluster-info", "description": "Show cluster info" },
+      { "command": "kubectl config view", "description": "View kubeconfig" },
+      { "command": "kubectl config current-context", "description": "Show current context" },
+      { "command": "kubectl config get-contexts", "description": "List contexts" },
+      { "command": "kubectl api-resources", "description": "List API resources" },
+      { "command": "kubectl api-versions", "description": "List API versions" },
+      // kubectl get (read-only)
+      { "command": "kubectl get", "description": "Get resources" },
+      { "command": "kubectl describe", "description": "Describe resources" },
+      { "command": "kubectl logs", "description": "View pod logs" },
+      { "command": "kubectl top", "description": "Show resource usage" },
+      { "command": "kubectl explain", "description": "Explain resource fields" },
+      // helm info
+      { "command": "helm version", "description": "Check Helm version" },
+      { "command": "helm list", "description": "List releases" },
+      { "command": "helm status", "description": "Show release status" },
+      { "command": "helm history", "description": "Show release history" },
+      { "command": "helm get", "description": "Get release info" },
+      { "command": "helm show", "description": "Show chart info" },
+      { "command": "helm search", "description": "Search charts" },
+      { "command": "helm repo list", "description": "List chart repos" },
+      // k9s info
+      { "command": "k9s version", "description": "Check k9s version" },
+      { "command": "k9s info", "description": "Show k9s info" },
+      // minikube info
+      { "command": "minikube version", "description": "Check Minikube version" },
+      { "command": "minikube status", "description": "Show Minikube status" },
+      { "command": "minikube profile list", "description": "List Minikube profiles" },
+      { "command": "minikube ip", "description": "Get Minikube IP" },
+      { "command": "minikube service list", "description": "List services" }
+    ],
+    "standard": [
+      // kubectl apply (non-destructive)
+      { "command": "kubectl apply", "description": "Apply configuration" },
+      { "command": "kubectl create", "description": "Create resources" },
+      { "command": "kubectl patch", "description": "Patch resources" },
+      { "command": "kubectl label", "description": "Label resources" },
+      { "command": "kubectl annotate", "description": "Annotate resources" },
+      // kubectl exec/port-forward
+      { "command": "kubectl exec", "description": "Execute in pod" },
+      { "command": "kubectl port-forward", "description": "Forward ports" },
+      { "command": "kubectl cp", "description": "Copy files" },
+      { "command": "kubectl attach", "description": "Attach to pod" },
+      // kubectl rollout
+      { "command": "kubectl rollout status", "description": "Check rollout status" },
+      { "command": "kubectl rollout history", "description": "View rollout history" },
+      { "command": "kubectl rollout pause", "description": "Pause rollout" },
+      { "command": "kubectl rollout resume", "description": "Resume rollout" },
+      { "command": "kubectl rollout restart", "description": "Restart rollout" },
+      // kubectl delete pod (restarts)
+      { "command": "kubectl delete pod", "description": "Delete pod (will restart)" },
+      // kubectl config
+      { "command": "kubectl config use-context", "description": "Switch context" },
+      { "command": "kubectl config set-context", "description": "Set context" },
+      // helm development
+      { "command": "helm template", "description": "Render chart templates" },
+      { "command": "helm lint", "description": "Lint chart" },
+      { "command": "helm dependency", "description": "Manage dependencies" },
+      { "command": "helm diff", "description": "Diff releases" },
+      { "command": "helm upgrade --dry-run", "description": "Dry-run upgrade" },
+      { "command": "helm repo add", "description": "Add chart repo" },
+      { "command": "helm repo update", "description": "Update chart repos" },
+      // k9s usage
+      { "command": "k9s", "description": "Launch k9s UI" },
+      // minikube management
+      { "command": "minikube dashboard", "description": "Open dashboard" },
+      { "command": "minikube tunnel", "description": "Create tunnel" },
+      { "command": "minikube service", "description": "Access service" },
+      { "command": "minikube logs", "description": "View logs" }
+    ],
+    "permissive": [
+      // kubectl delete
+      { "command": "kubectl delete", "description": "Delete resources" },
+      // kubectl scale
+      { "command": "kubectl scale", "description": "Scale resources" },
+      { "command": "kubectl autoscale", "description": "Configure autoscaling" },
+      // kubectl edit
+      { "command": "kubectl edit", "description": "Edit resources" },
+      { "command": "kubectl replace", "description": "Replace resources" },
+      { "command": "kubectl set", "description": "Set resource values" },
+      // kubectl rollout undo
+      { "command": "kubectl rollout undo", "description": "Undo rollout" },
+      // kubectl cordon/drain
+      { "command": "kubectl cordon", "description": "Cordon node" },
+      { "command": "kubectl uncordon", "description": "Uncordon node" },
+      { "command": "kubectl drain", "description": "Drain node" },
+      { "command": "kubectl taint", "description": "Taint node" },
+      // helm install/upgrade
+      { "command": "helm install", "description": "Install chart" },
+      { "command": "helm upgrade", "description": "Upgrade release" },
+      { "command": "helm uninstall", "description": "Uninstall release" },
+      { "command": "helm rollback", "description": "Rollback release" },
+      { "command": "helm repo remove", "description": "Remove chart repo" },
+      // minikube lifecycle
+      { "command": "minikube start", "description": "Start Minikube" },
+      { "command": "minikube stop", "description": "Stop Minikube" },
+      { "command": "minikube delete", "description": "Delete Minikube" },
+      { "command": "minikube addons enable", "description": "Enable addon" },
+      { "command": "minikube addons disable", "description": "Disable addon" }
+    ]
+  }
+}

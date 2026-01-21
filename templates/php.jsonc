@@ -1,0 +1,106 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "php",
+  "description": "PHP, Composer, and Laravel Artisan",
+  "detection": {
+    "files": ["composer.json", "composer.lock"]
+  },
+  "levels": {
+    "restrictive": [
+      // php info
+      { "command": "php --version", "description": "Check PHP version" },
+      { "command": "php -v", "description": "Check PHP version" },
+      { "command": "php -i", "description": "Show PHP info" },
+      { "command": "php -m", "description": "List PHP modules" },
+      { "command": "php --ini", "description": "Show PHP ini files" },
+      // composer info
+      { "command": "composer --version", "description": "Check Composer version" },
+      { "command": "composer -V", "description": "Check Composer version" },
+      { "command": "composer show", "description": "Show packages" },
+      { "command": "composer info", "description": "Show package info" },
+      { "command": "composer search", "description": "Search Packagist" },
+      { "command": "composer outdated", "description": "List outdated packages" },
+      { "command": "composer licenses", "description": "Show licenses" },
+      { "command": "composer depends", "description": "Show dependencies" },
+      { "command": "composer prohibits", "description": "Show blockers" },
+      { "command": "composer suggests", "description": "Show suggestions" },
+      { "command": "composer validate", "description": "Validate composer.json" },
+      { "command": "composer config --list", "description": "List config" },
+      // artisan info
+      { "command": "php artisan --version", "description": "Check Laravel version" },
+      { "command": "php artisan list", "description": "List Artisan commands" },
+      { "command": "php artisan help", "description": "Artisan help" },
+      { "command": "php artisan route:list", "description": "List routes" },
+      { "command": "php artisan about", "description": "Show application info" },
+      { "command": "php artisan config:show", "description": "Show config" },
+      { "command": "php artisan env", "description": "Show environment" }
+    ],
+    "standard": [
+      // composer autoload
+      { "command": "composer dump-autoload", "description": "Regenerate autoloader" },
+      { "command": "composer dumpautoload", "description": "Regenerate autoloader" },
+      // artisan serve
+      { "command": "php artisan serve", "description": "Start dev server" },
+      { "command": "php artisan tinker", "description": "Start Tinker REPL" },
+      // artisan make
+      { "command": "php artisan make:controller", "description": "Create controller" },
+      { "command": "php artisan make:model", "description": "Create model" },
+      { "command": "php artisan make:migration", "description": "Create migration" },
+      { "command": "php artisan make:seeder", "description": "Create seeder" },
+      { "command": "php artisan make:factory", "description": "Create factory" },
+      { "command": "php artisan make:middleware", "description": "Create middleware" },
+      { "command": "php artisan make:command", "description": "Create command" },
+      { "command": "php artisan make:event", "description": "Create event" },
+      { "command": "php artisan make:listener", "description": "Create listener" },
+      { "command": "php artisan make:job", "description": "Create job" },
+      { "command": "php artisan make:mail", "description": "Create mail" },
+      { "command": "php artisan make:notification", "description": "Create notification" },
+      { "command": "php artisan make:policy", "description": "Create policy" },
+      { "command": "php artisan make:request", "description": "Create request" },
+      { "command": "php artisan make:resource", "description": "Create resource" },
+      { "command": "php artisan make:test", "description": "Create test" },
+      // artisan status/check
+      { "command": "php artisan migrate:status", "description": "Migration status" },
+      { "command": "php artisan queue:listen", "description": "Listen for jobs" },
+      { "command": "php artisan queue:work", "description": "Process jobs" },
+      // phpunit
+      { "command": "phpunit", "description": "Run PHPUnit tests" },
+      { "command": "php artisan test", "description": "Run Laravel tests" },
+      // php-cs-fixer
+      { "command": "php-cs-fixer fix", "description": "Fix code style" },
+      // pest
+      { "command": "pest", "description": "Run Pest tests" },
+      // php execution
+      { "command": "php", "description": "Run PHP script" }
+    ],
+    "permissive": [
+      // composer install
+      { "command": "composer install", "description": "Install packages" },
+      { "command": "composer update", "description": "Update packages" },
+      { "command": "composer require", "description": "Add package" },
+      { "command": "composer remove", "description": "Remove package" },
+      { "command": "composer global require", "description": "Install global package" },
+      { "command": "composer clear-cache", "description": "Clear Composer cache" },
+      { "command": "composer create-project", "description": "Create new project" },
+      // artisan migrate
+      { "command": "php artisan migrate", "description": "Run migrations" },
+      { "command": "php artisan migrate:rollback", "description": "Rollback migrations" },
+      { "command": "php artisan migrate:reset", "description": "Reset migrations" },
+      { "command": "php artisan migrate:refresh", "description": "Refresh migrations" },
+      { "command": "php artisan migrate:fresh", "description": "Fresh migrations" },
+      // artisan db
+      { "command": "php artisan db:seed", "description": "Seed database" },
+      { "command": "php artisan db:wipe", "description": "Wipe database" },
+      // artisan cache
+      { "command": "php artisan cache:clear", "description": "Clear cache" },
+      { "command": "php artisan config:clear", "description": "Clear config cache" },
+      { "command": "php artisan config:cache", "description": "Cache config" },
+      { "command": "php artisan route:clear", "description": "Clear route cache" },
+      { "command": "php artisan route:cache", "description": "Cache routes" },
+      { "command": "php artisan view:clear", "description": "Clear view cache" },
+      { "command": "php artisan view:cache", "description": "Cache views" },
+      { "command": "php artisan optimize", "description": "Optimize application" },
+      { "command": "php artisan optimize:clear", "description": "Clear optimizations" }
+    ]
+  }
+}

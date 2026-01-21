@@ -1,0 +1,92 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "java",
+  "description": "Maven, Gradle, Java, and JVM development",
+  "detection": {
+    "files": ["pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"]
+  },
+  "levels": {
+    "restrictive": [
+      // java info
+      { "command": "java --version", "description": "Check Java version" },
+      { "command": "java -version", "description": "Check Java version" },
+      { "command": "javac --version", "description": "Check javac version" },
+      { "command": "javac -version", "description": "Check javac version" },
+      // maven info
+      { "command": "mvn --version", "description": "Check Maven version" },
+      { "command": "mvn -v", "description": "Check Maven version" },
+      { "command": "mvn help:effective-pom", "description": "Show effective POM" },
+      { "command": "mvn help:effective-settings", "description": "Show effective settings" },
+      { "command": "mvn dependency:tree", "description": "Show dependency tree" },
+      { "command": "mvn dependency:list", "description": "List dependencies" },
+      { "command": "mvn dependency:analyze", "description": "Analyze dependencies" },
+      { "command": "mvn versions:display-dependency-updates", "description": "Show dependency updates" },
+      { "command": "mvn versions:display-plugin-updates", "description": "Show plugin updates" },
+      // gradle info
+      { "command": "gradle --version", "description": "Check Gradle version" },
+      { "command": "gradle -v", "description": "Check Gradle version" },
+      { "command": "gradle tasks", "description": "List Gradle tasks" },
+      { "command": "gradle dependencies", "description": "Show Gradle dependencies" },
+      { "command": "gradle projects", "description": "List Gradle projects" },
+      { "command": "gradle properties", "description": "Show project properties" },
+      // gradle wrapper
+      { "command": "./gradlew --version", "description": "Check Gradle wrapper version" },
+      { "command": "./gradlew tasks", "description": "List Gradle wrapper tasks" },
+      { "command": "./gradlew dependencies", "description": "Show Gradle wrapper dependencies" }
+    ],
+    "standard": [
+      // maven build (no install/deploy)
+      { "command": "mvn compile", "description": "Compile sources" },
+      { "command": "mvn test-compile", "description": "Compile test sources" },
+      { "command": "mvn test", "description": "Run tests" },
+      { "command": "mvn package", "description": "Package project" },
+      { "command": "mvn verify", "description": "Verify project" },
+      { "command": "mvn validate", "description": "Validate project" },
+      { "command": "mvn site", "description": "Generate site" },
+      // maven plugins
+      { "command": "mvn checkstyle:check", "description": "Run checkstyle" },
+      { "command": "mvn spotbugs:check", "description": "Run SpotBugs" },
+      { "command": "mvn pmd:check", "description": "Run PMD" },
+      { "command": "mvn jacoco:report", "description": "Generate coverage report" },
+      // gradle build (no publish)
+      { "command": "gradle build", "description": "Build project" },
+      { "command": "gradle assemble", "description": "Assemble outputs" },
+      { "command": "gradle test", "description": "Run tests" },
+      { "command": "gradle check", "description": "Run all checks" },
+      { "command": "gradle classes", "description": "Compile classes" },
+      { "command": "gradle testClasses", "description": "Compile test classes" },
+      { "command": "gradle jar", "description": "Create JAR" },
+      // gradle wrapper
+      { "command": "./gradlew build", "description": "Build with wrapper" },
+      { "command": "./gradlew test", "description": "Test with wrapper" },
+      { "command": "./gradlew assemble", "description": "Assemble with wrapper" },
+      { "command": "./gradlew check", "description": "Check with wrapper" },
+      // java execution
+      { "command": "java -jar", "description": "Run JAR file" },
+      { "command": "java -cp", "description": "Run with classpath" },
+      { "command": "java -classpath", "description": "Run with classpath" }
+    ],
+    "permissive": [
+      // maven install/deploy
+      { "command": "mvn install", "description": "Install to local repo" },
+      { "command": "mvn deploy", "description": "Deploy to remote repo" },
+      { "command": "mvn clean", "description": "Clean project" },
+      { "command": "mvn clean install", "description": "Clean and install" },
+      { "command": "mvn clean package", "description": "Clean and package" },
+      { "command": "mvn release:prepare", "description": "Prepare release" },
+      { "command": "mvn release:perform", "description": "Perform release" },
+      // maven dependency
+      { "command": "mvn dependency:resolve", "description": "Resolve dependencies" },
+      { "command": "mvn dependency:purge-local-repository", "description": "Purge local repo" },
+      // gradle publish
+      { "command": "gradle publish", "description": "Publish artifacts" },
+      { "command": "gradle publishToMavenLocal", "description": "Publish to local Maven" },
+      { "command": "gradle clean", "description": "Clean project" },
+      { "command": "gradle wrapper", "description": "Generate Gradle wrapper" },
+      // gradle wrapper
+      { "command": "./gradlew clean", "description": "Clean with wrapper" },
+      { "command": "./gradlew publish", "description": "Publish with wrapper" },
+      { "command": "./gradlew publishToMavenLocal", "description": "Publish to local Maven with wrapper" }
+    ]
+  }
+}

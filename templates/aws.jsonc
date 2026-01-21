@@ -1,0 +1,112 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "aws",
+  "description": "AWS CLI, SAM, CDK, Amplify, and Elastic Beanstalk",
+  "detection": {
+    "files": ["cdk.json", "samconfig.toml", "amplify.yml"]
+  },
+  "levels": {
+    "restrictive": [
+      // aws cli info
+      { "command": "aws --version", "description": "Check AWS CLI version" },
+      { "command": "aws sts get-caller-identity", "description": "Get current AWS identity" },
+      { "command": "aws configure list", "description": "List AWS configuration" },
+      { "command": "aws configure get", "description": "Get AWS config values" },
+      // s3 read-only
+      { "command": "aws s3 ls", "description": "List S3 buckets/objects" },
+      { "command": "aws s3api list-buckets", "description": "List S3 buckets" },
+      { "command": "aws s3api get-bucket-location", "description": "Get bucket location" },
+      // ec2 describe
+      { "command": "aws ec2 describe-instances", "description": "Describe EC2 instances" },
+      { "command": "aws ec2 describe-vpcs", "description": "Describe VPCs" },
+      { "command": "aws ec2 describe-security-groups", "description": "Describe security groups" },
+      { "command": "aws ec2 describe-subnets", "description": "Describe subnets" },
+      // iam read-only
+      { "command": "aws iam list-users", "description": "List IAM users" },
+      { "command": "aws iam list-roles", "description": "List IAM roles" },
+      { "command": "aws iam list-policies", "description": "List IAM policies" },
+      { "command": "aws iam get-user", "description": "Get IAM user details" },
+      { "command": "aws iam get-role", "description": "Get IAM role details" },
+      // lambda read-only
+      { "command": "aws lambda list-functions", "description": "List Lambda functions" },
+      { "command": "aws lambda get-function", "description": "Get Lambda function details" },
+      // cloudformation read-only
+      { "command": "aws cloudformation list-stacks", "description": "List CloudFormation stacks" },
+      { "command": "aws cloudformation describe-stacks", "description": "Describe CF stacks" },
+      // sam info
+      { "command": "sam --version", "description": "Check SAM CLI version" },
+      { "command": "sam --info", "description": "SAM CLI info" },
+      // cdk info
+      { "command": "cdk --version", "description": "Check CDK version" },
+      { "command": "cdk doctor", "description": "CDK environment check" },
+      { "command": "cdk list", "description": "List CDK stacks" },
+      // amplify info
+      { "command": "amplify --version", "description": "Check Amplify version" },
+      { "command": "amplify status", "description": "Amplify project status" },
+      { "command": "amplify env list", "description": "List Amplify environments" },
+      // eb info
+      { "command": "eb --version", "description": "Check EB CLI version" },
+      { "command": "eb status", "description": "Elastic Beanstalk status" },
+      { "command": "eb list", "description": "List EB environments" }
+    ],
+    "standard": [
+      // s3 sync/copy (no delete)
+      { "command": "aws s3 cp", "description": "Copy to/from S3" },
+      { "command": "aws s3 sync", "description": "Sync with S3" },
+      { "command": "aws s3 mv", "description": "Move in S3" },
+      { "command": "aws s3 presign", "description": "Generate presigned URL" },
+      // logs
+      { "command": "aws logs describe-log-groups", "description": "Describe log groups" },
+      { "command": "aws logs filter-log-events", "description": "Filter log events" },
+      { "command": "aws logs tail", "description": "Tail log group" },
+      // sam local development
+      { "command": "sam build", "description": "Build SAM application" },
+      { "command": "sam local invoke", "description": "Invoke Lambda locally" },
+      { "command": "sam local start-api", "description": "Start local API Gateway" },
+      { "command": "sam local start-lambda", "description": "Start local Lambda" },
+      { "command": "sam validate", "description": "Validate SAM template" },
+      // cdk development
+      { "command": "cdk synth", "description": "Synthesize CDK stack" },
+      { "command": "cdk diff", "description": "Diff CDK stack changes" },
+      { "command": "cdk context", "description": "Manage CDK context" },
+      // amplify local
+      { "command": "amplify mock", "description": "Mock Amplify locally" },
+      { "command": "amplify codegen", "description": "Generate Amplify code" },
+      // eb local
+      { "command": "eb local run", "description": "Run EB locally" },
+      { "command": "eb logs", "description": "View EB logs" },
+      { "command": "eb health", "description": "Check EB health" }
+    ],
+    "permissive": [
+      // s3 destructive
+      { "command": "aws s3 rm", "description": "Remove from S3" },
+      { "command": "aws s3 rb", "description": "Remove S3 bucket" },
+      { "command": "aws s3api delete-object", "description": "Delete S3 object" },
+      // lambda deploy
+      { "command": "aws lambda update-function-code", "description": "Update Lambda code" },
+      { "command": "aws lambda create-function", "description": "Create Lambda function" },
+      { "command": "aws lambda delete-function", "description": "Delete Lambda function" },
+      // sam deploy
+      { "command": "sam deploy", "description": "Deploy SAM application" },
+      { "command": "sam delete", "description": "Delete SAM application" },
+      { "command": "sam package", "description": "Package SAM application" },
+      // cdk deploy
+      { "command": "cdk deploy", "description": "Deploy CDK stack" },
+      { "command": "cdk destroy", "description": "Destroy CDK stack" },
+      { "command": "cdk bootstrap", "description": "Bootstrap CDK environment" },
+      // amplify deploy
+      { "command": "amplify push", "description": "Push Amplify changes" },
+      { "command": "amplify publish", "description": "Publish Amplify app" },
+      { "command": "amplify delete", "description": "Delete Amplify resources" },
+      { "command": "amplify pull", "description": "Pull Amplify backend" },
+      // eb deploy
+      { "command": "eb deploy", "description": "Deploy to Elastic Beanstalk" },
+      { "command": "eb create", "description": "Create EB environment" },
+      { "command": "eb terminate", "description": "Terminate EB environment" },
+      // cloudformation
+      { "command": "aws cloudformation create-stack", "description": "Create CF stack" },
+      { "command": "aws cloudformation update-stack", "description": "Update CF stack" },
+      { "command": "aws cloudformation delete-stack", "description": "Delete CF stack" }
+    ]
+  }
+}

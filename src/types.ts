@@ -13,10 +13,30 @@ export interface Permission {
   description?: string;
 }
 
+// Content pattern for detection (file + content check)
+export interface ContentPattern {
+  file: string;
+  contains: string;
+}
+
+// Detection rules for auto-recommending templates
+export interface DetectionRules {
+  // File patterns that indicate this template (supports globs like *.csproj)
+  files?: string[];
+  // Directory patterns that indicate this template (e.g., .git/, .github/workflows/)
+  directories?: string[];
+  // File + content patterns for ambiguous detection
+  contentPatterns?: ContentPattern[];
+  // If true, this template is always recommended (e.g., shell baseline)
+  always?: boolean;
+}
+
 // Template definition - defines WHAT commands are relevant at each level
 export interface TemplateDefinition {
   name: string;
   description: string;
+  // Optional detection rules for auto-recommending this template
+  detection?: DetectionRules;
   // Commands at each level (stacking - each level inherits from previous)
   levels: {
     restrictive: Permission[];

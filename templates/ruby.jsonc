@@ -1,0 +1,98 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "ruby",
+  "description": "Ruby, Bundler, Rails, and Rake",
+  "detection": {
+    "files": ["Gemfile", "Gemfile.lock", "*.gemspec", "Rakefile"]
+  },
+  "levels": {
+    "restrictive": [
+      // ruby info
+      { "command": "ruby --version", "description": "Check Ruby version" },
+      { "command": "ruby -v", "description": "Check Ruby version" },
+      { "command": "ruby --help", "description": "Ruby help" },
+      // gem info
+      { "command": "gem --version", "description": "Check gem version" },
+      { "command": "gem -v", "description": "Check gem version" },
+      { "command": "gem list", "description": "List installed gems" },
+      { "command": "gem search", "description": "Search RubyGems" },
+      { "command": "gem info", "description": "Show gem info" },
+      { "command": "gem specification", "description": "Show gem specification" },
+      { "command": "gem environment", "description": "Show gem environment" },
+      { "command": "gem outdated", "description": "List outdated gems" },
+      // bundler info
+      { "command": "bundle --version", "description": "Check Bundler version" },
+      { "command": "bundle version", "description": "Check Bundler version" },
+      { "command": "bundle show", "description": "Show gem location" },
+      { "command": "bundle list", "description": "List bundled gems" },
+      { "command": "bundle outdated", "description": "List outdated gems" },
+      { "command": "bundle check", "description": "Check gem requirements" },
+      { "command": "bundle info", "description": "Show gem info" },
+      { "command": "bundle config list", "description": "List bundle config" },
+      // rails info
+      { "command": "rails --version", "description": "Check Rails version" },
+      { "command": "rails -v", "description": "Check Rails version" },
+      { "command": "rails about", "description": "Show Rails info" },
+      { "command": "rails routes", "description": "List routes" },
+      { "command": "rails stats", "description": "Show code stats" },
+      // rake info
+      { "command": "rake --version", "description": "Check Rake version" },
+      { "command": "rake -T", "description": "List rake tasks" },
+      { "command": "rake -D", "description": "Describe rake tasks" }
+    ],
+    "standard": [
+      // bundle exec (run bundled commands)
+      { "command": "bundle exec", "description": "Execute with bundled gems" },
+      // rails server/console
+      { "command": "rails server", "description": "Start Rails server" },
+      { "command": "rails s", "description": "Start Rails server" },
+      { "command": "rails console", "description": "Start Rails console" },
+      { "command": "rails c", "description": "Start Rails console" },
+      { "command": "rails dbconsole", "description": "Start database console" },
+      // rails generators
+      { "command": "rails generate", "description": "Run generator" },
+      { "command": "rails g", "description": "Run generator" },
+      { "command": "rails destroy", "description": "Undo generator" },
+      { "command": "rails d", "description": "Undo generator" },
+      // rails assets
+      { "command": "rails assets:precompile", "description": "Precompile assets" },
+      { "command": "rails assets:clean", "description": "Clean assets" },
+      // rake tasks
+      { "command": "rake", "description": "Run rake task" },
+      { "command": "rake test", "description": "Run tests" },
+      { "command": "rake spec", "description": "Run RSpec tests" },
+      // rspec
+      { "command": "rspec", "description": "Run RSpec" },
+      // rubocop
+      { "command": "rubocop", "description": "Run RuboCop" },
+      { "command": "rubocop -a", "description": "Run RuboCop with auto-fix" },
+      { "command": "rubocop -A", "description": "Run RuboCop with aggressive auto-fix" },
+      // ruby execution
+      { "command": "ruby", "description": "Run Ruby script" }
+    ],
+    "permissive": [
+      // gem install
+      { "command": "gem install", "description": "Install gem" },
+      { "command": "gem uninstall", "description": "Uninstall gem" },
+      { "command": "gem update", "description": "Update gems" },
+      { "command": "gem cleanup", "description": "Clean old gems" },
+      // bundle install
+      { "command": "bundle install", "description": "Install bundled gems" },
+      { "command": "bundle update", "description": "Update bundled gems" },
+      { "command": "bundle add", "description": "Add gem to Gemfile" },
+      { "command": "bundle remove", "description": "Remove gem from Gemfile" },
+      { "command": "bundle config set", "description": "Set bundle config" },
+      { "command": "bundle clean", "description": "Clean unused gems" },
+      // rails database
+      { "command": "rails db:create", "description": "Create database" },
+      { "command": "rails db:drop", "description": "Drop database" },
+      { "command": "rails db:migrate", "description": "Run migrations" },
+      { "command": "rails db:rollback", "description": "Rollback migration" },
+      { "command": "rails db:seed", "description": "Seed database" },
+      { "command": "rails db:reset", "description": "Reset database" },
+      { "command": "rails db:setup", "description": "Setup database" },
+      // rails new
+      { "command": "rails new", "description": "Create new Rails app" }
+    ]
+  }
+}
