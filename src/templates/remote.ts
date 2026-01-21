@@ -17,6 +17,9 @@ const TEMPLATES_BASE_URL = `${CDN_BASE_URL}/templates`;
 // Timeout for fetch requests (10 seconds)
 const FETCH_TIMEOUT_MS = 10000;
 
+// Supported manifest major version
+const SUPPORTED_MAJOR_VERSION = 1;
+
 export interface TemplateCategory {
   name: string;
   templates: string[];
@@ -52,22 +55,25 @@ async function fetchWithTimeout(
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(url, { signal: controller.signal });
-    return response;
+    return await fetch(url, { signal: controller.signal });
   } finally {
     clearTimeout(timeoutId);
   }
 }
 
-// Legacy manifest format (v1.0.0)
-interface LegacyManifest {
-  version: string;
-  templates: string[];
+/**
+ * Parse the major version from a semver string.
+ */
+function parseMajorVersion(version: string): number {
+  const match = version.match(/^(\d+)\./);
+  if (!match) {
+    throw new Error(`Invalid version format: ${version}`);
+  }
+  return parseInt(match[1], 10);
 }
 
 /**
  * Fetch the template manifest from the remote CDN.
- * Supports both legacy flat format and new categorized format.
  */
 export async function fetchManifest(): Promise<TemplateManifest> {
   const response = await fetchWithTimeout(MANIFEST_URL);
@@ -82,33 +88,25 @@ export async function fetchManifest(): Promise<TemplateManifest> {
     throw new Error("Invalid manifest format: missing version");
   }
 
-  // Check if this is the new categorized format
-  if (Array.isArray(data.categories)) {
-    const manifest = data as TemplateManifest;
-    // Validate each category has name and templates
-    for (const category of manifest.categories) {
-      if (!category.name || !Array.isArray(category.templates)) {
-        throw new Error("Invalid manifest format: category missing name or templates");
-      }
+  const majorVersion = parseMajorVersion(data.version);
+  if (majorVersion !== SUPPORTED_MAJOR_VERSION) {
+    throw new Error(
+      `Manifest version ${data.version} is not compatible with this version of cc-permissions. ` +
+        `Please upgrade cc-permissions: npm install -g cc-permissions@latest`
+    );
+  }
+
+  if (!Array.isArray(data.categories)) {
+    throw new Error("Invalid manifest format: missing categories");
+  }
+
+  for (const category of data.categories) {
+    if (!category.name || !Array.isArray(category.templates)) {
+      throw new Error("Invalid manifest format: category missing name or templates");
     }
-    return manifest;
   }
 
-  // Legacy format: convert flat templates array to categorized format
-  if (Array.isArray(data.templates)) {
-    const legacy = data as LegacyManifest;
-    return {
-      version: legacy.version,
-      categories: [
-        {
-          name: "All Templates",
-          templates: legacy.templates,
-        },
-      ],
-    };
-  }
-
-  throw new Error("Invalid manifest format: missing categories or templates");
+  return data as TemplateManifest;
 }
 
 /**
