@@ -45,10 +45,10 @@ Options:
 ${describeLevels()}
 
 Examples:
-  cc-permissions template general --level standard
-  cc-permissions template web,python --level permissive
-  cc-permissions template web --level standard --apply
-  cc-permissions template web --offline
+  cc-permissions template shell --level standard
+  cc-permissions template nodejs,python --level permissive
+  cc-permissions template nodejs --level standard --apply
+  cc-permissions template nodejs --offline
   cc-permissions analyze ./my-project
   cc-permissions list
   cc-permissions update
@@ -63,7 +63,7 @@ Usage: cc-permissions template <names> [options]
 Generate permission configurations from one or more templates.
 
 Arguments:
-  names             Comma-separated template names (e.g., "web" or "web,python")
+  names             Comma-separated template names (e.g., "nodejs" or "nodejs,python")
 
 Options:
   -l, --level       Permission level: restrictive, standard, permissive (default: standard)
@@ -76,11 +76,11 @@ ${describeLevels()}
 Run "cc-permissions list" to see available templates.
 
 Examples:
-  cc-permissions template general --level restrictive
-  cc-permissions template web --level standard
-  cc-permissions template web,python --level permissive --format summary
-  cc-permissions template web --level standard --apply
-  cc-permissions template web --offline
+  cc-permissions template shell --level restrictive
+  cc-permissions template nodejs --level standard
+  cc-permissions template nodejs,python --level permissive --format summary
+  cc-permissions template nodejs --level standard --apply
+  cc-permissions template nodejs --offline
 `);
 }
 
