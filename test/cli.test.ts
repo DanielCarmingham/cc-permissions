@@ -59,11 +59,12 @@ describe("CLI - Help and Version", () => {
     assert.ok(stdout.includes("cc-permissions"));
   });
 
-  it("should display help when no arguments provided", () => {
+  it("should run analyze when no arguments provided", () => {
     const { stdout, exitCode } = runCli([]);
 
     assert.equal(exitCode, 0);
-    assert.ok(stdout.includes("Usage:"));
+    // Should run analyze and show project analysis output
+    assert.ok(stdout.includes("Project Analysis"));
   });
 
   it("should display version with --version flag", () => {
