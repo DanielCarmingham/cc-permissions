@@ -1,5 +1,5 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export interface PackageJson {
@@ -14,10 +14,10 @@ export type BumpType = "major" | "minor" | "patch";
  * Get the path to package.json relative to this module.
  */
 function getPackageJsonPath(): string {
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const __dirname = dirname(fileURLToPath(import.meta.url));
   // In dist/, go up one level to find package.json
   // In src/, also go up one level
-  return path.resolve(__dirname, "..", "package.json");
+  return resolve(__dirname, "..", "package.json");
 }
 
 /**
@@ -25,7 +25,7 @@ function getPackageJsonPath(): string {
  */
 export function readPackageJson(packagePath?: string): PackageJson {
   const targetPath = packagePath ?? getPackageJsonPath();
-  const content = fs.readFileSync(targetPath, "utf-8");
+  const content = readFileSync(targetPath, "utf-8");
   return JSON.parse(content) as PackageJson;
 }
 
@@ -34,7 +34,7 @@ export function readPackageJson(packagePath?: string): PackageJson {
  */
 export function writePackageJson(pkg: PackageJson, packagePath?: string): void {
   const targetPath = packagePath ?? getPackageJsonPath();
-  fs.writeFileSync(targetPath, JSON.stringify(pkg, null, 2) + "\n", "utf-8");
+  writeFileSync(targetPath, JSON.stringify(pkg, null, 2) + "\n", "utf-8");
 }
 
 /**

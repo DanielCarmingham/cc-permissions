@@ -1,11 +1,11 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import {
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import type {
   Permission,
   ClaudeCodePermissions,
-  PermissionLevel,
   TemplateDefinition,
 } from "./types.js";
+import { PermissionLevel } from "./types.js";
 import {
   BANNED_PATTERNS,
   combineTemplatePermissions,
@@ -139,9 +139,9 @@ export function applyPermissions(
   templates: TemplateDefinition[],
   level: PermissionLevel
 ): ApplyResult {
-  const claudeDir = path.join(baseDir, ".claude");
-  const settingsPath = path.join(claudeDir, "settings.json");
-  const backupPath = path.join(claudeDir, "settings.json.bak");
+  const claudeDir = join(baseDir, ".claude");
+  const settingsPath = join(claudeDir, "settings.json");
+  const backupPath = join(claudeDir, "settings.json.bak");
 
   // Generate new permissions
   const newSettings = generateSettings(templates, level);
@@ -152,17 +152,17 @@ export function applyPermissions(
   let backupCreated: string | null = null;
 
   // Ensure .claude directory exists
-  if (!fs.existsSync(claudeDir)) {
-    fs.mkdirSync(claudeDir, { recursive: true });
+  if (!existsSync(claudeDir)) {
+    mkdirSync(claudeDir, { recursive: true });
   }
 
   // Read existing settings if they exist
-  if (fs.existsSync(settingsPath)) {
+  if (existsSync(settingsPath)) {
     created = false;
 
     // Create backup
-    const existingContent = fs.readFileSync(settingsPath, "utf-8");
-    fs.writeFileSync(backupPath, existingContent, "utf-8");
+    const existingContent = readFileSync(settingsPath, "utf-8");
+    writeFileSync(backupPath, existingContent, "utf-8");
     backupCreated = backupPath;
 
     // Parse existing settings
@@ -182,7 +182,7 @@ export function applyPermissions(
   };
 
   // Write merged settings
-  fs.writeFileSync(settingsPath, JSON.stringify(mergedSettings, null, 2) + "\n", "utf-8");
+  writeFileSync(settingsPath, JSON.stringify(mergedSettings, null, 2) + "\n", "utf-8");
 
   return {
     settingsPath,

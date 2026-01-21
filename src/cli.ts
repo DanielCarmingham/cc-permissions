@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { parseArgs } from "node:util";
-import { PermissionLevel } from "./types.js";
 import { parseLevel, describeLevels } from "./permissions.js";
 import {
   getTemplates,

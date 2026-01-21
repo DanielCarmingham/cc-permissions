@@ -1,4 +1,4 @@
-import { TemplateDefinition, TemplateRegistry } from "../types.js";
+import type { TemplateDefinition, TemplateRegistry } from "../types.js";
 import {
   initializeTemplates as initLoader,
   getTemplates as getLoadedTemplates,

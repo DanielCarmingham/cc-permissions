@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import stripJsonComments from "strip-json-comments";
-import { TemplateDefinition, TemplateRegistry, Permission, DetectionRules, ContentPattern } from "../types.js";
+import type { TemplateDefinition, TemplateRegistry, Permission, DetectionRules, ContentPattern } from "../types.js";
 import {
   cacheExists,
   getCacheTemplatesDir,

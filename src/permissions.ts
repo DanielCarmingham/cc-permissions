@@ -1,9 +1,9 @@
-import {
+import type {
   Permission,
-  PermissionLevel,
   TemplateDefinition,
   ClaudeCodePermissions,
 } from "./types.js";
+import { PermissionLevel } from "./types.js";
 
 // Always banned patterns - dangerous operations that should never be allowed
 // These are stored as raw commands; formatting happens at output time

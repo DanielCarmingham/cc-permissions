@@ -1,6 +1,7 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import { AnalysisResult, PermissionLevel, DetectionRules, TemplateRegistry } from "./types.js";
+import { readdirSync, existsSync, statSync, readFileSync } from "node:fs";
+import { join, resolve, relative } from "node:path";
+import type { AnalysisResult, DetectionRules, TemplateRegistry } from "./types.js";
+import { PermissionLevel } from "./types.js";
 import { loadTemplatesSync } from "./templates/loader.js";
 
 /**
@@ -12,12 +13,12 @@ function fileExists(dir: string, pattern: string): string | null {
     if (pattern.includes("*")) {
       // Simple glob matching for extensions
       const ext = pattern.replace("*", "");
-      const files = fs.readdirSync(dir);
+      const files = readdirSync(dir);
       const match = files.find((f) => f.endsWith(ext));
-      return match ? path.join(dir, match) : null;
+      return match ? join(dir, match) : null;
     } else {
-      const filePath = path.join(dir, pattern);
-      if (fs.existsSync(filePath)) {
+      const filePath = join(dir, pattern);
+      if (existsSync(filePath)) {
         return filePath;
       }
       return null;
@@ -39,22 +40,22 @@ function directoryExists(dir: string, pattern: string): string | null {
     if (dirPattern.includes("*")) {
       // Simple glob matching for directory names
       const suffix = dirPattern.replace("*", "");
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      const entries = readdirSync(dir, { withFileTypes: true });
       const match = entries.find(
         (e) => e.isDirectory() && e.name.endsWith(suffix)
       );
-      return match ? path.join(dir, match.name) : null;
+      return match ? join(dir, match.name) : null;
     } else if (dirPattern.includes("/")) {
       // Nested directory path like ".github/workflows"
-      const fullPath = path.join(dir, dirPattern);
-      if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
+      const fullPath = join(dir, dirPattern);
+      if (existsSync(fullPath) && statSync(fullPath).isDirectory()) {
         return fullPath;
       }
       return null;
     } else {
       // Simple directory name like ".git"
-      const fullPath = path.join(dir, dirPattern);
-      if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
+      const fullPath = join(dir, dirPattern);
+      if (existsSync(fullPath) && statSync(fullPath).isDirectory()) {
         return fullPath;
       }
       return null;
@@ -68,14 +69,14 @@ function directoryExists(dir: string, pattern: string): string | null {
  * Check if a file contains specific text.
  */
 function fileContains(dir: string, filename: string, searchText: string): boolean {
-  const filePath = path.join(dir, filename);
-  if (!fs.existsSync(filePath)) return false;
+  const filePath = join(dir, filename);
+  if (!existsSync(filePath)) return false;
 
   try {
-    const stat = fs.statSync(filePath);
+    const stat = statSync(filePath);
     if (!stat.isFile()) return false;
 
-    const content = fs.readFileSync(filePath, "utf-8");
+    const content = readFileSync(filePath, "utf-8");
     return content.includes(searchText);
   } catch {
     return false;
@@ -117,7 +118,7 @@ function detectTemplate(
   if (detection.contentPatterns) {
     for (const { file, contains } of detection.contentPatterns) {
       if (fileContains(dir, file, contains)) {
-        return path.join(dir, file);
+        return join(dir, file);
       }
     }
   }
@@ -129,7 +130,7 @@ function detectTemplate(
  * Analyze a directory to recommend templates.
  */
 export function analyzeDirectory(dir: string): AnalysisResult {
-  const absoluteDir = path.resolve(dir);
+  const absoluteDir = resolve(dir);
   const detectedFiles: string[] = [];
   const recommendedTemplates: Set<string> = new Set();
 
@@ -154,7 +155,7 @@ export function analyzeDirectory(dir: string): AnalysisResult {
       recommendedTemplates.add(name);
       // Track detected files/directories (but not "always" marker)
       if (detected !== "always") {
-        const relativePath = path.relative(absoluteDir, detected) || detected;
+        const relativePath = relative(absoluteDir, detected) || detected;
         if (!detectedFiles.includes(relativePath)) {
           detectedFiles.push(relativePath);
         }
