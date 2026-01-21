@@ -1,0 +1,54 @@
+{
+  "name": "cc-permissions",
+  "version": "0.1.0",
+  "description": "Generate thoughtful permission configs for Claude Code without the container overhead",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "cc-permissions": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js",
+    "test": "node --import tsx --test test/**/*.test.ts",
+    "test:watch": "node --import tsx --test --watch test/**/*.test.ts",
+    "test:coverage": "node --import tsx --experimental-test-coverage --test test/**/*.test.ts",
+    "check-version": "node scripts/check-version.js",
+    "prepublishOnly": "npm run check-version && npm run build",
+    "version:show": "node scripts/bump-version.js show",
+    "version:bump": "node scripts/bump-version.js bump",
+    "version:set": "node scripts/bump-version.js set"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "permissions",
+    "cli"
+  ],
+  "author": "DanielCarmingham",
+  "license": "0BSD",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielCarmingham/cc-permissions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DanielCarmingham/cc-permissions/issues"
+  },
+  "homepage": "https://github.com/DanielCarmingham/cc-permissions#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.9",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "strip-json-comments": "^5.0.3"
+  }
+}

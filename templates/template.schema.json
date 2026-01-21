@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/DanielCarmingham/cc-permissions/blob/main/templates/template.schema.json",
+  "title": "CC-Permissions Template",
+  "description": "Schema for permission templates in cc-permissions",
+  "type": "object",
+  "required": ["name", "description", "levels"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "name": {
+      "type": "string",
+      "description": "Template identifier (lowercase, no spaces)",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of what this template covers"
+    },
+    "levels": {
+      "type": "object",
+      "description": "Permission levels (cumulative: standard includes restrictive, permissive includes standard)",
+      "required": ["restrictive", "standard", "permissive"],
+      "additionalProperties": false,
+      "properties": {
+        "restrictive": {
+          "type": "array",
+          "description": "Read-only operations (exploration, status checks)",
+          "items": { "$ref": "#/$defs/permission" }
+        },
+        "standard": {
+          "type": "array",
+          "description": "Dev workflow commands (builds, tests, commits)",
+          "items": { "$ref": "#/$defs/permission" }
+        },
+        "permissive": {
+          "type": "array",
+          "description": "Commands with broader access (installs, publishes)",
+          "items": { "$ref": "#/$defs/permission" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "permission": {
+      "type": "object",
+      "required": ["command"],
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "type": "string",
+          "description": "The command or pattern to allow"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description for documentation"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "mock-web-project",
+  "version": "1.0.0",
+  "description": "Mock web project for testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"test\""
+  }
+}

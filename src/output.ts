@@ -1,0 +1,211 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
+import {
+  Permission,
+  ClaudeCodePermissions,
+  PermissionLevel,
+  TemplateDefinition,
+} from "./types.js";
+import {
+  BANNED_PATTERNS,
+  combineTemplatePermissions,
+  generateClaudeCodePermissions,
+} from "./permissions.js";
+
+/**
+ * Format for Claude Code settings.json permissions section
+ */
+export interface ClaudeCodeSettings {
+  permissions: {
+    allow: string[];
+    deny: string[];
+  };
+}
+
+/**
+ * Generate Claude Code settings format from templates and level.
+ */
+export function generateSettings(
+  templates: TemplateDefinition[],
+  level: PermissionLevel
+): ClaudeCodeSettings {
+  const permissions = combineTemplatePermissions(templates, level);
+  const ccPermissions = generateClaudeCodePermissions(permissions);
+
+  return {
+    permissions: ccPermissions,
+  };
+}
+
+/**
+ * Format settings as JSON string for output.
+ */
+export function formatSettingsJson(settings: ClaudeCodeSettings): string {
+  return JSON.stringify(settings, null, 2);
+}
+
+/**
+ * Format permissions as a human-readable summary.
+ */
+export function formatPermissionsSummary(
+  templates: TemplateDefinition[],
+  level: PermissionLevel
+): string {
+  const permissions = combineTemplatePermissions(templates, level);
+  const templateNames = templates.map((t) => t.name).join(", ");
+
+  const lines: string[] = [
+    `Permission Summary`,
+    `==================`,
+    `Templates: ${templateNames}`,
+    `Level: ${level}`,
+    ``,
+    `Allowed Commands (${permissions.length}):`,
+  ];
+
+  // Group permissions by template for better readability
+  for (const perm of permissions) {
+    const desc = perm.description ? ` - ${perm.description}` : "";
+    lines.push(`  ${perm.command}${desc}`);
+  }
+
+  lines.push(``);
+  lines.push(`Denied Patterns (${BANNED_PATTERNS.length}):`);
+  for (const banned of BANNED_PATTERNS) {
+    const desc = banned.description ? ` - ${banned.description}` : "";
+    lines.push(`  ${banned.command}${desc}`);
+  }
+
+  return lines.join("\n");
+}
+
+/**
+ * Generate the command to use these permissions.
+ */
+export function formatCommand(
+  templateNames: string[],
+  level: PermissionLevel
+): string {
+  const templates = templateNames.join(",");
+  return `cc-permissions template ${templates} --level ${level}`;
+}
+
+/**
+ * Full output with both JSON and summary.
+ */
+export function formatFullOutput(
+  templates: TemplateDefinition[],
+  level: PermissionLevel,
+  outputFormat: "json" | "summary" | "both" = "json"
+): string {
+  if (outputFormat === "json") {
+    const settings = generateSettings(templates, level);
+    return formatSettingsJson(settings);
+  }
+
+  if (outputFormat === "summary") {
+    return formatPermissionsSummary(templates, level);
+  }
+
+  // Both
+  const settings = generateSettings(templates, level);
+  const summary = formatPermissionsSummary(templates, level);
+  const json = formatSettingsJson(settings);
+
+  return `${summary}\n\n---\n\nJSON Output:\n${json}`;
+}
+
+/**
+ * Result of applying permissions to settings file.
+ */
+export interface ApplyResult {
+  settingsPath: string;
+  backupPath: string | null;
+  created: boolean;
+  merged: boolean;
+}
+
+/**
+ * Apply permissions to .claude/settings.json, merging with existing settings.
+ * Creates a .bak backup if the file already exists.
+ *
+ * @param baseDir - Directory containing .claude folder (defaults to cwd)
+ * @param templates - Templates to apply
+ * @param level - Permission level
+ * @returns Result with paths and status
+ */
+export function applyPermissions(
+  baseDir: string,
+  templates: TemplateDefinition[],
+  level: PermissionLevel
+): ApplyResult {
+  const claudeDir = path.join(baseDir, ".claude");
+  const settingsPath = path.join(claudeDir, "settings.json");
+  const backupPath = path.join(claudeDir, "settings.json.bak");
+
+  // Generate new permissions
+  const newSettings = generateSettings(templates, level);
+
+  let existingSettings: Record<string, unknown> = {};
+  let created = true;
+  let merged = false;
+  let backupCreated: string | null = null;
+
+  // Ensure .claude directory exists
+  if (!fs.existsSync(claudeDir)) {
+    fs.mkdirSync(claudeDir, { recursive: true });
+  }
+
+  // Read existing settings if they exist
+  if (fs.existsSync(settingsPath)) {
+    created = false;
+
+    // Create backup
+    const existingContent = fs.readFileSync(settingsPath, "utf-8");
+    fs.writeFileSync(backupPath, existingContent, "utf-8");
+    backupCreated = backupPath;
+
+    // Parse existing settings
+    try {
+      existingSettings = JSON.parse(existingContent);
+      merged = true;
+    } catch {
+      // If existing file is invalid JSON, we'll overwrite it
+      existingSettings = {};
+    }
+  }
+
+  // Merge: new permissions replace existing, but preserve other settings
+  const mergedSettings = {
+    ...existingSettings,
+    permissions: newSettings.permissions,
+  };
+
+  // Write merged settings
+  fs.writeFileSync(settingsPath, JSON.stringify(mergedSettings, null, 2) + "\n", "utf-8");
+
+  return {
+    settingsPath,
+    backupPath: backupCreated,
+    created,
+    merged,
+  };
+}
+
+/**
+ * Format the apply result for display.
+ */
+export function formatApplyResult(result: ApplyResult): string {
+  const lines: string[] = [];
+
+  if (result.created) {
+    lines.push(`Created: ${result.settingsPath}`);
+  } else if (result.merged) {
+    lines.push(`Updated: ${result.settingsPath}`);
+    if (result.backupPath) {
+      lines.push(`Backup:  ${result.backupPath}`);
+    }
+  }
+
+  return lines.join("\n");
+}

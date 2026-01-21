@@ -1,0 +1,101 @@
+{
+  "$schema": "./template.schema.json",
+  "name": "web",
+  "description": "Node.js, npm, and common frontend tooling",
+  "levels": {
+    "restrictive": [
+      // npm read-only
+      { "command": "npm list", "description": "List installed packages" },
+      { "command": "npm ls", "description": "List installed packages (alias)" },
+      { "command": "npm outdated", "description": "Check for outdated packages" },
+      { "command": "npm view", "description": "View package info" },
+      { "command": "npm info", "description": "View package info (alias)" },
+      { "command": "npm search", "description": "Search npm registry" },
+      { "command": "npm help", "description": "Get npm help" },
+      { "command": "npm config list", "description": "List npm config" },
+      { "command": "npm audit", "description": "Run security audit" },
+      // node read-only
+      { "command": "node -v", "description": "Check Node version" },
+      { "command": "node --version", "description": "Check Node version" },
+      { "command": "node -e", "description": "Evaluate Node expression" },
+      { "command": "node -p", "description": "Print Node evaluation" },
+      // npx read-only
+      { "command": "npx -v", "description": "Check npx version" },
+      // pnpm read-only
+      { "command": "pnpm list", "description": "List installed packages (pnpm)" },
+      { "command": "pnpm ls", "description": "List installed packages (pnpm alias)" },
+      { "command": "pnpm outdated", "description": "Check for outdated packages (pnpm)" },
+      // yarn read-only
+      { "command": "yarn list", "description": "List installed packages (yarn)" },
+      { "command": "yarn info", "description": "View package info (yarn)" },
+      { "command": "yarn outdated", "description": "Check for outdated packages (yarn)" },
+      // bun read-only
+      { "command": "bun --version", "description": "Check Bun version" },
+      { "command": "bun pm ls", "description": "List installed packages (bun)" }
+    ],
+    "standard": [
+      // npm scripts (no install)
+      { "command": "npm run", "description": "Run npm scripts" },
+      { "command": "npm test", "description": "Run tests" },
+      { "command": "npm start", "description": "Start the application" },
+      { "command": "npm build", "description": "Build the project" },
+      { "command": "npm run build", "description": "Build the project" },
+      { "command": "npm run dev", "description": "Run dev server" },
+      { "command": "npm run lint", "description": "Run linter" },
+      { "command": "npm run format", "description": "Run formatter" },
+      { "command": "npm run test", "description": "Run tests" },
+      { "command": "npm run watch", "description": "Run in watch mode" },
+      { "command": "npm exec", "description": "Execute package binary" },
+      // npx (execute without install)
+      { "command": "npx", "description": "Execute npm packages" },
+      // pnpm scripts
+      { "command": "pnpm run", "description": "Run pnpm scripts" },
+      { "command": "pnpm test", "description": "Run tests (pnpm)" },
+      { "command": "pnpm build", "description": "Build the project (pnpm)" },
+      { "command": "pnpm dev", "description": "Run dev server (pnpm)" },
+      { "command": "pnpm exec", "description": "Execute package binary (pnpm)" },
+      { "command": "pnpm dlx", "description": "Execute without install (pnpm)" },
+      // yarn scripts
+      { "command": "yarn run", "description": "Run yarn scripts" },
+      { "command": "yarn test", "description": "Run tests (yarn)" },
+      { "command": "yarn build", "description": "Build the project (yarn)" },
+      { "command": "yarn dev", "description": "Run dev server (yarn)" },
+      { "command": "yarn dlx", "description": "Execute without install (yarn)" },
+      // bun scripts
+      { "command": "bun run", "description": "Run bun scripts" },
+      { "command": "bun test", "description": "Run tests (bun)" },
+      { "command": "bun build", "description": "Build the project (bun)" },
+      { "command": "bunx", "description": "Execute bun packages" },
+      // node execution
+      { "command": "node", "description": "Run Node.js scripts" }
+    ],
+    "permissive": [
+      // npm install operations
+      { "command": "npm install", "description": "Install packages" },
+      { "command": "npm i", "description": "Install packages (alias)" },
+      { "command": "npm ci", "description": "Clean install" },
+      { "command": "npm uninstall", "description": "Uninstall packages" },
+      { "command": "npm update", "description": "Update packages" },
+      { "command": "npm link", "description": "Link packages locally" },
+      { "command": "npm publish", "description": "Publish to npm" },
+      { "command": "npm init", "description": "Initialize new project" },
+      { "command": "npm pack", "description": "Create package tarball" },
+      { "command": "npm cache clean", "description": "Clean npm cache" },
+      // pnpm install
+      { "command": "pnpm install", "description": "Install packages (pnpm)" },
+      { "command": "pnpm add", "description": "Add packages (pnpm)" },
+      { "command": "pnpm remove", "description": "Remove packages (pnpm)" },
+      { "command": "pnpm update", "description": "Update packages (pnpm)" },
+      // yarn install
+      { "command": "yarn install", "description": "Install packages (yarn)" },
+      { "command": "yarn add", "description": "Add packages (yarn)" },
+      { "command": "yarn remove", "description": "Remove packages (yarn)" },
+      { "command": "yarn upgrade", "description": "Upgrade packages (yarn)" },
+      // bun install
+      { "command": "bun install", "description": "Install packages (bun)" },
+      { "command": "bun add", "description": "Add packages (bun)" },
+      { "command": "bun remove", "description": "Remove packages (bun)" },
+      { "command": "bun update", "description": "Update packages (bun)" }
+    ]
+  }
+}

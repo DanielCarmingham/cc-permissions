@@ -1,0 +1,110 @@
+{
+  "$schema": "./template.schema.json",
+  "name": "python",
+  "description": "pip, python, venv, pytest, and common data tools",
+  "levels": {
+    "restrictive": [
+      // Python version/info
+      { "command": "python --version", "description": "Check Python version" },
+      { "command": "python -V", "description": "Check Python version (short)" },
+      { "command": "python3 --version", "description": "Check Python 3 version" },
+      { "command": "python3 -V", "description": "Check Python 3 version (short)" },
+      // pip read-only
+      { "command": "pip list", "description": "List installed packages" },
+      { "command": "pip3 list", "description": "List installed packages (pip3)" },
+      { "command": "pip show", "description": "Show package info" },
+      { "command": "pip3 show", "description": "Show package info (pip3)" },
+      { "command": "pip freeze", "description": "Output installed packages" },
+      { "command": "pip3 freeze", "description": "Output installed packages (pip3)" },
+      { "command": "pip check", "description": "Verify package dependencies" },
+      { "command": "pip3 check", "description": "Verify package dependencies (pip3)" },
+      { "command": "pip search", "description": "Search for packages" },
+      { "command": "pip3 search", "description": "Search for packages (pip3)" },
+      // uv read-only
+      { "command": "uv --version", "description": "Check uv version" },
+      { "command": "uv pip list", "description": "List installed packages (uv)" },
+      { "command": "uv pip show", "description": "Show package info (uv)" },
+      { "command": "uv pip freeze", "description": "Output installed packages (uv)" },
+      // Poetry read-only
+      { "command": "poetry --version", "description": "Check Poetry version" },
+      { "command": "poetry show", "description": "Show package info (Poetry)" },
+      { "command": "poetry env info", "description": "Show environment info (Poetry)" },
+      // Conda read-only
+      { "command": "conda --version", "description": "Check Conda version" },
+      { "command": "conda list", "description": "List installed packages (Conda)" },
+      { "command": "conda info", "description": "Show Conda info" },
+      { "command": "conda env list", "description": "List Conda environments" },
+      // venv info
+      { "command": "python -m venv --help", "description": "Venv help" }
+    ],
+    "standard": [
+      // Python execution
+      { "command": "python", "description": "Run Python scripts" },
+      { "command": "python3", "description": "Run Python 3 scripts" },
+      { "command": "python -c", "description": "Execute Python code" },
+      { "command": "python3 -c", "description": "Execute Python 3 code" },
+      { "command": "python -m", "description": "Run Python module" },
+      { "command": "python3 -m", "description": "Run Python 3 module" },
+      // Testing
+      { "command": "pytest", "description": "Run pytest" },
+      { "command": "python -m pytest", "description": "Run pytest via module" },
+      { "command": "python3 -m pytest", "description": "Run pytest via module (py3)" },
+      { "command": "unittest", "description": "Run unittest" },
+      { "command": "python -m unittest", "description": "Run unittest via module" },
+      { "command": "python3 -m unittest", "description": "Run unittest via module (py3)" },
+      // Linting/formatting
+      { "command": "ruff", "description": "Run Ruff linter" },
+      { "command": "ruff check", "description": "Run Ruff check" },
+      { "command": "ruff format", "description": "Run Ruff formatter" },
+      { "command": "black", "description": "Run Black formatter" },
+      { "command": "isort", "description": "Run isort" },
+      { "command": "flake8", "description": "Run flake8 linter" },
+      { "command": "pylint", "description": "Run pylint" },
+      { "command": "mypy", "description": "Run mypy type checker" },
+      // Build/packaging
+      { "command": "python -m build", "description": "Build package" },
+      { "command": "python3 -m build", "description": "Build package (py3)" },
+      // Virtual environment creation
+      { "command": "python -m venv", "description": "Create virtual environment" },
+      { "command": "python3 -m venv", "description": "Create virtual environment (py3)" },
+      // uv execution
+      { "command": "uv run", "description": "Run with uv" },
+      // Poetry scripts
+      { "command": "poetry run", "description": "Run with Poetry" },
+      { "command": "poetry build", "description": "Build with Poetry" },
+      // Conda activation
+      { "command": "conda activate", "description": "Activate Conda environment" },
+      { "command": "conda deactivate", "description": "Deactivate Conda environment" }
+    ],
+    "permissive": [
+      // pip install
+      { "command": "pip install", "description": "Install packages" },
+      { "command": "pip3 install", "description": "Install packages (pip3)" },
+      { "command": "pip uninstall", "description": "Uninstall packages" },
+      { "command": "pip3 uninstall", "description": "Uninstall packages (pip3)" },
+      { "command": "pip install -e", "description": "Install in editable mode" },
+      { "command": "pip3 install -e", "description": "Install in editable mode (pip3)" },
+      { "command": "pip install -r", "description": "Install from requirements" },
+      { "command": "pip3 install -r", "description": "Install from requirements (pip3)" },
+      // uv install
+      { "command": "uv pip install", "description": "Install packages (uv)" },
+      { "command": "uv pip uninstall", "description": "Uninstall packages (uv)" },
+      { "command": "uv pip sync", "description": "Sync packages (uv)" },
+      { "command": "uv venv", "description": "Create venv with uv" },
+      // Poetry install
+      { "command": "poetry install", "description": "Install with Poetry" },
+      { "command": "poetry add", "description": "Add package with Poetry" },
+      { "command": "poetry remove", "description": "Remove package with Poetry" },
+      { "command": "poetry update", "description": "Update with Poetry" },
+      { "command": "poetry lock", "description": "Lock dependencies with Poetry" },
+      { "command": "poetry publish", "description": "Publish with Poetry" },
+      // Conda install
+      { "command": "conda install", "description": "Install packages (Conda)" },
+      { "command": "conda create", "description": "Create Conda environment" },
+      { "command": "conda remove", "description": "Remove packages (Conda)" },
+      { "command": "conda update", "description": "Update packages (Conda)" },
+      { "command": "conda env create", "description": "Create env from file (Conda)" },
+      { "command": "conda env remove", "description": "Remove Conda environment" }
+    ]
+  }
+}

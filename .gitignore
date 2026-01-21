@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.log
+*.bak
+.DS_Store
+.claude/settings.json
+
+# .NET
+bin/
+obj/
+*.sln

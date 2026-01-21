@@ -1,0 +1,59 @@
+{
+  "$schema": "./template.schema.json",
+  "name": "general",
+  "description": "Git and common CLI tools (ls, cat, grep, find, etc.)",
+  "levels": {
+    "restrictive": [
+      // Git read-only
+      { "command": "git status", "description": "Check working tree status" },
+      { "command": "git log", "description": "View commit history" },
+      { "command": "git diff", "description": "View changes" },
+      { "command": "git branch", "description": "List branches" },
+      { "command": "git remote -v", "description": "List remotes" },
+      { "command": "git show", "description": "Show commit details" },
+      { "command": "git blame", "description": "Show line-by-line authorship" },
+      // File system read-only
+      { "command": "ls", "description": "List directory contents" },
+      { "command": "cat", "description": "View file contents" },
+      { "command": "head", "description": "View file beginning" },
+      { "command": "tail", "description": "View file end" },
+      { "command": "grep", "description": "Search file contents" },
+      { "command": "find", "description": "Find files" },
+      { "command": "wc", "description": "Count lines/words/chars" },
+      { "command": "tree", "description": "Display directory tree" },
+      { "command": "pwd", "description": "Print working directory" },
+      { "command": "which", "description": "Locate a command" },
+      { "command": "echo", "description": "Print text" },
+      { "command": "env", "description": "View environment variables" },
+      { "command": "printenv", "description": "Print environment variables" }
+    ],
+    "standard": [
+      // Git write operations
+      { "command": "git add", "description": "Stage changes" },
+      { "command": "git commit", "description": "Create commits" },
+      { "command": "git push", "description": "Push to remote" },
+      { "command": "git pull", "description": "Pull from remote" },
+      { "command": "git fetch", "description": "Fetch from remote" },
+      { "command": "git checkout", "description": "Switch branches or restore files" },
+      { "command": "git switch", "description": "Switch branches" },
+      { "command": "git merge", "description": "Merge branches" },
+      { "command": "git stash", "description": "Stash changes" },
+      { "command": "git tag", "description": "Create tags" },
+      // File write operations
+      { "command": "mkdir", "description": "Create directories" },
+      { "command": "touch", "description": "Create empty files" },
+      { "command": "cp", "description": "Copy files" },
+      { "command": "mv", "description": "Move/rename files" }
+    ],
+    "permissive": [
+      // Git advanced operations
+      { "command": "git rebase", "description": "Rebase branches" },
+      { "command": "git reset", "description": "Reset changes" },
+      { "command": "git cherry-pick", "description": "Cherry-pick commits" },
+      { "command": "git revert", "description": "Revert commits" },
+      { "command": "git clean", "description": "Clean untracked files" },
+      // File deletion (non-recursive)
+      { "command": "rm", "description": "Remove files (use with caution)" }
+    ]
+  }
+}

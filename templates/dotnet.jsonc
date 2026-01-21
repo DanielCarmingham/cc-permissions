@@ -1,0 +1,76 @@
+{
+  "$schema": "./template.schema.json",
+  "name": "dotnet",
+  "description": "dotnet CLI, NuGet, MSBuild",
+  "levels": {
+    "restrictive": [
+      // dotnet info/version
+      { "command": "dotnet --version", "description": "Check .NET version" },
+      { "command": "dotnet --info", "description": "Display .NET information" },
+      { "command": "dotnet --list-sdks", "description": "List installed SDKs" },
+      { "command": "dotnet --list-runtimes", "description": "List installed runtimes" },
+      { "command": "dotnet help", "description": "Get .NET help" },
+      // Project info
+      { "command": "dotnet list", "description": "List project references" },
+      { "command": "dotnet list package", "description": "List NuGet packages" },
+      { "command": "dotnet list reference", "description": "List project references" },
+      // NuGet info
+      { "command": "dotnet nuget list source", "description": "List NuGet sources" },
+      { "command": "nuget list", "description": "List NuGet packages" },
+      { "command": "nuget sources list", "description": "List NuGet sources" },
+      // MSBuild info
+      { "command": "dotnet msbuild -version", "description": "Check MSBuild version" },
+      { "command": "msbuild -version", "description": "Check MSBuild version (direct)" }
+    ],
+    "standard": [
+      // Build/Run
+      { "command": "dotnet build", "description": "Build the project" },
+      { "command": "dotnet run", "description": "Run the project" },
+      { "command": "dotnet watch", "description": "Watch and rebuild" },
+      { "command": "dotnet clean", "description": "Clean build output" },
+      { "command": "dotnet publish", "description": "Publish the project" },
+      // Testing
+      { "command": "dotnet test", "description": "Run tests" },
+      // Code quality
+      { "command": "dotnet format", "description": "Format code" },
+      // MSBuild
+      { "command": "dotnet msbuild", "description": "Run MSBuild" },
+      { "command": "msbuild", "description": "Run MSBuild (direct)" },
+      // EF Core migrations (read/generate)
+      { "command": "dotnet ef migrations", "description": "EF Core migrations" },
+      { "command": "dotnet ef dbcontext", "description": "EF Core DbContext commands" },
+      // User secrets (dev only)
+      { "command": "dotnet user-secrets", "description": "Manage user secrets" },
+      // Pack (create NuGet package)
+      { "command": "dotnet pack", "description": "Create NuGet package" }
+    ],
+    "permissive": [
+      // Package management
+      { "command": "dotnet add package", "description": "Add NuGet package" },
+      { "command": "dotnet add reference", "description": "Add project reference" },
+      { "command": "dotnet remove package", "description": "Remove NuGet package" },
+      { "command": "dotnet remove reference", "description": "Remove project reference" },
+      // Restore (downloads packages)
+      { "command": "dotnet restore", "description": "Restore NuGet packages" },
+      // Project creation
+      { "command": "dotnet new", "description": "Create new project/file" },
+      { "command": "dotnet sln", "description": "Solution file operations" },
+      // Tool management
+      { "command": "dotnet tool install", "description": "Install .NET tool" },
+      { "command": "dotnet tool uninstall", "description": "Uninstall .NET tool" },
+      { "command": "dotnet tool update", "description": "Update .NET tool" },
+      { "command": "dotnet tool restore", "description": "Restore .NET tools" },
+      // NuGet publish
+      { "command": "dotnet nuget push", "description": "Push NuGet package" },
+      { "command": "dotnet nuget delete", "description": "Delete NuGet package" },
+      { "command": "dotnet nuget add source", "description": "Add NuGet source" },
+      { "command": "dotnet nuget remove source", "description": "Remove NuGet source" },
+      // EF Core database operations
+      { "command": "dotnet ef database", "description": "EF Core database operations" },
+      // Workload management
+      { "command": "dotnet workload install", "description": "Install workload" },
+      { "command": "dotnet workload update", "description": "Update workloads" },
+      { "command": "dotnet workload uninstall", "description": "Uninstall workload" }
+    ]
+  }
+}
