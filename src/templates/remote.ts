@@ -6,10 +6,9 @@ import {
   type CacheMeta,
 } from "./cache.js";
 
-// jsDelivr CDN pointing to GitHub repo (free, fast, no rate limits)
-// URL pattern: https://cdn.jsdelivr.net/gh/user/repo@branch/path
+// Raw GitHub URL for templates (updates immediately, no CDN cache delays)
 const CDN_BASE_URL =
-  "https://cdn.jsdelivr.net/gh/DanielCarmingham/cc-permissions-templates@main";
+  "https://raw.githubusercontent.com/DanielCarmingham/cc-permissions-templates/main";
 
 const MANIFEST_URL = `${CDN_BASE_URL}/index.json`;
 const TEMPLATES_BASE_URL = `${CDN_BASE_URL}/templates`;
