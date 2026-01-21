@@ -17,9 +17,21 @@ const TEMPLATES_BASE_URL = `${CDN_BASE_URL}/templates`;
 // Timeout for fetch requests (10 seconds)
 const FETCH_TIMEOUT_MS = 10000;
 
+export interface TemplateCategory {
+  name: string;
+  templates: string[];
+}
+
 export interface TemplateManifest {
   version: string;
-  templates: string[];
+  categories: TemplateCategory[];
+}
+
+/**
+ * Extract a flat list of all template names from the categorized manifest.
+ */
+export function getTemplateNames(manifest: TemplateManifest): string[] {
+  return manifest.categories.flatMap((category) => category.templates);
 }
 
 export interface FetchResult {
@@ -60,8 +72,15 @@ export async function fetchManifest(): Promise<TemplateManifest> {
   const manifest = (await response.json()) as TemplateManifest;
 
   // Validate manifest structure
-  if (!manifest.version || !Array.isArray(manifest.templates)) {
-    throw new Error("Invalid manifest format: missing version or templates");
+  if (!manifest.version || !Array.isArray(manifest.categories)) {
+    throw new Error("Invalid manifest format: missing version or categories");
+  }
+
+  // Validate each category has name and templates
+  for (const category of manifest.categories) {
+    if (!category.name || !Array.isArray(category.templates)) {
+      throw new Error("Invalid manifest format: category missing name or templates");
+    }
   }
 
   return manifest;
@@ -93,8 +112,11 @@ export async function fetchAndCacheTemplates(): Promise<FetchResult> {
     // Ensure cache directory exists
     ensureCacheDir();
 
+    // Extract flat template list from categories
+    const templateNames = getTemplateNames(manifest);
+
     // Fetch all templates in parallel
-    const templatePromises = manifest.templates.map(async (name) => {
+    const templatePromises = templateNames.map(async (name) => {
       const content = await fetchTemplate(name);
       cacheTemplate(name, content);
       return name;
@@ -106,7 +128,8 @@ export async function fetchAndCacheTemplates(): Promise<FetchResult> {
     const meta: CacheMeta = {
       lastUpdated: new Date().toISOString(),
       version: manifest.version,
-      templates: manifest.templates,
+      templates: templateNames,
+      categories: manifest.categories,
     };
     saveCacheMeta(meta);
 

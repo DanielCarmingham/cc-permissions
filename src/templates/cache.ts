@@ -7,11 +7,17 @@ const CACHE_BASE_DIR = join(homedir(), ".cc-permissions");
 const CACHE_TEMPLATES_DIR = join(CACHE_BASE_DIR, "templates");
 const CACHE_META_FILE = join(CACHE_BASE_DIR, "cache-meta.json");
 
+export interface TemplateCategory {
+  name: string;
+  templates: string[];
+}
+
 export interface CacheMeta {
   lastUpdated: string; // ISO timestamp
   version: string; // Manifest version
   etag?: string; // ETag for conditional requests
-  templates: string[]; // List of cached template names
+  templates: string[]; // Flat list of cached template names
+  categories?: TemplateCategory[]; // Categorized template list (optional for backwards compat)
 }
 
 /**
@@ -151,4 +157,13 @@ export function isCacheStale(maxAgeMs: number = 24 * 60 * 60 * 1000): boolean {
   const lastUpdated = new Date(meta.lastUpdated).getTime();
   const now = Date.now();
   return now - lastUpdated > maxAgeMs;
+}
+
+/**
+ * Get categories from the cache metadata.
+ * Returns null if no categories are available.
+ */
+export function getCategories(): TemplateCategory[] | null {
+  const meta = getCacheMeta();
+  return meta?.categories ?? null;
 }

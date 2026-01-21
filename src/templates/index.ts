@@ -19,6 +19,8 @@ export {
   getCacheInfo,
   cacheExists,
   isCacheStale,
+  getCategories,
+  type TemplateCategory,
 } from "./cache.js";
 
 // Re-export remote functions

@@ -12,7 +12,9 @@ import {
   checkForUpdates,
   fetchAndCacheTemplates,
   getCdnBaseUrl,
+  getCategories,
   type LoadResult,
+  type TemplateCategory,
 } from "./templates/index.js";
 import { formatFullOutput, applyPermissions, formatApplyResult } from "./output.js";
 import { analyzeDirectory, formatAnalysisResult } from "./analyze.js";
@@ -210,10 +212,29 @@ async function handleList(offline: boolean): Promise<void> {
   }
 
   console.log(`Available Templates:\n`);
-  for (const template of listTemplates()) {
-    console.log(`  ${template.name.padEnd(12)} ${template.description}`);
+
+  const categories = getCategories();
+  const allTemplates = listTemplates();
+  const templateMap = new Map(allTemplates.map((t) => [t.name, t.description]));
+
+  if (categories && categories.length > 0) {
+    // Display templates grouped by category
+    for (const category of categories) {
+      console.log(`  ${category.name}:`);
+      for (const name of category.templates) {
+        const description = templateMap.get(name) || "";
+        console.log(`    ${name.padEnd(12)} ${description}`);
+      }
+      console.log();
+    }
+  } else {
+    // Fallback: display flat list (for old cache format)
+    for (const template of allTemplates) {
+      console.log(`  ${template.name.padEnd(12)} ${template.description}`);
+    }
   }
-  console.log(`\nUse "cc-permissions template <name> --level <level>" to generate permissions.`);
+
+  console.log(`Use "cc-permissions template <name> --level <level>" to generate permissions.`);
   console.log(`\nTemplate source: ${loadResult.source}`);
 }
 
@@ -234,13 +255,18 @@ async function handleUpdate(): Promise<void> {
   console.log("Fetching templates from remote...");
   const result = await fetchAndCacheTemplates();
 
-  if (result.success) {
-    console.log(`\nSuccess! Downloaded ${result.manifest?.templates.length} templates (v${result.manifest?.version}).`);
+  if (result.success && result.manifest) {
+    const categories = result.manifest.categories;
+    const totalTemplates = categories.reduce((sum, cat) => sum + cat.templates.length, 0);
+    console.log(`\nSuccess! Downloaded ${totalTemplates} templates (v${result.manifest.version}).`);
     console.log("\nAvailable templates:");
-    for (const name of result.manifest?.templates || []) {
-      console.log(`  - ${name}`);
+    for (const category of categories) {
+      console.log(`\n  ${category.name}:`);
+      for (const name of category.templates) {
+        console.log(`    - ${name}`);
+      }
     }
-  } else {
+  } else if (!result.success) {
     console.error(`\nError: ${result.error}`);
     console.error("\nPlease check your network connection and try again.");
     process.exit(1);
