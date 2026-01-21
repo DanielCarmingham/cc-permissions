@@ -35,6 +35,8 @@ export interface DetectionRules {
 export interface TemplateDefinition {
   name: string;
   description: string;
+  // Optional category for grouping templates in list output
+  category?: string;
   // Optional detection rules for auto-recommending this template
   detection?: DetectionRules;
   // Commands at each level (stacking - each level inherits from previous)

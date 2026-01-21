@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "python",
   "description": "pip, python, venv, pytest, and common data tools",
+  "category": "Languages & Runtimes",
   "detection": {
     "files": ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", "poetry.lock", "uv.lock", "conda.yaml", "environment.yml"]
   },

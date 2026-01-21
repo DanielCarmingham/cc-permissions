@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "rust",
   "description": "Cargo, rustc, and rustup",
+  "category": "Languages & Runtimes",
   "detection": {
     "files": ["Cargo.toml", "Cargo.lock"]
   },

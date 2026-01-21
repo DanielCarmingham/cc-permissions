@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "aws",
   "description": "AWS CLI, SAM, CDK, Amplify, and Elastic Beanstalk",
+  "category": "Cloud Providers",
   "detection": {
     "files": ["cdk.json", "samconfig.toml", "amplify.yml"]
   },

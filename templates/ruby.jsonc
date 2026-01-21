@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "ruby",
   "description": "Ruby, Bundler, Rails, and Rake",
+  "category": "Languages & Runtimes",
   "detection": {
     "files": ["Gemfile", "Gemfile.lock", "*.gemspec", "Rakefile"]
   },

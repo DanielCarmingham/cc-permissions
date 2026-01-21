@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "java",
   "description": "Maven, Gradle, Java, and JVM development",
+  "category": "Languages & Runtimes",
   "detection": {
     "files": ["pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"]
   },

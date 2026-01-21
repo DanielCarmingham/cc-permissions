@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "android",
   "description": "Gradle, ADB, and Android development",
+  "category": "Mobile Development",
   "detection": {
     "files": ["AndroidManifest.xml"],
     "contentPatterns": [

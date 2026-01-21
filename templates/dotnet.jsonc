@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "dotnet",
   "description": "dotnet CLI, NuGet, MSBuild",
+  "category": "Languages & Runtimes",
   "detection": {
     "files": ["*.csproj", "*.fsproj", "*.vbproj", "*.sln", "nuget.config", "global.json"]
   },

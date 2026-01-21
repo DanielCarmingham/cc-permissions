@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "terraform",
   "description": "Terraform, Terragrunt, and tflint",
+  "category": "Container & Infrastructure",
   "detection": {
     "files": ["*.tf", ".terraform.lock.hcl", "terragrunt.hcl"]
   },

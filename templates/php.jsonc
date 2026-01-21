@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "php",
   "description": "PHP, Composer, and Laravel Artisan",
+  "category": "Languages & Runtimes",
   "detection": {
     "files": ["composer.json", "composer.lock"]
   },

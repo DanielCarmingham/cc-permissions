@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "shell",
   "description": "Basic shell and filesystem commands",
+  "category": "General",
   "detection": {
     "always": true
   },

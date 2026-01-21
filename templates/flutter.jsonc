@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "flutter",
   "description": "Flutter SDK and Dart development",
+  "category": "Mobile Development",
   "detection": {
     "contentPatterns": [
       { "file": "pubspec.yaml", "contains": "flutter:" }

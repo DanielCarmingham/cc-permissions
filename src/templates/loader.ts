@@ -203,6 +203,13 @@ function validateTemplate(data: unknown, filename: string): TemplateDefinition {
   const description = obj.description as string;
   const detection = validateDetection(obj.detection, name);
 
+  // Validate category (optional)
+  if (obj.category !== undefined && typeof obj.category !== "string") {
+    throw new Error(
+      `Template "${filename}": category must be a string`
+    );
+  }
+
   const template: TemplateDefinition = {
     name,
     description,
@@ -218,6 +225,10 @@ function validateTemplate(data: unknown, filename: string): TemplateDefinition {
       ),
     },
   };
+
+  if (obj.category) {
+    template.category = obj.category as string;
+  }
 
   if (detection) {
     template.detection = detection;

@@ -57,12 +57,13 @@ export function listTemplateNames(): string[] {
 }
 
 /**
- * List all templates with descriptions.
+ * List all templates with descriptions and categories.
  */
-export function listTemplates(): Array<{ name: string; description: string }> {
+export function listTemplates(): Array<{ name: string; description: string; category?: string }> {
   const registry = getLoadedTemplates();
   return Object.entries(registry).map(([name, template]) => ({
     name,
     description: template.description,
+    category: template.category,
   }));
 }

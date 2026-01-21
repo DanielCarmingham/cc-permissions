@@ -154,15 +154,51 @@ Examples:
 }
 
 function handleList(): void {
-  console.log(`Available Templates:\n`);
-
   const allTemplates = listTemplates();
 
+  // Fixed category order
+  const categoryOrder = [
+    "General",
+    "Version Control",
+    "Languages & Runtimes",
+    "Cloud Providers",
+    "Container & Infrastructure",
+    "Mobile Development",
+    "Utilities",
+    "Other",
+  ];
+
+  // Group templates by category
+  const grouped = new Map<string, Array<{ name: string; description: string }>>();
+
   for (const template of allTemplates) {
-    console.log(`  ${template.name.padEnd(12)} ${template.description}`);
+    const category = template.category || "Other";
+    if (!grouped.has(category)) {
+      grouped.set(category, []);
+    }
+    grouped.get(category)!.push({ name: template.name, description: template.description });
   }
 
-  console.log(`\nUse "cc-permissions template <name> --level <level>" to generate permissions.`);
+  // Sort templates within each category alphabetically
+  for (const templates of grouped.values()) {
+    templates.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  console.log("Available Templates:\n");
+
+  // Output in fixed category order
+  for (const category of categoryOrder) {
+    const templates = grouped.get(category);
+    if (!templates || templates.length === 0) continue;
+
+    console.log(`${category}:`);
+    for (const template of templates) {
+      console.log(`  ${template.name.padEnd(12)} ${template.description}`);
+    }
+    console.log();
+  }
+
+  console.log(`Use "cc-permissions template <name> --level <level>" to generate permissions.`);
 }
 
 // Main CLI entry point

@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "docker",
   "description": "Docker, Docker Compose, and Buildx",
+  "category": "Container & Infrastructure",
   "detection": {
     "files": ["Dockerfile", "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"]
   },

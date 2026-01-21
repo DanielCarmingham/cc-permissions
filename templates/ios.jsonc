@@ -2,6 +2,7 @@
   "$schema": "../template.schema.json",
   "name": "ios",
   "description": "Xcode, Swift, CocoaPods, and iOS development",
+  "category": "Mobile Development",
   "detection": {
     "files": ["Podfile", "Podfile.lock", "Package.swift"],
     "directories": ["*.xcodeproj/", "*.xcworkspace/"]

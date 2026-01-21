@@ -20,6 +20,10 @@
       "type": "string",
       "description": "Brief description of what this template covers"
     },
+    "category": {
+      "type": "string",
+      "description": "Category for grouping templates in list output"
+    },
     "detection": {
       "type": "object",
       "description": "Optional rules for auto-detecting when this template should be recommended",
