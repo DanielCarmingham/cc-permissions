@@ -6,23 +6,10 @@ import {
   getTemplates,
   listTemplateNames,
   listTemplates,
-  initializeTemplates,
   resetLoader,
-  getTemplatesSync,
 } from "../src/templates/index.js";
-import { TemplateDefinition } from "../src/types.js";
 
 describe("templates", () => {
-  // Initialize templates before all tests in this suite
-  before(async () => {
-    // Use offline mode to avoid network requests during tests
-    // This will use bundled templates
-    const result = await initializeTemplates({ offline: true });
-    if (!result.success) {
-      throw new Error(`Failed to initialize templates: ${result.error}`);
-    }
-  });
-
   after(() => {
     resetLoader();
   });
@@ -272,7 +259,7 @@ describe("templates", () => {
   });
 });
 
-describe("getTemplatesSync", () => {
+describe("templates - synchronous loading", () => {
   before(() => {
     resetLoader();
   });
@@ -281,8 +268,8 @@ describe("getTemplatesSync", () => {
     resetLoader();
   });
 
-  it("should load templates synchronously from bundled directory", () => {
-    const registry = getTemplatesSync();
+  it("should load templates synchronously via lazy loading", () => {
+    const registry = templates();
 
     assert.ok(registry);
     assert.ok(registry.shell);

@@ -23,23 +23,9 @@ export {
   getTemplates,
   listTemplateNames,
   listTemplates,
-  getTemplatesSync,
-  // Async initialization
-  initializeTemplates,
   isInitialized,
   resetLoader,
-  // Cache management
-  clearCache,
-  getCacheInfo,
-  cacheExists,
-  isCacheStale,
-  // Remote fetch
-  checkForUpdates,
-  fetchAndCacheTemplates,
-  getCdnBaseUrl,
-  // Types
-  type LoadOptions,
-  type LoadResult,
+  getTemplatesDir,
 } from "./templates/index.js";
 
 // Output generation

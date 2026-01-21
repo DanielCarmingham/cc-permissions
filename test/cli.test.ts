@@ -1,10 +1,10 @@
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { execSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { mkdtempSync, rmSync, existsSync } from "node:fs";
-import { tmpdir, homedir } from "node:os";
+import { tmpdir } from "node:os";
 
 // Path to the CLI entry point
 const CLI_PATH = path.join(import.meta.dirname, "..", "src", "cli.ts");
@@ -50,8 +50,6 @@ describe("CLI - Help and Version", () => {
     assert.ok(stdout.includes("template"));
     assert.ok(stdout.includes("analyze"));
     assert.ok(stdout.includes("list"));
-    assert.ok(stdout.includes("update"));
-    assert.ok(stdout.includes("cache"));
   });
 
   it("should display help with -h flag", () => {
@@ -97,8 +95,6 @@ describe("CLI - Unknown Command", () => {
 
 describe("CLI - Template Command", () => {
   it("should display template help when no arguments provided", () => {
-    // Note: template --help shows main help because --help is parsed at top level
-    // Use 'template' with no args to see template-specific help
     const { stdout, exitCode } = runCli(["template"]);
 
     assert.equal(exitCode, 0);
@@ -108,8 +104,8 @@ describe("CLI - Template Command", () => {
     assert.ok(stdout.includes("--apply"));
   });
 
-  it("should generate permissions JSON for valid template (offline)", () => {
-    const { stdout, exitCode } = runCli(["template", "shell", "--offline"]);
+  it("should generate permissions JSON for valid template", () => {
+    const { stdout, exitCode } = runCli(["template", "shell"]);
 
     assert.equal(exitCode, 0);
     // Should be valid JSON
@@ -120,8 +116,8 @@ describe("CLI - Template Command", () => {
   });
 
   it("should generate permissions with specified level", () => {
-    const restrictive = runCli(["template", "shell", "--level", "restrictive", "--offline"]);
-    const permissive = runCli(["template", "shell", "--level", "permissive", "--offline"]);
+    const restrictive = runCli(["template", "shell", "--level", "restrictive"]);
+    const permissive = runCli(["template", "shell", "--level", "permissive"]);
 
     assert.equal(restrictive.exitCode, 0);
     assert.equal(permissive.exitCode, 0);
@@ -134,7 +130,7 @@ describe("CLI - Template Command", () => {
   });
 
   it("should support summary format", () => {
-    const { stdout, exitCode } = runCli(["template", "shell", "--format", "summary", "--offline"]);
+    const { stdout, exitCode } = runCli(["template", "shell", "--format", "summary"]);
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("Permission Summary"));
@@ -144,7 +140,7 @@ describe("CLI - Template Command", () => {
   });
 
   it("should support both format", () => {
-    const { stdout, exitCode } = runCli(["template", "shell", "--format", "both", "--offline"]);
+    const { stdout, exitCode } = runCli(["template", "shell", "--format", "both"]);
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("Permission Summary"));
@@ -152,7 +148,7 @@ describe("CLI - Template Command", () => {
   });
 
   it("should handle multiple templates (comma-separated)", () => {
-    const { stdout, exitCode } = runCli(["template", "shell,git", "--offline"]);
+    const { stdout, exitCode } = runCli(["template", "shell,git"]);
 
     assert.equal(exitCode, 0);
     const parsed = JSON.parse(stdout);
@@ -160,7 +156,7 @@ describe("CLI - Template Command", () => {
   });
 
   it("should error for unknown template", () => {
-    const { stderr, exitCode } = runCli(["template", "nonexistent", "--offline"]);
+    const { stderr, exitCode } = runCli(["template", "nonexistent"]);
 
     assert.equal(exitCode, 1);
     assert.ok(stderr.includes("Unknown template"));
@@ -168,14 +164,14 @@ describe("CLI - Template Command", () => {
   });
 
   it("should error for invalid level", () => {
-    const { stderr, exitCode } = runCli(["template", "shell", "--level", "invalid", "--offline"]);
+    const { stderr, exitCode } = runCli(["template", "shell", "--level", "invalid"]);
 
     assert.equal(exitCode, 1);
     assert.ok(stderr.includes("Invalid level"));
   });
 
   it("should error for invalid format", () => {
-    const { stderr, exitCode } = runCli(["template", "shell", "--format", "invalid", "--offline"]);
+    const { stderr, exitCode } = runCli(["template", "shell", "--format", "invalid"]);
 
     assert.equal(exitCode, 1);
     assert.ok(stderr.includes("Invalid format"));
@@ -186,7 +182,7 @@ describe("CLI - Template Command", () => {
 
     try {
       const { stdout, exitCode } = runCli(
-        ["template", "shell", "--level", "standard", "--apply", "--offline"],
+        ["template", "shell", "--level", "standard", "--apply"],
         { cwd: tempDir }
       );
 
@@ -220,14 +216,11 @@ describe("CLI - Analyze Command", () => {
     }
   });
 
-  // Note: analyze --help shows main help because --help is parsed at top level
-  // The analyze command runs successfully even without explicit help flag
-
   it("should analyze current directory by default", () => {
     // Create a simple Node.js project
     fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
 
-    const { stdout, exitCode } = runCli(["analyze", "--offline"], { cwd: tempDir });
+    const { stdout, exitCode } = runCli(["analyze"], { cwd: tempDir });
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("Project Analysis"));
@@ -238,7 +231,7 @@ describe("CLI - Analyze Command", () => {
   it("should analyze specified directory", () => {
     fs.writeFileSync(path.join(tempDir, "requirements.txt"), "flask");
 
-    const { stdout, exitCode } = runCli(["analyze", tempDir, "--offline"]);
+    const { stdout, exitCode } = runCli(["analyze", tempDir]);
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("python"));
@@ -249,7 +242,7 @@ describe("CLI - Analyze Command", () => {
     fs.writeFileSync(path.join(tempDir, "requirements.txt"), "");
     fs.mkdirSync(path.join(tempDir, ".git"));
 
-    const { stdout, exitCode } = runCli(["analyze", tempDir, "--offline"]);
+    const { stdout, exitCode } = runCli(["analyze", tempDir]);
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("nodejs"));
@@ -260,7 +253,7 @@ describe("CLI - Analyze Command", () => {
   it("should show suggested command", () => {
     fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
 
-    const { stdout, exitCode } = runCli(["analyze", tempDir, "--offline"]);
+    const { stdout, exitCode } = runCli(["analyze", tempDir]);
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("Suggested Command:"));
@@ -270,7 +263,7 @@ describe("CLI - Analyze Command", () => {
 
 describe("CLI - List Command", () => {
   it("should list available templates", () => {
-    const { stdout, exitCode } = runCli(["list", "--offline"]);
+    const { stdout, exitCode } = runCli(["list"]);
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("Available Templates"));
@@ -278,79 +271,11 @@ describe("CLI - List Command", () => {
     assert.ok(stdout.includes("nodejs"));
     assert.ok(stdout.includes("python"));
   });
-
-  it("should show template source", () => {
-    const { stdout, exitCode } = runCli(["list", "--offline"]);
-
-    assert.equal(exitCode, 0);
-    assert.ok(stdout.includes("Template source:"));
-  });
-});
-
-describe("CLI - Cache Command", () => {
-  it("should show cache info with cache info", () => {
-    const { stdout, exitCode } = runCli(["cache", "info"]);
-
-    assert.equal(exitCode, 0);
-    assert.ok(stdout.includes("Template Cache Information"));
-    assert.ok(stdout.includes("Path:"));
-    assert.ok(stdout.includes("Exists:"));
-    assert.ok(stdout.includes("Templates:"));
-  });
-
-  it("should show cache info with just cache command", () => {
-    const { stdout, exitCode } = runCli(["cache"]);
-
-    assert.equal(exitCode, 0);
-    assert.ok(stdout.includes("Template Cache Information"));
-  });
-
-  it("should clear cache with cache clear", () => {
-    // First ensure cache exists by running a command that creates it
-    runCli(["template", "shell", "--offline"]);
-
-    const { stdout, exitCode } = runCli(["cache", "clear"]);
-
-    // Could be 0 if cleared or if cache didn't exist
-    assert.ok(exitCode === 0 || stdout.includes("does not exist") || true);
-    // Just verify the command runs without crash
-  });
-
-  it("should error for unknown cache action", () => {
-    const { stderr, exitCode } = runCli(["cache", "unknownaction"]);
-
-    assert.equal(exitCode, 1);
-    assert.ok(stderr.includes("Unknown cache action"));
-  });
-
-  it("should show CDN URL in cache info", () => {
-    const { stdout, exitCode } = runCli(["cache", "info"]);
-
-    assert.equal(exitCode, 0);
-    assert.ok(stdout.includes("CDN URL:"));
-  });
-});
-
-describe("CLI - Offline Mode", () => {
-  it("should work with global --offline flag", () => {
-    const { stdout, exitCode } = runCli(["--offline", "list"]);
-
-    assert.equal(exitCode, 0);
-    assert.ok(stdout.includes("Available Templates"));
-  });
-
-  it("should work with --offline on subcommand", () => {
-    const { stdout, exitCode } = runCli(["template", "shell", "--offline"]);
-
-    assert.equal(exitCode, 0);
-    const parsed = JSON.parse(stdout);
-    assert.ok(parsed.permissions);
-  });
 });
 
 describe("CLI - Edge Cases", () => {
   it("should handle mixed case template names", () => {
-    const { stdout, exitCode } = runCli(["template", "SHELL", "--offline"]);
+    const { stdout, exitCode } = runCli(["template", "SHELL"]);
 
     assert.equal(exitCode, 0);
     const parsed = JSON.parse(stdout);
@@ -358,7 +283,7 @@ describe("CLI - Edge Cases", () => {
   });
 
   it("should handle short flags", () => {
-    const { stdout, exitCode } = runCli(["template", "shell", "-l", "restrictive", "-f", "json", "--offline"]);
+    const { stdout, exitCode } = runCli(["template", "shell", "-l", "restrictive", "-f", "json"]);
 
     assert.equal(exitCode, 0);
     const parsed = JSON.parse(stdout);
@@ -366,7 +291,7 @@ describe("CLI - Edge Cases", () => {
   });
 
   it("should handle whitespace in template names (comma-separated)", () => {
-    const { stdout, exitCode } = runCli(["template", "shell, git", "--offline"]);
+    const { stdout, exitCode } = runCli(["template", "shell, git"]);
 
     assert.equal(exitCode, 0);
     const parsed = JSON.parse(stdout);

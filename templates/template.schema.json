@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/DanielCarmingham/cc-permissions-templates/blob/main/template.schema.json",
+  "$id": "https://github.com/DanielCarmingham/cc-permissions/blob/main/templates/template.schema.json",
   "title": "CC-Permissions Template",
   "description": "Schema for permission templates in cc-permissions",
   "type": "object",

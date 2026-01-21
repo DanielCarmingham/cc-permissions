@@ -33,16 +33,13 @@ npm install -g cc-permissions
 
 ```bash
 # Generate standard web development permissions
-cc-permissions template web --level standard
+cc-permissions template nodejs --level standard
 
 # Combine multiple templates
-cc-permissions template web,python --level standard
+cc-permissions template nodejs,python --level standard
 
 # Apply directly to .claude/settings.json (creates backup)
-cc-permissions template web --level standard --apply
-
-# Work offline (use cached templates only)
-cc-permissions template web --level standard --offline
+cc-permissions template nodejs --level standard --apply
 ```
 
 ### Analyze Your Project
@@ -58,35 +55,6 @@ cc-permissions analyze ./path/to/project
 
 ```bash
 cc-permissions list
-```
-
-### Update Templates
-
-Templates are fetched from a remote CDN and cached locally. Update to get the latest templates:
-
-```bash
-cc-permissions update
-```
-
-On first run, templates are automatically fetched. Subsequent runs use the local cache, with automatic background checks for updates (daily).
-
-### Manage Template Cache
-
-```bash
-# Show cache information
-cc-permissions cache info
-
-# Clear the cache (forces re-download on next run)
-cc-permissions cache clear
-```
-
-### Offline Mode
-
-Use `--offline` to work without network access (uses cached templates):
-
-```bash
-cc-permissions template web --level standard --offline
-cc-permissions list --offline
 ```
 
 ### Check Version
@@ -109,47 +77,27 @@ Levels are cumulative—each level includes everything from the previous level:
 
 | Template | Description |
 |----------|-------------|
-| `general` | Git and common CLI tools (ls, cat, grep, find, etc.) |
-| `web` | Node.js, npm, and common frontend tooling |
+| `shell` | Git and common CLI tools (ls, cat, grep, find, etc.) |
+| `nodejs` | Node.js, npm, and common frontend tooling |
 | `python` | pip, python, venv, pytest, and common data tools |
 | `dotnet` | dotnet CLI, NuGet, MSBuild |
 
-Combine templates with commas: `cc-permissions template general,web,python`
+Combine templates with commas: `cc-permissions template shell,nodejs,python`
+
+Run `cc-permissions list` to see all available templates.
 
 ## Output Formats
 
 ```bash
 # JSON only (default) - pipe to .claude/settings.json
-cc-permissions template web --format json
+cc-permissions template nodejs --format json
 
 # Human-readable summary
-cc-permissions template web --format summary
+cc-permissions template nodejs --format summary
 
 # Both JSON and summary
-cc-permissions template web --format both
+cc-permissions template nodejs --format both
 ```
-
-## Template Architecture
-
-Templates are fetched from a remote CDN and cached locally for offline use:
-
-```
-~/.cc-permissions/
-├── templates/           # Cached template files
-│   ├── general.jsonc
-│   ├── web.jsonc
-│   ├── python.jsonc
-│   └── dotnet.jsonc
-└── cache-meta.json      # Cache metadata (version, last updated)
-```
-
-**How it works:**
-1. First run: Fetches templates from CDN, caches locally
-2. Subsequent runs: Uses cache, checks for updates in background (daily)
-3. Offline: Uses cached templates
-4. `cc-permissions update`: Forces refresh from CDN
-
-The tool also includes bundled templates as a fallback if both remote fetch and cache fail.
 
 ## Who This Is For
 
@@ -159,7 +107,7 @@ The tool also includes bundled templates as a fallback if both remote fetch and 
 
 ## Contributing Templates
 
-Templates are maintained in a separate repository: [cc-permissions-templates](https://github.com/DanielCarmingham/cc-permissions-templates)
+Templates are located in the `templates/` directory.
 
 ### Template Structure
 

@@ -1,38 +1,15 @@
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import stripJsonComments from "strip-json-comments";
 import type { TemplateDefinition, TemplateRegistry, Permission, DetectionRules, ContentPattern } from "../types.js";
-import {
-  cacheExists,
-  getCacheTemplatesDir,
-  listCachedTemplateFiles,
-  isCacheStale,
-} from "./cache.js";
-import { fetchAndCacheTemplates } from "./remote.js";
 
-// Get the bundled templates directory (for fallback during migration)
+// Get the bundled templates directory
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const BUNDLED_TEMPLATES_DIR = join(__dirname, "..", "..", "templates");
+const TEMPLATES_DIR = join(__dirname, "..", "..", "templates");
 
 // Module-level state
 let _templates: TemplateRegistry | null = null;
-let _initialized = false;
-let _offlineMode = false;
-
-export interface LoadOptions {
-  offline?: boolean;
-  forceRefresh?: boolean;
-  silent?: boolean;
-}
-
-export interface LoadResult {
-  success: boolean;
-  source: "cache" | "remote" | "bundled";
-  templateCount: number;
-  error?: string;
-  warning?: string;
-}
 
 /**
  * Validate a permission object.
@@ -271,24 +248,24 @@ function loadTemplateFile(filepath: string): TemplateDefinition {
 }
 
 /**
- * Load templates from a directory.
+ * Load all templates from the bundled templates directory.
  */
-function loadTemplatesFromDirectory(dir: string): TemplateRegistry {
+function loadTemplates(): TemplateRegistry {
   const registry: TemplateRegistry = {};
 
   let files: string[];
   try {
-    files = readdirSync(dir).filter((f) => f.endsWith(".jsonc"));
+    files = readdirSync(TEMPLATES_DIR).filter((f) => f.endsWith(".jsonc"));
   } catch {
-    throw new Error(`Failed to read templates directory: ${dir}`);
+    throw new Error(`Failed to read templates directory: ${TEMPLATES_DIR}`);
   }
 
   if (files.length === 0) {
-    throw new Error(`No template files found in ${dir}`);
+    throw new Error(`No template files found in ${TEMPLATES_DIR}`);
   }
 
   for (const file of files) {
-    const filepath = join(dir, file);
+    const filepath = join(TEMPLATES_DIR, file);
     const template = loadTemplateFile(filepath);
 
     if (registry[template.name]) {
@@ -304,157 +281,21 @@ function loadTemplatesFromDirectory(dir: string): TemplateRegistry {
 }
 
 /**
- * Load templates from cache directory.
- */
-function loadFromCache(): TemplateRegistry {
-  const cacheDir = getCacheTemplatesDir();
-  return loadTemplatesFromDirectory(cacheDir);
-}
-
-/**
- * Load templates from bundled directory (fallback for migration).
- */
-function loadFromBundled(): TemplateRegistry {
-  return loadTemplatesFromDirectory(BUNDLED_TEMPLATES_DIR);
-}
-
-/**
- * Check if bundled templates exist.
- */
-function bundledTemplatesExist(): boolean {
-  if (!existsSync(BUNDLED_TEMPLATES_DIR)) {
-    return false;
-  }
-  const files = readdirSync(BUNDLED_TEMPLATES_DIR).filter((f) =>
-    f.endsWith(".jsonc")
-  );
-  return files.length > 0;
-}
-
-/**
- * Initialize templates - fetches from remote and caches, or uses cache/bundled.
- * This must be called before using templates.
- */
-export async function initializeTemplates(
-  options: LoadOptions = {}
-): Promise<LoadResult> {
-  const { offline = false, forceRefresh = false, silent = false } = options;
-  _offlineMode = offline;
-
-  // If offline mode, only use cache or bundled
-  if (offline) {
-    if (cacheExists()) {
-      try {
-        _templates = loadFromCache();
-        _initialized = true;
-        return {
-          success: true,
-          source: "cache",
-          templateCount: Object.keys(_templates).length,
-        };
-      } catch (error) {
-        // Cache corrupted, try bundled
-      }
-    }
-
-    // Fall back to bundled templates
-    if (bundledTemplatesExist()) {
-      _templates = loadFromBundled();
-      _initialized = true;
-      return {
-        success: true,
-        source: "bundled",
-        templateCount: Object.keys(_templates).length,
-        warning: "Using bundled templates (offline mode, no cache).",
-      };
-    }
-
-    return {
-      success: false,
-      source: "cache",
-      templateCount: 0,
-      error:
-        "No cached templates available. Run 'cc-permissions update' while online to download templates.",
-    };
-  }
-
-  // Online mode: check if we need to fetch
-  const shouldFetch = forceRefresh || !cacheExists() || isCacheStale();
-
-  if (shouldFetch) {
-    const fetchResult = await fetchAndCacheTemplates();
-
-    if (fetchResult.success) {
-      _templates = loadFromCache();
-      _initialized = true;
-      return {
-        success: true,
-        source: "remote",
-        templateCount: Object.keys(_templates).length,
-      };
-    }
-
-    // Fetch failed, try to use existing cache or bundled
-    if (!silent) {
-      console.warn(`Warning: Failed to fetch templates: ${fetchResult.error}`);
-    }
-  }
-
-  // Try cache first
-  if (cacheExists()) {
-    try {
-      _templates = loadFromCache();
-      _initialized = true;
-      return {
-        success: true,
-        source: "cache",
-        templateCount: Object.keys(_templates).length,
-        warning: shouldFetch ? "Using cached templates (fetch failed)." : undefined,
-      };
-    } catch {
-      // Cache corrupted, continue to bundled
-    }
-  }
-
-  // Fall back to bundled templates
-  if (bundledTemplatesExist()) {
-    _templates = loadFromBundled();
-    _initialized = true;
-    return {
-      success: true,
-      source: "bundled",
-      templateCount: Object.keys(_templates).length,
-      warning: "Using bundled templates. Run 'cc-permissions update' to get latest.",
-    };
-  }
-
-  return {
-    success: false,
-    source: "cache",
-    templateCount: 0,
-    error:
-      "No templates available. Please run 'cc-permissions update' to download templates.",
-  };
-}
-
-/**
  * Get the loaded templates registry.
- * Throws if templates haven't been initialized.
+ * Loads templates on first access (lazy initialization).
  */
 export function getTemplates(): TemplateRegistry {
-  if (!_initialized || !_templates) {
-    throw new Error(
-      "Templates not initialized. Call initializeTemplates() first."
-    );
+  if (!_templates) {
+    _templates = loadTemplates();
   }
   return _templates;
 }
 
 /**
- * Check if templates have been initialized.
+ * Check if templates have been loaded.
  */
 export function isInitialized(): boolean {
-  return _initialized;
+  return _templates !== null;
 }
 
 /**
@@ -462,28 +303,11 @@ export function isInitialized(): boolean {
  */
 export function resetLoader(): void {
   _templates = null;
-  _initialized = false;
-  _offlineMode = false;
 }
 
 /**
- * Synchronously load templates from cache or bundled (for backward compatibility).
- * Prefers cache, falls back to bundled.
+ * Get the templates directory path.
  */
-export function loadTemplatesSync(): TemplateRegistry {
-  if (cacheExists()) {
-    try {
-      return loadFromCache();
-    } catch {
-      // Fall through to bundled
-    }
-  }
-
-  if (bundledTemplatesExist()) {
-    return loadFromBundled();
-  }
-
-  throw new Error(
-    "No templates available. Please run 'cc-permissions update' to download templates."
-  );
+export function getTemplatesDir(): string {
+  return TEMPLATES_DIR;
 }

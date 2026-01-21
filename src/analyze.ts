@@ -2,7 +2,7 @@ import { readdirSync, existsSync, statSync, readFileSync } from "node:fs";
 import { join, resolve, relative } from "node:path";
 import type { AnalysisResult, DetectionRules, TemplateRegistry } from "./types.js";
 import { PermissionLevel } from "./types.js";
-import { loadTemplatesSync } from "./templates/loader.js";
+import { getTemplates } from "./templates/loader.js";
 
 /**
  * Check if a file exists in the directory.
@@ -137,7 +137,7 @@ export function analyzeDirectory(dir: string): AnalysisResult {
   // Load templates to get detection rules
   let templates: TemplateRegistry;
   try {
-    templates = loadTemplatesSync();
+    templates = getTemplates();
   } catch {
     // If templates can't be loaded, return minimal result with shell
     return {
