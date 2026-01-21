@@ -59,8 +59,15 @@ async function fetchWithTimeout(
   }
 }
 
+// Legacy manifest format (v1.0.0)
+interface LegacyManifest {
+  version: string;
+  templates: string[];
+}
+
 /**
  * Fetch the template manifest from the remote CDN.
+ * Supports both legacy flat format and new categorized format.
  */
 export async function fetchManifest(): Promise<TemplateManifest> {
   const response = await fetchWithTimeout(MANIFEST_URL);
@@ -69,21 +76,39 @@ export async function fetchManifest(): Promise<TemplateManifest> {
     throw new Error(`Failed to fetch manifest: ${response.status} ${response.statusText}`);
   }
 
-  const manifest = (await response.json()) as TemplateManifest;
+  const data = await response.json();
 
-  // Validate manifest structure
-  if (!manifest.version || !Array.isArray(manifest.categories)) {
-    throw new Error("Invalid manifest format: missing version or categories");
+  if (!data.version) {
+    throw new Error("Invalid manifest format: missing version");
   }
 
-  // Validate each category has name and templates
-  for (const category of manifest.categories) {
-    if (!category.name || !Array.isArray(category.templates)) {
-      throw new Error("Invalid manifest format: category missing name or templates");
+  // Check if this is the new categorized format
+  if (Array.isArray(data.categories)) {
+    const manifest = data as TemplateManifest;
+    // Validate each category has name and templates
+    for (const category of manifest.categories) {
+      if (!category.name || !Array.isArray(category.templates)) {
+        throw new Error("Invalid manifest format: category missing name or templates");
+      }
     }
+    return manifest;
   }
 
-  return manifest;
+  // Legacy format: convert flat templates array to categorized format
+  if (Array.isArray(data.templates)) {
+    const legacy = data as LegacyManifest;
+    return {
+      version: legacy.version,
+      categories: [
+        {
+          name: "All Templates",
+          templates: legacy.templates,
+        },
+      ],
+    };
+  }
+
+  throw new Error("Invalid manifest format: missing categories or templates");
 }
 
 /**
