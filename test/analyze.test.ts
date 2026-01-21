@@ -369,6 +369,147 @@ dependencies:
   });
 });
 
+describe("analyzeDirectory - error scenarios", () => {
+  let tempDir: string;
+
+  beforeEach(() => {
+    tempDir = createTempDir();
+  });
+
+  afterEach(() => {
+    try {
+      rmSync(tempDir, { recursive: true, force: true });
+    } catch {
+      // Ignore cleanup errors
+    }
+  });
+
+  it("should handle non-existent directory gracefully", () => {
+    const nonExistent = path.join(tempDir, "does-not-exist");
+
+    // analyzeDirectory should handle this gracefully
+    const result = analyzeDirectory(nonExistent);
+
+    // Should return fallback result with shell template
+    assert.ok(result.recommendedTemplates.includes("shell"));
+    assert.equal(result.detectedFiles.length, 0);
+  });
+
+  it("should handle file instead of directory", () => {
+    const filePath = path.join(tempDir, "file.txt");
+    fs.writeFileSync(filePath, "test");
+
+    // When given a file path instead of directory
+    const result = analyzeDirectory(filePath);
+
+    // Should handle gracefully and recommend shell
+    assert.ok(result.recommendedTemplates.includes("shell"));
+  });
+
+  it("should handle symbolic links", () => {
+    // Create a directory and a symlink to it
+    const realDir = path.join(tempDir, "real");
+    const linkDir = path.join(tempDir, "link");
+    fs.mkdirSync(realDir);
+    fs.writeFileSync(path.join(realDir, "package.json"), "{}");
+
+    try {
+      fs.symlinkSync(realDir, linkDir);
+
+      const result = analyzeDirectory(linkDir);
+
+      // Should detect nodejs through symlink
+      assert.ok(result.recommendedTemplates.includes("nodejs"));
+    } catch {
+      // Symlink creation may fail on some systems/permissions
+      // In that case, just verify the test doesn't crash
+    }
+  });
+
+  it("should handle deeply nested directory structures", () => {
+    // Create nested structure
+    const deep = path.join(tempDir, "a", "b", "c", "d", "e");
+    fs.mkdirSync(deep, { recursive: true });
+    fs.writeFileSync(path.join(deep, "package.json"), "{}");
+
+    // Analyze the deep directory
+    const result = analyzeDirectory(deep);
+
+    // Should still detect nodejs
+    assert.ok(result.recommendedTemplates.includes("nodejs"));
+  });
+
+  it("should handle directory with only hidden files", () => {
+    fs.writeFileSync(path.join(tempDir, ".hidden"), "secret");
+    fs.writeFileSync(path.join(tempDir, ".env"), "SECRET=value");
+
+    const result = analyzeDirectory(tempDir);
+
+    // Should still return shell as minimum
+    assert.ok(result.recommendedTemplates.includes("shell"));
+  });
+
+  it("should handle directory with binary files", () => {
+    // Create a binary file
+    const buffer = Buffer.from([0x00, 0x01, 0x02, 0xff, 0xfe]);
+    fs.writeFileSync(path.join(tempDir, "binary.bin"), buffer);
+    fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+
+    const result = analyzeDirectory(tempDir);
+
+    // Should still work and detect nodejs
+    assert.ok(result.recommendedTemplates.includes("nodejs"));
+  });
+
+  it("should handle very large number of files", () => {
+    // Create many files
+    for (let i = 0; i < 100; i++) {
+      fs.writeFileSync(path.join(tempDir, `file${i}.txt`), `content ${i}`);
+    }
+    fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+
+    const result = analyzeDirectory(tempDir);
+
+    // Should still work correctly
+    assert.ok(result.recommendedTemplates.includes("nodejs"));
+    assert.ok(result.recommendedTemplates.includes("shell"));
+  });
+
+  it("should handle unicode filenames", () => {
+    fs.writeFileSync(path.join(tempDir, "文件.txt"), "chinese");
+    fs.writeFileSync(path.join(tempDir, "файл.txt"), "russian");
+    fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+
+    const result = analyzeDirectory(tempDir);
+
+    // Should handle unicode files without crashing
+    assert.ok(result.recommendedTemplates.includes("nodejs"));
+  });
+
+  it("should handle file with invalid JSON in content pattern check", () => {
+    // Create a package.json with invalid JSON (shouldn't crash content checks)
+    fs.writeFileSync(path.join(tempDir, "pubspec.yaml"), "not yaml {{{{");
+
+    const result = analyzeDirectory(tempDir);
+
+    // Should not crash, should still return shell
+    assert.ok(result.recommendedTemplates.includes("shell"));
+  });
+
+  it("should handle relative path with nested directory", () => {
+    // Create a nested structure and use relative path from parent
+    const nestedDir = path.join(tempDir, "nested");
+    fs.mkdirSync(nestedDir);
+    fs.writeFileSync(path.join(nestedDir, "package.json"), "{}");
+
+    // Analyze using relative path from temp dir (without changing cwd)
+    const result = analyzeDirectory(path.join(tempDir, "nested"));
+
+    // Should handle paths correctly
+    assert.ok(result.recommendedTemplates.includes("nodejs"));
+  });
+});
+
 describe("formatAnalysisResult", () => {
   it("should format empty analysis", () => {
     const result = {

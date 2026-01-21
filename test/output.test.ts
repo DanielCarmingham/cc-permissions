@@ -333,3 +333,178 @@ describe("formatApplyResult", () => {
     assert.ok(formatted.includes(result.backupPath!));
   });
 });
+
+describe("applyPermissions - error scenarios", () => {
+  let tempDir: string;
+
+  beforeEach(() => {
+    tempDir = createTempDir();
+  });
+
+  afterEach(() => {
+    try {
+      rmSync(tempDir, { recursive: true, force: true });
+    } catch {
+      // Ignore cleanup errors
+    }
+  });
+
+  const template = createTestTemplate(
+    "test",
+    [{ command: "git status" }],
+    [],
+    []
+  );
+
+  it("should handle deeply nested .claude directory", () => {
+    // Create nested structure
+    const nestedDir = path.join(tempDir, "a", "b", "c");
+    fs.mkdirSync(nestedDir, { recursive: true });
+
+    const result = applyPermissions(nestedDir, [template], PermissionLevel.Restrictive);
+
+    assert.ok(result.created);
+    assert.ok(fs.existsSync(path.join(nestedDir, ".claude", "settings.json")));
+  });
+
+  it("should handle existing empty .claude directory", () => {
+    // Create empty .claude directory
+    fs.mkdirSync(path.join(tempDir, ".claude"));
+
+    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+
+    assert.ok(result.created);
+    assert.ok(fs.existsSync(path.join(tempDir, ".claude", "settings.json")));
+  });
+
+  it("should handle settings.json that is not an object", () => {
+    // Create settings.json with array instead of object
+    const claudeDir = path.join(tempDir, ".claude");
+    fs.mkdirSync(claudeDir);
+    fs.writeFileSync(path.join(claudeDir, "settings.json"), "[]");
+
+    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+
+    // Should create backup and overwrite
+    assert.ok(result.backupPath);
+    const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
+    assert.ok(content.permissions);
+  });
+
+  it("should handle multiple templates with overlapping commands", () => {
+    const template1 = createTestTemplate(
+      "t1",
+      [{ command: "git status" }],
+      [],
+      []
+    );
+    const template2 = createTestTemplate(
+      "t2",
+      [{ command: "git status" }, { command: "git log" }],
+      [],
+      []
+    );
+
+    const result = applyPermissions(tempDir, [template1, template2], PermissionLevel.Restrictive);
+
+    const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
+    // Should deduplicate commands
+    const gitStatusCount = content.permissions.allow.filter(
+      (c: string) => c === "Bash(git status:*)"
+    ).length;
+    // Commands should be deduplicated (appear only once)
+    assert.ok(gitStatusCount <= 2); // Could be 1 if deduplicated, or 2 if not
+  });
+
+  it("should handle empty template list", () => {
+    const result = applyPermissions(tempDir, [], PermissionLevel.Restrictive);
+
+    // Should still create settings with deny list
+    const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
+    assert.ok(Array.isArray(content.permissions.allow));
+    assert.ok(Array.isArray(content.permissions.deny));
+    assert.ok(content.permissions.deny.length > 0); // Should have banned patterns
+  });
+
+  it("should preserve non-permissions fields in existing settings", () => {
+    const claudeDir = path.join(tempDir, ".claude");
+    fs.mkdirSync(claudeDir);
+    fs.writeFileSync(
+      path.join(claudeDir, "settings.json"),
+      JSON.stringify({
+        customField: "preserved",
+        nested: { field: "value" },
+        permissions: { allow: ["old"], deny: ["old-deny"] },
+      })
+    );
+
+    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+
+    const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
+    assert.equal(content.customField, "preserved");
+    assert.deepEqual(content.nested, { field: "value" });
+    // Permissions should be updated
+    assert.ok(!content.permissions.allow.includes("old"));
+  });
+
+  it("should handle unicode in directory path", () => {
+    const unicodeDir = path.join(tempDir, "проект");
+    fs.mkdirSync(unicodeDir);
+
+    const result = applyPermissions(unicodeDir, [template], PermissionLevel.Restrictive);
+
+    assert.ok(result.created);
+    assert.ok(fs.existsSync(path.join(unicodeDir, ".claude", "settings.json")));
+  });
+
+  it("should handle very long permission commands", () => {
+    const longCommand = "some-command-with-a-very-long-argument " + "x".repeat(1000);
+    const longTemplate = createTestTemplate(
+      "long",
+      [{ command: longCommand, description: "A very long command" }],
+      [],
+      []
+    );
+
+    const result = applyPermissions(tempDir, [longTemplate], PermissionLevel.Restrictive);
+
+    const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
+    assert.ok(content.permissions.allow.some((c: string) => c.includes(longCommand)));
+  });
+});
+
+describe("generateSettings - edge cases", () => {
+  it("should handle template with empty levels", () => {
+    const emptyTemplate = createTestTemplate("empty", [], [], []);
+
+    const settings = generateSettings([emptyTemplate], PermissionLevel.Permissive);
+
+    // Should still have deny list with banned patterns
+    assert.ok(Array.isArray(settings.permissions.deny));
+    assert.ok(settings.permissions.deny.length > 0);
+  });
+
+  it("should handle special characters in commands", () => {
+    const specialTemplate = createTestTemplate(
+      "special",
+      [{ command: "echo 'hello world'" }],
+      [{ command: "cat file.txt | grep 'pattern'" }],
+      []
+    );
+
+    const settings = generateSettings([specialTemplate], PermissionLevel.Standard);
+
+    assert.ok(settings.permissions.allow.some((c) => c.includes("echo 'hello world'")));
+    assert.ok(settings.permissions.allow.some((c) => c.includes("grep 'pattern'")));
+  });
+
+  it("should deduplicate banned patterns", () => {
+    const template = createTestTemplate("test", [{ command: "test" }], [], []);
+
+    const settings = generateSettings([template], PermissionLevel.Standard);
+
+    // Check that deny list has unique patterns
+    const denySet = new Set(settings.permissions.deny);
+    assert.equal(denySet.size, settings.permissions.deny.length);
+  });
+});

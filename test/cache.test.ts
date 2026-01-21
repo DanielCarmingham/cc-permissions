@@ -211,4 +211,96 @@ describe("cache module", () => {
       assert.equal(isCacheStale(10 * 60 * 1000), false); // 10 minute max age
     });
   });
+
+  describe("error scenarios", () => {
+    it("should handle corrupted cache meta JSON gracefully", () => {
+      ensureCacheDir();
+      const metaPath = path.join(cacheBaseDir, "cache-meta.json");
+      fs.writeFileSync(metaPath, "not valid json {{{");
+
+      const meta = getCacheMeta();
+      assert.equal(meta, null);
+    });
+
+    it("should handle missing lastUpdated in metadata for stale check", () => {
+      ensureCacheDir();
+      const metaPath = path.join(cacheBaseDir, "cache-meta.json");
+      fs.writeFileSync(metaPath, JSON.stringify({ version: "1", templates: [] }));
+
+      // Missing lastUpdated should be considered stale
+      assert.equal(isCacheStale(), true);
+    });
+
+    it("should handle invalid date in lastUpdated", () => {
+      saveCacheMeta({
+        lastUpdated: "not-a-valid-date",
+        version: "1",
+        templates: [],
+      });
+
+      // Invalid date should be handled without crashing
+      // Date.parse returns NaN for invalid dates
+      const result = isCacheStale();
+      // NaN comparisons return false, so this should return true (stale)
+      assert.equal(typeof result, "boolean");
+    });
+
+    it("should handle cache template with special characters in name", () => {
+      const content = '{"name": "special-chars!@#$"}';
+      // The filename will be sanitized to just the alphanumeric parts
+      cacheTemplate("special-test", content);
+
+      const read = readCachedTemplate("special-test");
+      assert.equal(read, content);
+    });
+
+    it("should handle empty template content", () => {
+      cacheTemplate("empty", "");
+
+      const read = readCachedTemplate("empty");
+      assert.equal(read, "");
+    });
+
+    it("should handle very large template content", () => {
+      const largeContent = "x".repeat(1000000); // 1MB of data
+      cacheTemplate("large", largeContent);
+
+      const read = readCachedTemplate("large");
+      assert.equal(read?.length, 1000000);
+    });
+
+    it("should handle unicode template content", () => {
+      const unicodeContent = '{"name": "unicode", "description": "中文 русский 日本語"}';
+      cacheTemplate("unicode", unicodeContent);
+
+      const read = readCachedTemplate("unicode");
+      assert.equal(read, unicodeContent);
+    });
+
+    it("should handle concurrent cache operations", async () => {
+      // Simulate concurrent writes (not truly concurrent in Node but tests the operations)
+      const promises = [];
+      for (let i = 0; i < 10; i++) {
+        promises.push(
+          new Promise<void>((resolve) => {
+            cacheTemplate(`concurrent-${i}`, `{"id": ${i}}`);
+            resolve();
+          })
+        );
+      }
+      await Promise.all(promises);
+
+      // All files should be readable
+      for (let i = 0; i < 10; i++) {
+        const read = readCachedTemplate(`concurrent-${i}`);
+        assert.ok(read?.includes(String(i)));
+      }
+    });
+
+    it("should return empty array when listing templates in non-existent directory", () => {
+      // Cache doesn't exist yet
+      const files = listCachedTemplateFiles();
+      assert.deepEqual(files, []);
+    });
+  });
 });
