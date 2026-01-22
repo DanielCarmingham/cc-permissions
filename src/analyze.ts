@@ -144,7 +144,7 @@ export function analyzeDirectory(dir: string): AnalysisResult {
       detectedFiles: [],
       recommendedTemplates: ["shell"],
       suggestedLevel: PermissionLevel.Restrictive,
-      suggestedCommand: "cc-permissions template shell --level restrictive",
+      suggestedCommand: "cc-permissions --apply --level restrictive",
     };
   }
 
@@ -180,7 +180,10 @@ export function analyzeDirectory(dir: string): AnalysisResult {
   }
 
   const templateNames = Array.from(recommendedTemplates);
-  const suggestedCommand = `cc-permissions template ${templateNames.join(",")} --level ${suggestedLevel}`;
+  const suggestedCommand =
+    suggestedLevel === PermissionLevel.Standard
+      ? `cc-permissions --apply`
+      : `cc-permissions --apply --level ${suggestedLevel}`;
 
   return {
     detectedFiles,
