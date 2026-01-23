@@ -27,6 +27,21 @@ npx cc-permissions
 npm install -g cc-permissions
 ```
 
+### Claude Code Plugin
+
+Install as a Claude Code plugin for integrated commands:
+
+```bash
+# In Claude Code
+/plugin install https://github.com/DanielCarmingham/cc-permissions
+```
+
+Then use:
+- `/cc-permissions:analyze` - Scan project and recommend templates
+- `/cc-permissions:template nodejs,python` - Generate from specific templates
+- `/cc-permissions:list` - List available templates
+- `/cc-permissions:apply` - Apply permissions to settings
+
 ## Usage
 
 ### Quick Start

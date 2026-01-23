@@ -1,0 +1,9 @@
+{
+  "name": "cc-permissions",
+  "description": "Generate thoughtful permission configs for Claude Code",
+  "version": "0.1.1",
+  "author": {
+    "name": "Daniel Carmingham"
+  },
+  "repository": "https://github.com/DanielCarmingham/cc-permissions"
+}
