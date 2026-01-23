@@ -29,6 +29,16 @@ npm install -g cc-permissions
 
 ## Usage
 
+### Quick Start
+
+```bash
+# Analyze your project and apply recommended permissions
+cc-permissions --apply
+
+# Or be more specific
+cc-permissions --apply --level permissive
+```
+
 ### Generate Permissions from a Template
 
 ```bash
@@ -39,7 +49,7 @@ cc-permissions template nodejs --level standard
 cc-permissions template nodejs,python --level standard
 
 # Apply directly to .claude/settings.json (creates backup)
-cc-permissions template nodejs --level standard --apply
+cc-permissions template nodejs --apply
 ```
 
 ### Analyze Your Project
@@ -85,6 +95,32 @@ Levels are cumulative—each level includes everything from the previous level:
 Combine templates with commas: `cc-permissions template shell,nodejs,python`
 
 Run `cc-permissions list` to see all available templates.
+
+## Apply Options
+
+Control where permissions are written with `--scope` or `--output`:
+
+```bash
+# Project settings (default) - .claude/settings.json
+cc-permissions --apply --scope project
+
+# User/global settings - ~/.claude/settings.json
+cc-permissions --apply --scope user
+
+# Local settings (gitignored) - .claude/settings.local.json
+cc-permissions --apply --scope local
+
+# Custom file path
+cc-permissions --apply --output ./my-permissions.json
+```
+
+| Scope | File | Use Case |
+|-------|------|----------|
+| `project` | `.claude/settings.json` | Shared team settings (commit to repo) |
+| `user` / `global` | `~/.claude/settings.json` | Personal defaults across all projects |
+| `local` | `.claude/settings.local.json` | Personal overrides (gitignored) |
+
+**Tip:** Options support prefix matching—use `-l r` for `--level restrictive` or `-s u` for `--scope user`.
 
 ## Output Formats
 
