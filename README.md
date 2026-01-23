@@ -31,9 +31,8 @@ npm install -g cc-permissions
 
 Install as a Claude Code plugin for integrated commands:
 
-```bash
-# In Claude Code
-/plugin install https://github.com/DanielCarmingham/cc-permissions
+```
+/plugin install DanielCarmingham/cc-permissions
 ```
 
 Then use:
