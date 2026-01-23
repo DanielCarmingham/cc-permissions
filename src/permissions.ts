@@ -96,19 +96,23 @@ export function generateClaudeCodePermissions(
 
 /**
  * Parse a permission level string to enum.
+ * Supports prefix matching (e.g., "r" or "res" for "restrictive").
  */
 export function parseLevel(levelStr: string): PermissionLevel | null {
   const normalized = levelStr.toLowerCase().trim();
-  switch (normalized) {
-    case "restrictive":
-      return PermissionLevel.Restrictive;
-    case "standard":
-      return PermissionLevel.Standard;
-    case "permissive":
-      return PermissionLevel.Permissive;
-    default:
-      return null;
+  const levels: Array<[string, PermissionLevel]> = [
+    ["restrictive", PermissionLevel.Restrictive],
+    ["standard", PermissionLevel.Standard],
+    ["permissive", PermissionLevel.Permissive],
+  ];
+
+  const matches = levels.filter(([name]) => name.startsWith(normalized));
+
+  if (matches.length === 1) {
+    return matches[0][1];
   }
+
+  return null;
 }
 
 /**

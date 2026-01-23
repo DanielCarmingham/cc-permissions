@@ -56,8 +56,17 @@ describe("parseLevel", () => {
   it("should return null for invalid input", () => {
     assert.equal(parseLevel("invalid"), null);
     assert.equal(parseLevel(""), null);
-    assert.equal(parseLevel("restrict"), null);
-    assert.equal(parseLevel("perm"), null);
+    assert.equal(parseLevel("x"), null);
+  });
+
+  it("should accept prefix matches", () => {
+    assert.equal(parseLevel("r"), PermissionLevel.Restrictive);
+    assert.equal(parseLevel("res"), PermissionLevel.Restrictive);
+    assert.equal(parseLevel("restrict"), PermissionLevel.Restrictive);
+    assert.equal(parseLevel("s"), PermissionLevel.Standard);
+    assert.equal(parseLevel("stan"), PermissionLevel.Standard);
+    assert.equal(parseLevel("p"), PermissionLevel.Permissive);
+    assert.equal(parseLevel("perm"), PermissionLevel.Permissive);
   });
 });
 

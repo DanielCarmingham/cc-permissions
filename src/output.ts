@@ -143,12 +143,20 @@ export function resolveSettingsPath(scope: ApplyScope, baseDir: string = process
 
 /**
  * Parse and validate scope string.
+ * Supports prefix matching (e.g., "u" for "user", "l" for "local").
  */
 export function parseScope(value: string): ApplyScope | null {
-  const normalized = value.toLowerCase();
-  if (["project", "user", "global", "local"].includes(normalized)) {
-    return normalized as ApplyScope;
+  const normalized = value.toLowerCase().trim();
+  const scopes: ApplyScope[] = ["project", "user", "global", "local"];
+
+  const matches = scopes.filter((s) => s.startsWith(normalized));
+
+  if (matches.length === 1) {
+    return matches[0];
   }
+
+  // Special case: "g" is unambiguous (only "global" starts with g)
+  // but "u" matches "user" only, "l" matches "local" only, "p" matches "project" only
   return null;
 }
 
