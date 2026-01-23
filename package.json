@@ -1,6 +1,6 @@
 {
   "name": "cc-permissions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generate thoughtful permission configs for Claude Code without the container overhead",
   "type": "module",
   "main": "dist/index.js",
