@@ -26,7 +26,7 @@ Commands:
 Global Options:
   -h, --help        Show this help message
   -v, --version     Show version number
-  -l, --level       Permission level (used with analyze)
+  -l, --level       Permission level: restrictive, standard, permissive
   -a, --apply       Apply permissions to .claude/settings.json
 
 Run "cc-permissions <command> --help" for command-specific options.
