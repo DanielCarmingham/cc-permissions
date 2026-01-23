@@ -6,7 +6,7 @@ import {
   getTemplates,
   listTemplates,
 } from "./templates/index.js";
-import { formatFullOutput, applyPermissions, formatApplyResult } from "./output.js";
+import { formatFullOutput, applyPermissions, formatApplyResult, parseScope } from "./output.js";
 import { analyzeDirectory, formatAnalysisResult } from "./analyze.js";
 import { formatVersionInfo, readPackageJson } from "./version.js";
 
@@ -27,7 +27,14 @@ Global Options:
   -h, --help        Show this help message
   -v, --version     Show version number
   -l, --level       Permission level: restrictive, standard, permissive
-  -a, --apply       Apply permissions to .claude/settings.json
+  -a, --apply       Apply permissions to settings file
+  -s, --scope       Settings scope: project, user, local (default: project)
+  -o, --output      Custom output file path (overrides --scope)
+
+Scopes:
+  project           .claude/settings.json (in target directory)
+  user, global      ~/.claude/settings.json (user's home directory)
+  local             .claude/settings.local.json (gitignored, for personal prefs)
 
 Run "cc-permissions <command> --help" for command-specific options.
 
@@ -35,6 +42,7 @@ Examples:
   cc-permissions                        Analyze current directory
   cc-permissions --apply                Analyze and apply permissions
   cc-permissions --apply -l permissive  Analyze and apply with custom level
+  cc-permissions --apply --scope user   Apply to user-level settings
   cc-permissions analyze ./my-project   Analyze a specific path
   cc-permissions template nodejs,python Manually select templates
   cc-permissions list                   List all templates
@@ -53,7 +61,9 @@ Arguments:
 Options:
   -l, --level       Permission level: restrictive, standard, permissive (default: standard)
   -f, --format      Output format: json, summary, both (default: json)
-  -a, --apply       Apply permissions to .claude/settings.json (creates .bak backup)
+  -a, --apply       Apply permissions to settings file (creates .bak backup)
+  -s, --scope       Settings scope: project, user, local (default: project)
+  -o, --output      Custom output file path (overrides --scope)
 
 ${describeLevels()}
 
@@ -63,7 +73,8 @@ Examples:
   cc-permissions template shell --level restrictive
   cc-permissions template nodejs --level standard
   cc-permissions template nodejs,python --level permissive --format summary
-  cc-permissions template nodejs --level standard --apply
+  cc-permissions template nodejs --apply
+  cc-permissions template nodejs --apply --scope user
 `);
 }
 
@@ -74,6 +85,8 @@ function handleTemplate(args: string[]): void {
       level: { type: "string", short: "l", default: "standard" },
       format: { type: "string", short: "f", default: "json" },
       apply: { type: "boolean", short: "a" },
+      scope: { type: "string", short: "s", default: "project" },
+      output: { type: "string", short: "o" },
       help: { type: "boolean", short: "h" },
     },
     allowPositionals: true,
@@ -106,7 +119,18 @@ function handleTemplate(args: string[]): void {
 
   // Handle --apply flag
   if (values.apply) {
-    const result = applyPermissions(process.cwd(), found, level);
+    // Parse scope
+    const scope = parseScope(values.scope as string);
+    if (!scope) {
+      console.error(`Invalid scope: ${values.scope}`);
+      console.error(`Valid scopes: project, user, global, local`);
+      process.exit(1);
+    }
+
+    const result = applyPermissions(found, level, {
+      scope,
+      outputPath: values.output as string | undefined,
+    });
     console.log(formatApplyResult(result));
     return;
   }
@@ -136,7 +160,9 @@ Arguments:
 Options:
   -l, --level       Permission level: restrictive, standard, permissive
                     (default: auto-detected based on project complexity)
-  -a, --apply       Apply permissions to .claude/settings.json
+  -a, --apply       Apply permissions to settings file
+  -s, --scope       Settings scope: project, user, local (default: project)
+  -o, --output      Custom output file path (overrides --scope)
   -h, --help        Show this help
 
 ${describeLevels()}
@@ -145,6 +171,7 @@ Examples:
   cc-permissions analyze
   cc-permissions analyze ./my-project
   cc-permissions analyze --apply
+  cc-permissions analyze --apply --scope user
   cc-permissions analyze -l permissive --apply
 `);
 }
@@ -156,6 +183,8 @@ function handleAnalyze(args: string[]): void {
       help: { type: "boolean", short: "h" },
       level: { type: "string", short: "l" },
       apply: { type: "boolean", short: "a" },
+      scope: { type: "string", short: "s", default: "project" },
+      output: { type: "string", short: "o" },
     },
     allowPositionals: true,
   });
@@ -190,8 +219,19 @@ function handleAnalyze(args: string[]): void {
       process.exit(1);
     }
 
+    // Parse scope
+    const scope = parseScope(values.scope as string);
+    if (!scope) {
+      console.error(`Invalid scope: ${values.scope}`);
+      console.error(`Valid scopes: project, user, global, local`);
+      process.exit(1);
+    }
+
     // Apply the permissions
-    const applyResult = applyPermissions(process.cwd(), found, level);
+    const applyResult = applyPermissions(found, level, {
+      scope,
+      outputPath: values.output as string | undefined,
+    });
 
     // Show analysis summary then apply result
     console.log(`Detected templates: ${result.recommendedTemplates.join(", ")}`);
@@ -287,6 +327,8 @@ function main(): void {
       version: { type: "boolean", short: "v" },
       level: { type: "string", short: "l" },
       apply: { type: "boolean", short: "a" },
+      scope: { type: "string", short: "s" },
+      output: { type: "string", short: "o" },
     },
     allowPositionals: true,
     strict: false, // Allow unknown options to pass through to subcommands
@@ -308,7 +350,7 @@ function main(): void {
   }
 
   // No arguments: run analyze on current directory
-  // Pass through --level and --apply flags
+  // Pass through relevant flags
   if (!command) {
     const analyzeArgs: string[] = [];
     if (values.level) {
@@ -316,6 +358,12 @@ function main(): void {
     }
     if (values.apply) {
       analyzeArgs.push("--apply");
+    }
+    if (values.scope) {
+      analyzeArgs.push("--scope", values.scope as string);
+    }
+    if (values.output) {
+      analyzeArgs.push("--output", values.output as string);
     }
     handleAnalyze(analyzeArgs);
     return;

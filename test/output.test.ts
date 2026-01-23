@@ -238,7 +238,7 @@ describe("applyPermissions", () => {
   );
 
   it("should create .claude directory if it does not exist", () => {
-    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+    const result = applyPermissions([template], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     assert.ok(fs.existsSync(path.join(tempDir, ".claude")));
     assert.ok(result.created);
@@ -246,7 +246,7 @@ describe("applyPermissions", () => {
   });
 
   it("should create settings.json with correct content", () => {
-    applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+    applyPermissions([template], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     const settingsPath = path.join(tempDir, ".claude", "settings.json");
     assert.ok(fs.existsSync(settingsPath));
@@ -272,7 +272,7 @@ describe("applyPermissions", () => {
       JSON.stringify(existingSettings)
     );
 
-    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+    const result = applyPermissions([template], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     // Should have backup
     assert.ok(result.backupPath);
@@ -293,7 +293,7 @@ describe("applyPermissions", () => {
     fs.mkdirSync(claudeDir, { recursive: true });
     fs.writeFileSync(path.join(claudeDir, "settings.json"), "not valid json {{{");
 
-    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+    const result = applyPermissions([template], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     // Should create backup even for invalid JSON
     assert.ok(result.backupPath);
@@ -361,7 +361,7 @@ describe("applyPermissions - error scenarios", () => {
     const nestedDir = path.join(tempDir, "a", "b", "c");
     fs.mkdirSync(nestedDir, { recursive: true });
 
-    const result = applyPermissions(nestedDir, [template], PermissionLevel.Restrictive);
+    const result = applyPermissions([template], PermissionLevel.Restrictive, { baseDir: nestedDir });
 
     assert.ok(result.created);
     assert.ok(fs.existsSync(path.join(nestedDir, ".claude", "settings.json")));
@@ -371,7 +371,7 @@ describe("applyPermissions - error scenarios", () => {
     // Create empty .claude directory
     fs.mkdirSync(path.join(tempDir, ".claude"));
 
-    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+    const result = applyPermissions([template], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     assert.ok(result.created);
     assert.ok(fs.existsSync(path.join(tempDir, ".claude", "settings.json")));
@@ -383,7 +383,7 @@ describe("applyPermissions - error scenarios", () => {
     fs.mkdirSync(claudeDir);
     fs.writeFileSync(path.join(claudeDir, "settings.json"), "[]");
 
-    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+    const result = applyPermissions([template], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     // Should create backup and overwrite
     assert.ok(result.backupPath);
@@ -405,7 +405,7 @@ describe("applyPermissions - error scenarios", () => {
       []
     );
 
-    const result = applyPermissions(tempDir, [template1, template2], PermissionLevel.Restrictive);
+    const result = applyPermissions([template1, template2], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
     // Should deduplicate commands
@@ -417,7 +417,7 @@ describe("applyPermissions - error scenarios", () => {
   });
 
   it("should handle empty template list", () => {
-    const result = applyPermissions(tempDir, [], PermissionLevel.Restrictive);
+    const result = applyPermissions([], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     // Should still create settings with deny list
     const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
@@ -438,7 +438,7 @@ describe("applyPermissions - error scenarios", () => {
       })
     );
 
-    const result = applyPermissions(tempDir, [template], PermissionLevel.Restrictive);
+    const result = applyPermissions([template], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
     assert.equal(content.customField, "preserved");
@@ -451,7 +451,7 @@ describe("applyPermissions - error scenarios", () => {
     const unicodeDir = path.join(tempDir, "проект");
     fs.mkdirSync(unicodeDir);
 
-    const result = applyPermissions(unicodeDir, [template], PermissionLevel.Restrictive);
+    const result = applyPermissions([template], PermissionLevel.Restrictive, { baseDir: unicodeDir });
 
     assert.ok(result.created);
     assert.ok(fs.existsSync(path.join(unicodeDir, ".claude", "settings.json")));
@@ -466,7 +466,7 @@ describe("applyPermissions - error scenarios", () => {
       []
     );
 
-    const result = applyPermissions(tempDir, [longTemplate], PermissionLevel.Restrictive);
+    const result = applyPermissions([longTemplate], PermissionLevel.Restrictive, { baseDir: tempDir });
 
     const content = JSON.parse(fs.readFileSync(result.settingsPath, "utf-8"));
     assert.ok(content.permissions.allow.some((c: string) => c.includes(longCommand)));

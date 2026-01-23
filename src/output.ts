@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { homedir } from "node:os";
 import type {
   Permission,
   ClaudeCodePermissions,
@@ -116,6 +117,42 @@ export function formatFullOutput(
 }
 
 /**
+ * Scope for where to apply permissions.
+ */
+export type ApplyScope = "project" | "user" | "global" | "local";
+
+/**
+ * Resolve scope to a settings file path.
+ *
+ * @param scope - The scope (project, user/global, local)
+ * @param baseDir - Base directory for project/local scope (defaults to cwd)
+ * @returns Absolute path to the settings file
+ */
+export function resolveSettingsPath(scope: ApplyScope, baseDir: string = process.cwd()): string {
+  switch (scope) {
+    case "user":
+    case "global":
+      return join(homedir(), ".claude", "settings.json");
+    case "local":
+      return join(baseDir, ".claude", "settings.local.json");
+    case "project":
+    default:
+      return join(baseDir, ".claude", "settings.json");
+  }
+}
+
+/**
+ * Parse and validate scope string.
+ */
+export function parseScope(value: string): ApplyScope | null {
+  const normalized = value.toLowerCase();
+  if (["project", "user", "global", "local"].includes(normalized)) {
+    return normalized as ApplyScope;
+  }
+  return null;
+}
+
+/**
  * Result of applying permissions to settings file.
  */
 export interface ApplyResult {
@@ -126,22 +163,37 @@ export interface ApplyResult {
 }
 
 /**
- * Apply permissions to .claude/settings.json, merging with existing settings.
+ * Options for applying permissions.
+ */
+export interface ApplyOptions {
+  /** Base directory for relative scope paths (defaults to cwd) */
+  baseDir?: string;
+  /** Scope: project, user/global, local */
+  scope?: ApplyScope;
+  /** Custom output path (overrides scope) */
+  outputPath?: string;
+}
+
+/**
+ * Apply permissions to a settings file, merging with existing settings.
  * Creates a .bak backup if the file already exists.
  *
- * @param baseDir - Directory containing .claude folder (defaults to cwd)
  * @param templates - Templates to apply
  * @param level - Permission level
+ * @param options - Apply options (baseDir, scope, outputPath)
  * @returns Result with paths and status
  */
 export function applyPermissions(
-  baseDir: string,
   templates: TemplateDefinition[],
-  level: PermissionLevel
+  level: PermissionLevel,
+  options: ApplyOptions = {}
 ): ApplyResult {
-  const claudeDir = join(baseDir, ".claude");
-  const settingsPath = join(claudeDir, "settings.json");
-  const backupPath = join(claudeDir, "settings.json.bak");
+  const { baseDir = process.cwd(), scope = "project", outputPath } = options;
+
+  // Determine settings path: custom path overrides scope
+  const settingsPath = outputPath || resolveSettingsPath(scope, baseDir);
+  const settingsDir = dirname(settingsPath);
+  const backupPath = settingsPath + ".bak";
 
   // Generate new permissions
   const newSettings = generateSettings(templates, level);
@@ -151,9 +203,9 @@ export function applyPermissions(
   let merged = false;
   let backupCreated: string | null = null;
 
-  // Ensure .claude directory exists
-  if (!existsSync(claudeDir)) {
-    mkdirSync(claudeDir, { recursive: true });
+  // Ensure parent directory exists
+  if (!existsSync(settingsDir)) {
+    mkdirSync(settingsDir, { recursive: true });
   }
 
   // Read existing settings if they exist
