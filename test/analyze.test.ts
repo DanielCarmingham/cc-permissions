@@ -351,7 +351,7 @@ dependencies:
     it("should generate correct command for single template", () => {
       const result = analyzeDirectory(tempDir);
 
-      assert.ok(result.suggestedCommand.includes("cc-permissions --apply"));
+      assert.ok(result.suggestedCommand.includes("cc-permissions apply"));
       // Single template (shell only) suggests restrictive level
       assert.ok(result.suggestedCommand.includes("--level restrictive"));
     });
@@ -363,7 +363,7 @@ dependencies:
       const result = analyzeDirectory(tempDir);
 
       // Multiple templates means standard level, which is default so no --level flag
-      assert.equal(result.suggestedCommand, "cc-permissions --apply");
+      assert.equal(result.suggestedCommand, "cc-permissions apply");
     });
   });
 });

@@ -2,6 +2,7 @@
 
 import { parseArgs } from "node:util";
 import { parseLevel, describeLevels } from "./permissions.js";
+import { PermissionLevel } from "./types.js";
 import {
   getTemplates,
   listTemplates,
@@ -19,15 +20,15 @@ Usage:
   cc-permissions <command> [options]    Run a specific command
 
 Commands:
-  analyze [path]    Analyze project and recommend templates
-  template <names>  Generate permissions from specific templates
-  list              List available templates
+  apply [templates]  Analyze and apply permissions (or apply specific templates)
+  analyze [path]     Analyze project and recommend templates (no changes)
+  template <names>   Output permissions from specific templates (no apply)
+  list               List available templates
 
 Global Options:
   -h, --help        Show this help message
   -v, --version     Show version number
   -l, --level       Permission level: restrictive, standard, permissive
-  -a, --apply       Apply permissions to settings file
   -s, --scope       Settings scope: project, user, local (default: project)
   -o, --output      Custom output file path (overrides --scope)
 
@@ -40,11 +41,12 @@ Run "cc-permissions <command> --help" for command-specific options.
 
 Examples:
   cc-permissions                        Analyze current directory
-  cc-permissions --apply                Analyze and apply permissions
-  cc-permissions --apply -l permissive  Analyze and apply with custom level
-  cc-permissions --apply --scope user   Apply to user-level settings
+  cc-permissions apply                  Analyze and apply permissions
+  cc-permissions apply nodejs,docker    Apply specific templates
+  cc-permissions apply -l permissive    Analyze and apply with custom level
+  cc-permissions apply --scope user     Apply to user-level settings
   cc-permissions analyze ./my-project   Analyze a specific path
-  cc-permissions template nodejs,python Manually select templates
+  cc-permissions template nodejs        Output template permissions
   cc-permissions list                   List all templates
 `);
 }
@@ -148,11 +150,128 @@ function handleTemplate(args: string[]): void {
   console.log(output);
 }
 
+function showApplyHelp(): void {
+  console.log(`
+Usage: cc-permissions apply [templates] [options]
+
+Analyze project and apply permissions, or apply specific templates.
+
+Arguments:
+  templates         Optional comma-separated template names (e.g., "nodejs,python")
+                    If omitted, analyzes project and applies recommended templates
+
+Options:
+  -l, --level       Permission level: restrictive, standard, permissive
+                    (default: auto-detected when analyzing, standard when using templates)
+  -s, --scope       Settings scope: project, user, local (default: project)
+  -o, --output      Custom output file path (overrides --scope)
+  -h, --help        Show this help
+
+${describeLevels()}
+
+Examples:
+  cc-permissions apply                  Analyze and apply recommended templates
+  cc-permissions apply nodejs           Apply nodejs template
+  cc-permissions apply nodejs,python    Apply multiple templates
+  cc-permissions apply -l permissive    Analyze and apply with permissive level
+  cc-permissions apply --scope user     Apply to user-level settings
+`);
+}
+
+function handleApply(args: string[]): void {
+  const { values, positionals } = parseArgs({
+    args,
+    options: {
+      help: { type: "boolean", short: "h" },
+      level: { type: "string", short: "l" },
+      scope: { type: "string", short: "s", default: "project" },
+      output: { type: "string", short: "o" },
+    },
+    allowPositionals: true,
+  });
+
+  if (values.help) {
+    showApplyHelp();
+    process.exit(0);
+  }
+
+  // Parse scope
+  const scope = parseScope(values.scope as string);
+  if (!scope) {
+    console.error(`Invalid scope: ${values.scope}`);
+    console.error(`Valid scopes: project, user, global, local`);
+    process.exit(1);
+  }
+
+  // If templates are specified, apply those directly
+  if (positionals.length > 0) {
+    const templateNames = positionals[0].split(",").map((n) => n.trim().toLowerCase());
+
+    // Validate and get templates
+    const { found, notFound } = getTemplates(templateNames);
+
+    if (notFound.length > 0) {
+      console.error(`Unknown template(s): ${notFound.join(", ")}`);
+      console.error(`Available templates: ${listTemplates().map((t) => t.name).join(", ")}`);
+      process.exit(1);
+    }
+
+    // Parse level (default to standard for explicit templates)
+    const level = values.level ? parseLevel(values.level as string) : PermissionLevel.Standard;
+    if (!level) {
+      console.error(`Invalid level: ${values.level}`);
+      console.error(`Valid levels: restrictive, standard, permissive`);
+      process.exit(1);
+    }
+
+    const result = applyPermissions(found, level, {
+      scope,
+      outputPath: values.output as string | undefined,
+    });
+    console.log(formatApplyResult(result));
+    return;
+  }
+
+  // No templates specified: analyze and apply
+  const analysisResult = analyzeDirectory(".");
+
+  // Use provided level or the suggested level from analysis
+  let level = analysisResult.suggestedLevel;
+  if (values.level) {
+    const parsedLevel = parseLevel(values.level as string);
+    if (!parsedLevel) {
+      console.error(`Invalid level: ${values.level}`);
+      console.error(`Valid levels: restrictive, standard, permissive`);
+      process.exit(1);
+    }
+    level = parsedLevel;
+  }
+
+  // Get the templates
+  const { found, notFound } = getTemplates(analysisResult.recommendedTemplates);
+
+  if (notFound.length > 0) {
+    console.error(`Unknown template(s): ${notFound.join(", ")}`);
+    process.exit(1);
+  }
+
+  // Apply the permissions
+  const applyResult = applyPermissions(found, level, {
+    scope,
+    outputPath: values.output as string | undefined,
+  });
+
+  // Show analysis summary then apply result
+  console.log(`Detected templates: ${analysisResult.recommendedTemplates.join(", ")}`);
+  console.log(`Applied level: ${level}`);
+  console.log(formatApplyResult(applyResult));
+}
+
 function showAnalyzeHelp(): void {
   console.log(`
 Usage: cc-permissions analyze [path] [options]
 
-Analyze a project directory and recommend templates.
+Analyze a project directory and recommend templates (no changes made).
 
 Arguments:
   path              Path to analyze (default: current directory)
@@ -160,7 +279,6 @@ Arguments:
 Options:
   -l, --level       Permission level: restrictive, standard, permissive
                     (default: auto-detected based on project complexity)
-  -a, --apply       Apply permissions to settings file
   -s, --scope       Settings scope: project, user, local (default: project)
   -o, --output      Custom output file path (overrides --scope)
   -h, --help        Show this help
@@ -170,9 +288,7 @@ ${describeLevels()}
 Examples:
   cc-permissions analyze
   cc-permissions analyze ./my-project
-  cc-permissions analyze --apply
-  cc-permissions analyze --apply --scope user
-  cc-permissions analyze -l permissive --apply
+  cc-permissions analyze -l permissive
 `);
 }
 
@@ -182,6 +298,7 @@ function handleAnalyze(args: string[]): void {
     options: {
       help: { type: "boolean", short: "h" },
       level: { type: "string", short: "l" },
+      // Keep --apply for backwards compatibility
       apply: { type: "boolean", short: "a" },
       scope: { type: "string", short: "s", default: "project" },
       output: { type: "string", short: "o" },
@@ -197,7 +314,7 @@ function handleAnalyze(args: string[]): void {
   const targetPath = positionals[0] || ".";
   const result = analyzeDirectory(targetPath);
 
-  // Handle --apply flag
+  // Handle --apply flag (backwards compatibility - prefer `cc-permissions apply`)
   if (values.apply) {
     // Use provided level or the suggested level from analysis
     let level = result.suggestedLevel;
@@ -373,6 +490,9 @@ function main(): void {
   const subArgs = process.argv.slice(process.argv.indexOf(command) + 1);
 
   switch (command) {
+    case "apply":
+      handleApply(subArgs);
+      break;
     case "template":
       handleTemplate(subArgs);
       break;

@@ -6,6 +6,6 @@ description: Apply analyzed permissions to .claude/settings.json
 
 Apply the recommended permissions to your project.
 
-`!npx cc-permissions analyze --apply --output summary`
+`!npx cc-permissions apply`
 
 Confirm the permissions were written to `.claude/settings.json`.

@@ -13,16 +13,23 @@ This tool offers a middle ground. Generate permission configurations tailored to
 The fastest way to get going:
 
 ```bash
-npx cc-permissions --apply
+npx cc-permissions apply
 ```
 
 This analyzes your project, detects relevant templates, and applies permissions to `.claude/settings.json`.
 
-Want more control? Install globally:
+Want to see what would be applied first?
+
+```bash
+npx cc-permissions
+```
+
+Or install globally to use without npx:
 
 ```bash
 npm install -g cc-permissions
 ```
+Then run: `cc-permissions apply`
 
 Or use as a Claude Code plugin:
 
@@ -43,7 +50,7 @@ Permissions are organized into **templates** and **levels**.
 **Templates** group commands by technology. Use `nodejs` for npm/yarn/pnpm commands, `python` for pip and pytest, `docker` for container operations, and so on. Combine them freely:
 
 ```bash
-cc-permissions template nodejs,python,docker --apply
+cc-permissions apply nodejs,python,docker
 ```
 
 **Levels** control how permissive each template is:
@@ -58,13 +65,13 @@ Levels are cumulative. `standard` includes everything from `restrictive`, and `p
 
 ```bash
 # Safe exploration mode
-cc-permissions template nodejs --level restrictive
+cc-permissions apply nodejs --level restrictive
 
 # Normal development (default)
-cc-permissions template nodejs --level standard
+cc-permissions apply nodejs
 
 # Trusted project, full access
-cc-permissions template nodejs --level permissive
+cc-permissions apply nodejs --level permissive
 ```
 
 ## Templates
@@ -101,13 +108,13 @@ By default, permissions go to `.claude/settings.json` (project scope). You can c
 
 ```bash
 # Personal defaults across all projects
-cc-permissions --apply --scope user
+cc-permissions apply --scope user
 
 # Project-specific overrides (gitignored)
-cc-permissions --apply --scope local
+cc-permissions apply --scope local
 
 # Custom file
-cc-permissions --apply --output ./my-permissions.json
+cc-permissions apply --output ./my-permissions.json
 ```
 
 | Scope | File | Use case |
@@ -123,11 +130,14 @@ All generated configs include a deny list blocking dangerous patterns like `rm -
 ## Other commands
 
 ```bash
-# Analyze project without applying
-cc-permissions analyze
+# See what would be applied (same as cc-permissions analyze)
+cc-permissions
 
 # List available templates
 cc-permissions list
+
+# View template permissions without applying
+cc-permissions template nodejs
 
 # Output as JSON only
 cc-permissions template nodejs --format json

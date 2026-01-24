@@ -258,7 +258,7 @@ describe("CLI - Analyze Command", () => {
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("Suggested Command:"));
-    assert.ok(stdout.includes("cc-permissions --apply"));
+    assert.ok(stdout.includes("cc-permissions apply"));
   });
 });
 
