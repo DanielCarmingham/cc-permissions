@@ -34,6 +34,10 @@ export interface DetectionRules {
   contentPatterns?: ContentPattern[];
   // MCP server names that indicate this template (checks active MCP servers via `claude mcp list`)
   mcpServers?: string[];
+  // CLI commands that must be available on the system (checked via `which` or `command -v`)
+  commands?: string[];
+  // Git remote URL patterns to match (e.g., "github.com", "gitea.", "gitlab.com")
+  gitRemotes?: string[];
   // If true, this template is always recommended (e.g., shell baseline)
   always?: boolean;
 }

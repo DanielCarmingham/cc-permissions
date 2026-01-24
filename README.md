@@ -95,7 +95,7 @@ cc-permissions apply nodejs --level permissive
 | Template | Description |
 |----------|-------------|
 | [git](docs/templates/git.md) | Git version control |
-| [gitea](docs/templates/gitea.md) | Gitea MCP server for repository and workflow management |
+| [gitea](docs/templates/gitea.md) | Gitea CLI (tea) and MCP server for repository and workflow management |
 | [github](docs/templates/github.md) | GitHub CLI (gh) for repository and workflow management |
 
 ### Languages & Runtimes

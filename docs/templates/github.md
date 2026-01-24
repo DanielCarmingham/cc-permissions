@@ -2,7 +2,7 @@
 
 GitHub CLI (gh) for repository and workflow management
 
-**Category:** Utilities
+**Category:** Version Control
 
 ## Restrictive
 

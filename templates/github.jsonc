@@ -2,9 +2,10 @@
   "$schema": "../template.schema.json",
   "name": "github",
   "description": "GitHub CLI (gh) for repository and workflow management",
-  "category": "Utilities",
+  "category": "Version Control",
   "detection": {
-    "directories": [".github/workflows/", ".github/"]
+    "directories": [".github/workflows/", ".github/"],
+    "gitRemotes": ["github.com"]
   },
   "levels": {
     "restrictive": [

@@ -1,14 +1,47 @@
 {
   "$schema": "../template.schema.json",
   "name": "gitea",
-  "description": "Gitea MCP server for repository and workflow management",
+  "description": "Gitea CLI (tea) and MCP server for repository and workflow management",
   "category": "Version Control",
   "detection": {
-    "mcpServers": ["gitea"]
+    "mcpServers": ["gitea"],
+    "gitRemotes": ["gitea.com", "gitea."]
   },
   "levels": {
     "restrictive": [
-      // CLI commands
+      // Tea CLI: info
+      { "command": "tea --version", "description": "Check tea CLI version" },
+      { "command": "tea --help", "description": "Tea CLI help" },
+      { "command": "tea whoami", "description": "Show current user" },
+      { "command": "tea login list", "description": "List configured logins" },
+      // Tea CLI: repo read
+      { "command": "tea repos list", "description": "List repositories" },
+      { "command": "tea repos search", "description": "Search repositories" },
+      // Tea CLI: issue read
+      { "command": "tea issues list", "description": "List issues" },
+      { "command": "tea issues", "description": "List issues (alias)" },
+      // Tea CLI: PR read
+      { "command": "tea pulls list", "description": "List pull requests" },
+      { "command": "tea pulls", "description": "List pull requests (alias)" },
+      // Tea CLI: release read
+      { "command": "tea releases list", "description": "List releases" },
+      { "command": "tea releases", "description": "List releases (alias)" },
+      // Tea CLI: label read
+      { "command": "tea labels list", "description": "List labels" },
+      { "command": "tea labels", "description": "List labels (alias)" },
+      // Tea CLI: milestone read
+      { "command": "tea milestones list", "description": "List milestones" },
+      { "command": "tea milestones", "description": "List milestones (alias)" },
+      // Tea CLI: time tracking read
+      { "command": "tea times list", "description": "List tracked times" },
+      { "command": "tea times", "description": "List tracked times (alias)" },
+      // Tea CLI: organization read
+      { "command": "tea orgs list", "description": "List organizations" },
+      { "command": "tea orgs", "description": "List organizations (alias)" },
+      // Tea CLI: notifications
+      { "command": "tea notifications list", "description": "List notifications" },
+      { "command": "tea notifications", "description": "List notifications (alias)" },
+      // Gitea MCP CLI
       { "command": "gitea-mcp --version", "description": "Check Gitea MCP version" },
       { "command": "gitea-mcp --help", "description": "Gitea MCP help" },
       // MCP: Server info
@@ -65,6 +98,30 @@
       { "command": "mcp__gitea__get_stopwatch", "type": "mcp", "description": "Get stopwatch status" }
     ],
     "standard": [
+      // Tea CLI: issue create/edit
+      { "command": "tea issues create", "description": "Create issue" },
+      { "command": "tea issues edit", "description": "Edit issue" },
+      { "command": "tea issues reopen", "description": "Reopen issue" },
+      // Tea CLI: PR create/edit
+      { "command": "tea pulls create", "description": "Create pull request" },
+      { "command": "tea pulls checkout", "description": "Checkout PR branch" },
+      { "command": "tea pulls approve", "description": "Approve pull request" },
+      { "command": "tea pulls reject", "description": "Reject pull request" },
+      { "command": "tea pulls review", "description": "Review pull request" },
+      // Tea CLI: release create
+      { "command": "tea releases create", "description": "Create release" },
+      { "command": "tea releases edit", "description": "Edit release" },
+      // Tea CLI: label create
+      { "command": "tea labels create", "description": "Create label" },
+      { "command": "tea labels update", "description": "Update label" },
+      // Tea CLI: milestone create
+      { "command": "tea milestones create", "description": "Create milestone" },
+      // Tea CLI: time tracking
+      { "command": "tea times add", "description": "Add tracked time" },
+      // Tea CLI: comment
+      { "command": "tea comment", "description": "Add comment" },
+      // Tea CLI: clone
+      { "command": "tea clone", "description": "Clone repository" },
       // MCP: Branch create
       { "command": "mcp__gitea__create_branch", "type": "mcp", "description": "Create branch" },
       // MCP: File create/update
@@ -95,6 +152,28 @@
       { "command": "mcp__gitea__add_tracked_time", "type": "mcp", "description": "Add tracked time" }
     ],
     "permissive": [
+      // Tea CLI: repo management
+      { "command": "tea repos create", "description": "Create repository" },
+      { "command": "tea repos fork", "description": "Fork repository" },
+      // Tea CLI: issue close
+      { "command": "tea issues close", "description": "Close issue" },
+      // Tea CLI: PR merge/close
+      { "command": "tea pulls merge", "description": "Merge pull request" },
+      { "command": "tea pulls close", "description": "Close pull request" },
+      { "command": "tea pulls reopen", "description": "Reopen pull request" },
+      // Tea CLI: release delete
+      { "command": "tea releases delete", "description": "Delete release" },
+      // Tea CLI: label delete
+      { "command": "tea labels delete", "description": "Delete label" },
+      // Tea CLI: milestone close/delete
+      { "command": "tea milestones close", "description": "Close milestone" },
+      { "command": "tea milestones delete", "description": "Delete milestone" },
+      { "command": "tea milestones reopen", "description": "Reopen milestone" },
+      // Tea CLI: time tracking delete
+      { "command": "tea times delete", "description": "Delete tracked time" },
+      { "command": "tea times reset", "description": "Reset tracked times" },
+      // Tea CLI: notifications
+      { "command": "tea notifications read", "description": "Mark notifications as read" },
       // MCP: Repo management
       { "command": "mcp__gitea__create_repo", "type": "mcp", "description": "Create repository" },
       { "command": "mcp__gitea__fork_repo", "type": "mcp", "description": "Fork repository" },

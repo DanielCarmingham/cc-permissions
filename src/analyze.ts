@@ -8,6 +8,12 @@ import { getTemplates } from "./templates/loader.js";
 // Cache for active MCP servers (avoid running `claude mcp list` multiple times)
 let cachedMcpServers: Set<string> | null = null;
 
+// Cache for available CLI commands (avoid running `which` multiple times)
+const cachedCommands: Map<string, boolean> = new Map();
+
+// Cache for git remote URLs (per directory)
+const cachedGitRemotes: Map<string, string[]> = new Map();
+
 /**
  * Get the list of active MCP servers by running `claude mcp list`.
  * Results are cached for the duration of the process.
@@ -67,6 +73,117 @@ function hasMcpServer(serverNames: string[]): string | null {
     for (const active of activeMcpServers) {
       if (active.toLowerCase() === lowerName || active.toLowerCase().includes(lowerName)) {
         return `MCP:${active}`;
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Check if a CLI command is available on the system.
+ * Uses `which` on Unix-like systems or `where` on Windows.
+ */
+function isCommandAvailable(command: string): boolean {
+  if (cachedCommands.has(command)) {
+    return cachedCommands.get(command)!;
+  }
+
+  try {
+    // Use `which` on Unix-like systems, `where` on Windows
+    const checkCommand = process.platform === "win32" ? `where ${command}` : `which ${command}`;
+    execSync(checkCommand, {
+      encoding: "utf-8",
+      timeout: 5000,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+    cachedCommands.set(command, true);
+    return true;
+  } catch {
+    cachedCommands.set(command, false);
+    return false;
+  }
+}
+
+/**
+ * Check if any of the specified CLI commands are available.
+ */
+function hasCommand(commands: string[]): string | null {
+  for (const cmd of commands) {
+    if (isCommandAvailable(cmd)) {
+      return `CLI:${cmd}`;
+    }
+  }
+  return null;
+}
+
+/**
+ * Check if a directory is the root of a git repository.
+ * Returns true only if the directory contains a .git folder or file.
+ */
+function isGitRepoRoot(dir: string): boolean {
+  const gitPath = join(dir, ".git");
+  return existsSync(gitPath);
+}
+
+/**
+ * Get git remote URLs for a directory.
+ * Only returns remotes if the directory is itself a git repo root.
+ * Returns an array of remote URLs.
+ */
+function getGitRemotes(dir: string): string[] {
+  if (cachedGitRemotes.has(dir)) {
+    return cachedGitRemotes.get(dir)!;
+  }
+
+  const remotes: string[] = [];
+
+  // Only check git remotes if this directory is a git repo root
+  // This prevents detecting parent repo's remotes for subdirectories
+  if (!isGitRepoRoot(dir)) {
+    cachedGitRemotes.set(dir, remotes);
+    return remotes;
+  }
+
+  try {
+    const output = execSync("git remote -v", {
+      cwd: dir,
+      encoding: "utf-8",
+      timeout: 5000,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    // Parse output lines like:
+    // origin  git@github.com:user/repo.git (fetch)
+    // origin  https://github.com/user/repo.git (push)
+    for (const line of output.split("\n")) {
+      const parts = line.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        const url = parts[1];
+        if (url && !remotes.includes(url)) {
+          remotes.push(url);
+        }
+      }
+    }
+  } catch {
+    // Not a git repo or git not available
+  }
+
+  cachedGitRemotes.set(dir, remotes);
+  return remotes;
+}
+
+/**
+ * Check if any git remote matches the specified patterns.
+ */
+function hasGitRemote(dir: string, patterns: string[]): string | null {
+  const remotes = getGitRemotes(dir);
+
+  for (const pattern of patterns) {
+    const lowerPattern = pattern.toLowerCase();
+    for (const remote of remotes) {
+      if (remote.toLowerCase().includes(lowerPattern)) {
+        return `remote:${pattern}`;
       }
     }
   }
@@ -196,6 +313,18 @@ function detectTemplate(
   // Check MCP servers
   if (detection.mcpServers) {
     const found = hasMcpServer(detection.mcpServers);
+    if (found) return found;
+  }
+
+  // Check CLI commands
+  if (detection.commands) {
+    const found = hasCommand(detection.commands);
+    if (found) return found;
+  }
+
+  // Check git remotes
+  if (detection.gitRemotes) {
+    const found = hasGitRemote(dir, detection.gitRemotes);
     if (found) return found;
   }
 

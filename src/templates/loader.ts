@@ -171,6 +171,38 @@ function validateDetection(
     result.mcpServers = d.mcpServers as string[];
   }
 
+  if (d.commands !== undefined) {
+    if (!Array.isArray(d.commands)) {
+      throw new Error(
+        `Template "${templateName}": detection.commands must be an array`
+      );
+    }
+    for (let i = 0; i < d.commands.length; i++) {
+      if (typeof d.commands[i] !== "string") {
+        throw new Error(
+          `Template "${templateName}": detection.commands[${i}] must be a string`
+        );
+      }
+    }
+    result.commands = d.commands as string[];
+  }
+
+  if (d.gitRemotes !== undefined) {
+    if (!Array.isArray(d.gitRemotes)) {
+      throw new Error(
+        `Template "${templateName}": detection.gitRemotes must be an array`
+      );
+    }
+    for (let i = 0; i < d.gitRemotes.length; i++) {
+      if (typeof d.gitRemotes[i] !== "string") {
+        throw new Error(
+          `Template "${templateName}": detection.gitRemotes[${i}] must be a string`
+        );
+      }
+    }
+    result.gitRemotes = d.gitRemotes as string[];
+  }
+
   if (d.always !== undefined) {
     if (typeof d.always !== "boolean") {
       throw new Error(
