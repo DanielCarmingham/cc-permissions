@@ -40,8 +40,8 @@ Or use as a Claude Code plugin:
 # Install the plugin
 /plugin install cc-permissions@DanielCarmingham-cc-permissions
 
-# Update to latest version
-/plugin update cc-permissions@DanielCarmingham-cc-permissions
+# Update to latest version (run in terminal, not as slash command)
+claude plugin update cc-permissions@DanielCarmingham-cc-permissions
 
 # Uninstall
 /plugin uninstall cc-permissions@DanielCarmingham-cc-permissions
@@ -49,7 +49,7 @@ Or use as a Claude Code plugin:
 
 Then use `/cc-permissions:analyze`, `/cc-permissions:apply`, and other slash commands directly in Claude Code.
 
-Note: Third-party plugins don't auto-update by default. Run `/plugin update` to get new versions, or enable auto-update via `/plugin` → Marketplaces → select marketplace → Enable auto-update.
+Note: Third-party plugins don't auto-update by default. Run `claude plugin update` from your terminal to get new versions, or enable auto-update via `/plugin` → Marketplaces → select marketplace → Enable auto-update.
 
 ## How it works
 
