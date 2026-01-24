@@ -552,9 +552,18 @@ export function formatAnalysisResult(result: AnalysisResult): string {
   lines.push(``);
   lines.push(`🎚️  ${color("Suggested Level:", colors.bold)} ${result.suggestedLevel}`);
   lines.push(``);
-  lines.push(`💻 ${color("Suggested Command:", colors.bold)}`);
+  lines.push(`💻 ${color("Apply Permissions:", colors.bold)}`);
   lines.push(`   ${color(result.suggestedCommand, colors.green)}`);
   lines.push(``);
+
+  // Show template details command with an example template
+  const exampleTemplate = result.recommendedTemplates.find(t => t !== "shell") || result.recommendedTemplates[0];
+  if (exampleTemplate) {
+    lines.push(`📋 ${color("View Template Details:", colors.bold)}`);
+    lines.push(`   ${color(`cc-permissions template ${exampleTemplate}`, colors.cyan)}`);
+    lines.push(``);
+  }
+
   lines.push(color(`─────────────────────────────────────────────────────────────────────────`, colors.dim));
   lines.push(`⚠️  ${color("Warning:", colors.bold, colors.yellow)} This approach is inherently less safe than a fully`);
   lines.push(`   isolated environment. You're trading sandbox protection for convenience.`);
