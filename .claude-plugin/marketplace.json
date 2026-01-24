@@ -1,0 +1,10 @@
+{
+  "name": "danielcarmingham-cc-permissions",
+  "description": "Permission config generator for Claude Code",
+  "plugins": [
+    {
+      "name": "cc-permissions",
+      "path": "."
+    }
+  ]
+}

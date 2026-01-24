@@ -2,6 +2,16 @@
 
 **Thoughtful permission configs for Claude Code without the container overhead.**
 
+## Contents
+
+- [The Problem](#the-problem)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Available Templates](#available-templates)
+- [Permission Levels](#permission-levels)
+- [Apply Options](#apply-options)
+- [Contributing Templates](#contributing-templates)
+
 ## The Problem
 
 Claude Code users face a frustrating choice:
@@ -29,13 +39,23 @@ npm install -g cc-permissions
 
 ### Claude Code Plugin
 
-Install as a Claude Code plugin for integrated commands:
+Install as a Claude Code plugin for integrated slash commands:
 
-```
-/plugin install DanielCarmingham/cc-permissions
+```bash
+# Step 1: Add the GitHub repo as a marketplace
+/plugin marketplace add DanielCarmingham/cc-permissions
+
+# Step 2: Install the plugin
+/plugin install cc-permissions@danielcarmingham-cc-permissions
 ```
 
-Then use:
+Or use the interactive plugin manager:
+```
+/plugin
+```
+Then navigate to **Discover**, find cc-permissions, and install.
+
+Once installed, use the following slash commands:
 - `/cc-permissions:analyze` - Scan project and recommend templates
 - `/cc-permissions:template nodejs,python` - Generate from specific templates
 - `/cc-permissions:list` - List available templates
@@ -101,10 +121,27 @@ Levels are cumulative—each level includes everything from the previous level:
 
 | Template | Description |
 |----------|-------------|
-| `shell` | Git and common CLI tools (ls, cat, grep, find, etc.) |
-| `nodejs` | Node.js, npm, and common frontend tooling |
+| `shell` | Basic shell and filesystem commands |
+| `git` | Git version control |
+| `github` | GitHub CLI (gh) for repository and workflow management |
+| `nodejs` | Node.js, npm, pnpm, yarn, and bun |
 | `python` | pip, python, venv, pytest, and common data tools |
+| `go` | Go development and golangci-lint |
+| `rust` | Cargo, rustc, and rustup |
+| `java` | Maven, Gradle, Java, and JVM development |
 | `dotnet` | dotnet CLI, NuGet, MSBuild |
+| `ruby` | Ruby, Bundler, Rails, and Rake |
+| `php` | PHP, Composer, and Laravel Artisan |
+| `ios` | Xcode, Swift, CocoaPods, and iOS development |
+| `android` | Gradle, ADB, and Android development |
+| `flutter` | Flutter SDK and Dart development |
+| `docker` | Docker, Docker Compose, and Buildx |
+| `kubernetes` | kubectl, Helm, k9s, and Minikube |
+| `terraform` | Terraform, Terragrunt, and tflint |
+| `aws` | AWS CLI, SAM, CDK, Amplify, and Elastic Beanstalk |
+| `azure` | Azure CLI, Functions, Bicep, and Azure Developer CLI |
+| `gcp` | Google Cloud CLI, gsutil, Firebase, and BigQuery |
+| `database` | PostgreSQL, MySQL, MongoDB, and Redis CLI tools |
 
 Combine templates with commas: `cc-permissions template shell,nodejs,python`
 
