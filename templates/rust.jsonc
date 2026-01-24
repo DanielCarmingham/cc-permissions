@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "rust",
   "description": "Cargo, rustc, and rustup",
   "category": "Languages & Runtimes",

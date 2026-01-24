@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "go",
   "description": "Go development and golangci-lint",
   "category": "Languages & Runtimes",

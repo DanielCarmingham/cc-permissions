@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "gitlab",
   "description": "GitLab CLI (glab) and MCP server for repository and workflow management",
   "category": "Version Control",

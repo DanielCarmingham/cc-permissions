@@ -57,6 +57,16 @@
           "description": "MCP server names that indicate this template (checks active servers via `claude mcp list`)",
           "items": { "type": "string" }
         },
+        "commands": {
+          "type": "array",
+          "description": "CLI commands that must be available on the system (checked via `which` or `command -v`)",
+          "items": { "type": "string" }
+        },
+        "gitRemotes": {
+          "type": "array",
+          "description": "Git remote URL patterns to match (e.g., \"github.com\", \"gitea.\", \"gitlab.com\")",
+          "items": { "type": "string" }
+        },
         "always": {
           "type": "boolean",
           "description": "If true, this template is always recommended (e.g., shell baseline)"
@@ -100,6 +110,11 @@
         "description": {
           "type": "string",
           "description": "Optional description for documentation"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["bash", "mcp"],
+          "description": "Permission type: 'bash' for shell commands (default), 'mcp' for MCP tool permissions"
         }
       }
     }

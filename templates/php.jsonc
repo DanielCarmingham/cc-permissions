@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "php",
   "description": "PHP, Composer, and Laravel Artisan",
   "category": "Languages & Runtimes",

@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "android",
   "description": "Gradle, ADB, and Android development",
   "category": "Mobile Development",

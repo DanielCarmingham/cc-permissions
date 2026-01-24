@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "ruby",
   "description": "Ruby, Bundler, Rails, and Rake",
   "category": "Languages & Runtimes",

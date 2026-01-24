@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "git",
   "description": "Git version control",
   "category": "Version Control",

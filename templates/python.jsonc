@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "python",
   "description": "pip, python, venv, pytest, and common data tools",
   "category": "Languages & Runtimes",

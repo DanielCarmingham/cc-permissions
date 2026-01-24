@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "gcp",
   "description": "Google Cloud CLI, gsutil, Firebase, and BigQuery",
   "category": "Cloud Providers",

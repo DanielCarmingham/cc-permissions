@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "database",
   "description": "PostgreSQL, MySQL, MongoDB, and Redis CLI tools",
   "category": "Utilities",

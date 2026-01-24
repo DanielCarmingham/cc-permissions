@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "azure",
   "description": "Azure CLI, Functions, Bicep, and Azure Developer CLI",
   "category": "Cloud Providers",

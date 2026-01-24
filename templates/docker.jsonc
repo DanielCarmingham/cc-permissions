@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "docker",
   "description": "Docker, Docker Compose, and Buildx",
   "category": "Container & Infrastructure",

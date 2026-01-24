@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "gitea",
   "description": "Gitea CLI (tea) and MCP server for repository and workflow management",
   "category": "Version Control",

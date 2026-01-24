@@ -25,7 +25,7 @@ Create `templates/<name>.jsonc` with this structure:
 
 ```jsonc
 {
-  "$schema": "../template.schema.json",
+  "$schema": "./template.schema.json",
   "name": "my-template",
   "description": "Brief description of what this template covers",
   "category": "Category Name",

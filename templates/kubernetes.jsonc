@@ -1,5 +1,5 @@
 {
-  "$schema": "../template.schema.json",
+  "$schema": "template.schema.json",
   "name": "kubernetes",
   "description": "kubectl, Helm, k9s, and Minikube",
   "category": "Container & Infrastructure",
