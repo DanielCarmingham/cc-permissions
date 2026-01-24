@@ -1,0 +1,60 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "playwright",
+  "description": "Playwright testing framework",
+  "category": "Testing",
+  "detection": {
+    "files": ["playwright.config.ts", "playwright.config.js"],
+    "contentPatterns": [
+      { "file": "package.json", "contains": "@playwright/test" }
+    ]
+  },
+  "levels": {
+    "restrictive": [
+      // Version and help
+      { "command": "npx playwright --version", "description": "Check Playwright version" },
+      { "command": "npx playwright --help", "description": "Playwright help" },
+      { "command": "playwright --version", "description": "Check Playwright version" },
+      // List tests without running
+      { "command": "npx playwright test --list", "description": "List tests without running" },
+      // Show reports (read-only viewing)
+      { "command": "npx playwright show-report", "description": "Display test report" },
+      { "command": "npx playwright show-trace", "description": "View trace file" }
+    ],
+    "standard": [
+      // Running tests
+      { "command": "npx playwright test", "description": "Run Playwright tests" },
+      { "command": "playwright test", "description": "Run Playwright tests" },
+      // Test options
+      { "command": "npx playwright test --headed", "description": "Run tests with visible browser" },
+      { "command": "npx playwright test --debug", "description": "Debug tests with Inspector" },
+      { "command": "npx playwright test --ui", "description": "Interactive test UI mode" },
+      { "command": "npx playwright test --ui-port", "description": "UI mode on custom port" },
+      { "command": "npx playwright test --project", "description": "Run specific project" },
+      { "command": "npx playwright test --grep", "description": "Filter tests by pattern" },
+      { "command": "npx playwright test --update-snapshots", "description": "Update test snapshots" },
+      { "command": "npx playwright test --trace", "description": "Record trace" },
+      { "command": "npx playwright test --reporter", "description": "Use custom reporter" },
+      // Code generation (records actions, doesn't install)
+      { "command": "npx playwright codegen", "description": "Generate test code" },
+      { "command": "playwright codegen", "description": "Generate test code" },
+      // Screenshot comparison
+      { "command": "npx playwright screenshot", "description": "Take screenshot" },
+      // PDF generation
+      { "command": "npx playwright pdf", "description": "Generate PDF" }
+    ],
+    "permissive": [
+      // Browser installation
+      { "command": "npx playwright install", "description": "Install browsers" },
+      { "command": "npx playwright install chromium", "description": "Install Chromium" },
+      { "command": "npx playwright install firefox", "description": "Install Firefox" },
+      { "command": "npx playwright install webkit", "description": "Install WebKit" },
+      { "command": "npx playwright install msedge", "description": "Install Edge" },
+      { "command": "npx playwright install --with-deps", "description": "Install browsers with system deps" },
+      { "command": "playwright install", "description": "Install browsers" },
+      // Uninstall
+      { "command": "npx playwright uninstall", "description": "Uninstall browsers" },
+      { "command": "playwright uninstall", "description": "Uninstall browsers" }
+    ]
+  }
+}

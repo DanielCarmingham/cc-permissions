@@ -398,6 +398,7 @@ function handleList(args: string[]): void {
     "Languages & Runtimes",
     "Cloud Providers",
     "Container & Infrastructure",
+    "Testing",
     "Mobile Development",
     "Utilities",
     "Other",

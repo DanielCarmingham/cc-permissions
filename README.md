@@ -126,6 +126,12 @@ cc-permissions apply nodejs --level permissive
 | [kubernetes](docs/templates/kubernetes.md) | kubectl, Helm, k9s, and Minikube |
 | [terraform](docs/templates/terraform.md) | Terraform, Terragrunt, and tflint |
 
+### Testing
+
+| Template | Description |
+|----------|-------------|
+| [playwright](docs/templates/playwright.md) | Playwright testing framework |
+
 ### Mobile Development
 
 | Template | Description |
@@ -186,29 +192,9 @@ cc-permissions template nodejs --format json
 cc-permissions template nodejs --format both
 ```
 
-## Contributing templates
+## Contributing
 
-Templates live in `templates/` as `.jsonc` files. Each template defines commands for three levels:
-
-```jsonc
-{
-  "name": "my-template",
-  "description": "Brief description",
-  "levels": {
-    "restrictive": [
-      { "command": "mytool status", "description": "Check status" }
-    ],
-    "standard": [
-      { "command": "mytool build", "description": "Build project" }
-    ],
-    "permissive": [
-      { "command": "mytool install *", "description": "Install packages" }
-    ]
-  }
-}
-```
-
-After adding a template, run `node scripts/generate-template-docs.js` to update the documentation.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on adding new templates and development setup.
 
 ## License
 
