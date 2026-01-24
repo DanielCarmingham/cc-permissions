@@ -1,0 +1,182 @@
+{
+  "$schema": "../template.schema.json",
+  "name": "gitlab",
+  "description": "GitLab CLI (glab) and MCP server for repository and workflow management",
+  "category": "Version Control",
+  "detection": {
+    "directories": [".gitlab/", ".gitlab-ci.yml"],
+    "files": [".gitlab-ci.yml"],
+    "mcpServers": ["gitlab"],
+    "gitRemotes": ["gitlab.com", "gitlab."]
+  },
+  "levels": {
+    "restrictive": [
+      // glab CLI: info
+      { "command": "glab --version", "description": "Check glab CLI version" },
+      { "command": "glab version", "description": "Check glab CLI version" },
+      { "command": "glab --help", "description": "Glab CLI help" },
+      { "command": "glab auth status", "description": "Check authentication status" },
+      { "command": "glab config list", "description": "List glab config" },
+      { "command": "glab check-update", "description": "Check for CLI updates" },
+      // glab CLI: repo read
+      { "command": "glab repo view", "description": "View repository" },
+      { "command": "glab repo list", "description": "List repositories" },
+      { "command": "glab repo clone", "description": "Clone repository" },
+      { "command": "glab repo search", "description": "Search repositories" },
+      // glab CLI: MR read
+      { "command": "glab mr list", "description": "List merge requests" },
+      { "command": "glab mr view", "description": "View merge request" },
+      { "command": "glab mr diff", "description": "View MR diff" },
+      { "command": "glab mr checkout", "description": "Checkout MR branch" },
+      // glab CLI: issue read
+      { "command": "glab issue list", "description": "List issues" },
+      { "command": "glab issue view", "description": "View issue" },
+      // glab CLI: CI/CD read
+      { "command": "glab ci list", "description": "List CI pipelines" },
+      { "command": "glab ci view", "description": "View CI pipeline" },
+      { "command": "glab ci status", "description": "Show CI status" },
+      { "command": "glab ci trace", "description": "Trace CI pipeline logs" },
+      { "command": "glab job list", "description": "List CI jobs" },
+      { "command": "glab job view", "description": "View CI job" },
+      { "command": "glab job trace", "description": "Trace CI job logs" },
+      { "command": "glab job artifact", "description": "Download job artifacts" },
+      // glab CLI: release read
+      { "command": "glab release list", "description": "List releases" },
+      { "command": "glab release view", "description": "View release" },
+      { "command": "glab release download", "description": "Download release assets" },
+      // glab CLI: label read
+      { "command": "glab label list", "description": "List labels" },
+      // glab CLI: milestone read
+      { "command": "glab milestone list", "description": "List milestones" },
+      // glab CLI: variable read
+      { "command": "glab variable list", "description": "List CI/CD variables" },
+      { "command": "glab variable get", "description": "Get variable value" },
+      // glab CLI: schedule read
+      { "command": "glab schedule list", "description": "List pipeline schedules" },
+      // glab CLI: snippet read
+      { "command": "glab snippet list", "description": "List snippets" },
+      { "command": "glab snippet view", "description": "View snippet" },
+      // glab CLI: user read
+      { "command": "glab user list", "description": "List users" },
+      // glab CLI: API
+      { "command": "glab api", "description": "GitLab API calls" },
+      // glab CLI: duo (AI)
+      { "command": "glab duo ask", "description": "Ask GitLab Duo questions" },
+      // MCP: search
+      { "command": "mcp__gitlab__search", "type": "mcp", "description": "Search GitLab" },
+      { "command": "mcp__gitlab__search_code", "type": "mcp", "description": "Semantic code search" },
+      // MCP: project read
+      { "command": "mcp__gitlab__get_project", "type": "mcp", "description": "Get project details" },
+      { "command": "mcp__gitlab__list_projects", "type": "mcp", "description": "List projects" },
+      { "command": "mcp__gitlab__search_projects", "type": "mcp", "description": "Search projects" },
+      // MCP: file read
+      { "command": "mcp__gitlab__get_file_contents", "type": "mcp", "description": "Get file contents" },
+      { "command": "mcp__gitlab__get_directory_contents", "type": "mcp", "description": "Get directory contents" },
+      // MCP: issue read
+      { "command": "mcp__gitlab__get_issue", "type": "mcp", "description": "Get issue details" },
+      { "command": "mcp__gitlab__list_issues", "type": "mcp", "description": "List issues" },
+      // MCP: MR read
+      { "command": "mcp__gitlab__get_merge_request", "type": "mcp", "description": "Get merge request details" },
+      { "command": "mcp__gitlab__list_merge_requests", "type": "mcp", "description": "List merge requests" },
+      { "command": "mcp__gitlab__get_merge_request_commits", "type": "mcp", "description": "Get MR commits" },
+      { "command": "mcp__gitlab__get_merge_request_diffs", "type": "mcp", "description": "Get MR diffs" }
+    ],
+    "standard": [
+      // glab CLI: MR create/edit
+      { "command": "glab mr create", "description": "Create merge request" },
+      { "command": "glab mr update", "description": "Update merge request" },
+      { "command": "glab mr note", "description": "Comment on MR" },
+      { "command": "glab mr approve", "description": "Approve merge request" },
+      { "command": "glab mr revoke", "description": "Revoke MR approval" },
+      { "command": "glab mr rebase", "description": "Rebase merge request" },
+      { "command": "glab mr todo", "description": "Add MR to todo list" },
+      // glab CLI: issue create/edit
+      { "command": "glab issue create", "description": "Create issue" },
+      { "command": "glab issue update", "description": "Update issue" },
+      { "command": "glab issue note", "description": "Comment on issue" },
+      { "command": "glab issue subscribe", "description": "Subscribe to issue" },
+      { "command": "glab issue unsubscribe", "description": "Unsubscribe from issue" },
+      // glab CLI: CI/CD run
+      { "command": "glab ci run", "description": "Run CI pipeline" },
+      { "command": "glab ci retry", "description": "Retry CI pipeline" },
+      { "command": "glab job retry", "description": "Retry CI job" },
+      { "command": "glab job play", "description": "Play manual CI job" },
+      // glab CLI: release create
+      { "command": "glab release create", "description": "Create release" },
+      { "command": "glab release upload", "description": "Upload release assets" },
+      // glab CLI: label create
+      { "command": "glab label create", "description": "Create label" },
+      // glab CLI: milestone create
+      { "command": "glab milestone create", "description": "Create milestone" },
+      // glab CLI: snippet create
+      { "command": "glab snippet create", "description": "Create snippet" },
+      // glab CLI: schedule create
+      { "command": "glab schedule create", "description": "Create pipeline schedule" },
+      { "command": "glab schedule run", "description": "Run scheduled pipeline" },
+      // MCP: branch create
+      { "command": "mcp__gitlab__create_branch", "type": "mcp", "description": "Create branch" },
+      // MCP: file create/update
+      { "command": "mcp__gitlab__create_file", "type": "mcp", "description": "Create file" },
+      { "command": "mcp__gitlab__update_file", "type": "mcp", "description": "Update file" },
+      { "command": "mcp__gitlab__push_files", "type": "mcp", "description": "Push multiple files" },
+      // MCP: issue create
+      { "command": "mcp__gitlab__create_issue", "type": "mcp", "description": "Create issue" },
+      { "command": "mcp__gitlab__update_issue", "type": "mcp", "description": "Update issue" },
+      { "command": "mcp__gitlab__create_issue_note", "type": "mcp", "description": "Comment on issue" },
+      // MCP: MR create
+      { "command": "mcp__gitlab__create_merge_request", "type": "mcp", "description": "Create merge request" },
+      { "command": "mcp__gitlab__update_merge_request", "type": "mcp", "description": "Update merge request" },
+      { "command": "mcp__gitlab__create_merge_request_note", "type": "mcp", "description": "Comment on MR" }
+    ],
+    "permissive": [
+      // glab CLI: MR merge/close
+      { "command": "glab mr merge", "description": "Merge merge request" },
+      { "command": "glab mr close", "description": "Close merge request" },
+      { "command": "glab mr reopen", "description": "Reopen merge request" },
+      { "command": "glab mr delete", "description": "Delete merge request branch" },
+      // glab CLI: issue close
+      { "command": "glab issue close", "description": "Close issue" },
+      { "command": "glab issue reopen", "description": "Reopen issue" },
+      { "command": "glab issue delete", "description": "Delete issue" },
+      // glab CLI: CI/CD management
+      { "command": "glab ci cancel", "description": "Cancel CI pipeline" },
+      { "command": "glab ci delete", "description": "Delete CI pipeline" },
+      { "command": "glab job cancel", "description": "Cancel CI job" },
+      // glab CLI: repo management
+      { "command": "glab repo create", "description": "Create repository" },
+      { "command": "glab repo fork", "description": "Fork repository" },
+      { "command": "glab repo delete", "description": "Delete repository" },
+      { "command": "glab repo archive", "description": "Archive repository" },
+      { "command": "glab repo transfer", "description": "Transfer repository" },
+      // glab CLI: release management
+      { "command": "glab release delete", "description": "Delete release" },
+      // glab CLI: label delete
+      { "command": "glab label delete", "description": "Delete label" },
+      // glab CLI: milestone close/delete
+      { "command": "glab milestone close", "description": "Close milestone" },
+      { "command": "glab milestone delete", "description": "Delete milestone" },
+      // glab CLI: variable management
+      { "command": "glab variable set", "description": "Set CI/CD variable" },
+      { "command": "glab variable update", "description": "Update CI/CD variable" },
+      { "command": "glab variable delete", "description": "Delete CI/CD variable" },
+      // glab CLI: schedule management
+      { "command": "glab schedule delete", "description": "Delete pipeline schedule" },
+      // glab CLI: snippet delete
+      { "command": "glab snippet delete", "description": "Delete snippet" },
+      // glab CLI: deploy key management
+      { "command": "glab deploy-key list", "description": "List deploy keys" },
+      { "command": "glab deploy-key create", "description": "Create deploy key" },
+      { "command": "glab deploy-key delete", "description": "Delete deploy key" },
+      // MCP: project management
+      { "command": "mcp__gitlab__create_project", "type": "mcp", "description": "Create project" },
+      { "command": "mcp__gitlab__fork_project", "type": "mcp", "description": "Fork project" },
+      // MCP: branch delete
+      { "command": "mcp__gitlab__delete_branch", "type": "mcp", "description": "Delete branch" },
+      // MCP: MR merge
+      { "command": "mcp__gitlab__merge_merge_request", "type": "mcp", "description": "Merge merge request" },
+      { "command": "mcp__gitlab__close_merge_request", "type": "mcp", "description": "Close merge request" },
+      // MCP: issue close
+      { "command": "mcp__gitlab__close_issue", "type": "mcp", "description": "Close issue" }
+    ]
+  }
+}
