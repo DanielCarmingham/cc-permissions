@@ -83,4 +83,6 @@ jobs:
           generate_release_notes: true  # Appends GitHub's auto-generated notes
 
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: |
+          rm -f changelog.txt  # Clean up temp file to avoid dirty build marker
+          npm publish --provenance --access public
