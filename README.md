@@ -46,7 +46,7 @@ Install as a Claude Code plugin for integrated slash commands:
 /plugin marketplace add DanielCarmingham/cc-permissions
 
 # Step 2: Install the plugin
-/plugin install cc-permissions@danielcarmingham-cc-permissions
+/plugin install cc-permissions@DanielCarmingham-cc-permissions
 ```
 
 Or use the interactive plugin manager:
