@@ -200,4 +200,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on adding new templates 
 
 ## License
 
-0BSD
+[0BSD](LICENSE.md) - Use freely, no attribution required.
