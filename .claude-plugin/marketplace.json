@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "cc-permissions",
-      "source": "./"
+      "source": "../"
     }
   ]
 }
