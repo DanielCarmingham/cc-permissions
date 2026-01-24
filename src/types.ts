@@ -64,10 +64,21 @@ export interface ClaudeCodePermissions {
   deny: string[];
 }
 
+// Detection type categories
+export type DetectionType = "file" | "directory" | "content" | "mcp" | "remote" | "always";
+
+// Detection info for a single template
+export interface TemplateDetection {
+  template: string;
+  type: DetectionType; // What kind of detection triggered this
+  reason: string; // The specific value (file path, MCP server name, remote pattern, etc.)
+}
+
 // Analysis result from scanning a project
 export interface AnalysisResult {
-  detectedFiles: string[];
-  recommendedTemplates: string[];
+  detectedFiles: string[]; // Kept for backward compatibility
+  recommendedTemplates: string[]; // Kept for backward compatibility
+  detections: TemplateDetection[]; // New: template -> reason mapping
   suggestedLevel: PermissionLevel;
   suggestedCommand: string;
 }

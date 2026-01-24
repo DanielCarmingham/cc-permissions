@@ -1,7 +1,7 @@
 import { readdirSync, existsSync, statSync, readFileSync } from "node:fs";
 import { join, resolve, relative } from "node:path";
 import { execSync } from "node:child_process";
-import type { AnalysisResult, DetectionRules, TemplateRegistry } from "./types.js";
+import type { AnalysisResult, DetectionRules, TemplateRegistry, TemplateDetection, DetectionType } from "./types.js";
 import { PermissionLevel } from "./types.js";
 import { getTemplates } from "./templates/loader.js";
 
@@ -119,11 +119,15 @@ function hasCommand(commands: string[]): string | null {
 
 /**
  * Check if a directory is the root of a git repository.
- * Returns true only if the directory contains a .git folder or file.
+ * Returns true if the directory contains a .git folder (regular repo)
+ * or a .git file (worktree).
  */
 function isGitRepoRoot(dir: string): boolean {
   const gitPath = join(dir, ".git");
-  return existsSync(gitPath);
+  if (!existsSync(gitPath)) return false;
+  // Both directory and file are valid (.git file is used in worktrees)
+  const stat = statSync(gitPath);
+  return stat.isDirectory() || stat.isFile();
 }
 
 /**
@@ -270,26 +274,34 @@ function fileContains(dir: string, filename: string, searchText: string): boolea
   }
 }
 
+// Result from detectTemplate
+interface DetectionResult {
+  type: DetectionType;
+  reason: string;
+}
+
 /**
  * Detect if a template should be recommended based on its detection rules.
- * Returns the detected file/directory path if found, null otherwise.
+ * Returns the detection type and reason if found, null otherwise.
  */
 function detectTemplate(
   dir: string,
   detection: DetectionRules | undefined
-): string | null {
+): DetectionResult | null {
   if (!detection) return null;
 
   // Check if always recommended
   if (detection.always) {
-    return "always";
+    return { type: "always", reason: "always included" };
   }
 
   // Check simple file patterns
   if (detection.files) {
     for (const pattern of detection.files) {
       const found = fileExists(dir, pattern);
-      if (found) return found;
+      if (found) {
+        return { type: "file", reason: found };
+      }
     }
   }
 
@@ -297,7 +309,9 @@ function detectTemplate(
   if (detection.directories) {
     for (const pattern of detection.directories) {
       const found = directoryExists(dir, pattern);
-      if (found) return found;
+      if (found) {
+        return { type: "directory", reason: found };
+      }
     }
   }
 
@@ -305,7 +319,7 @@ function detectTemplate(
   if (detection.contentPatterns) {
     for (const { file, contains } of detection.contentPatterns) {
       if (fileContains(dir, file, contains)) {
-        return join(dir, file);
+        return { type: "content", reason: `${file} contains "${contains}"` };
       }
     }
   }
@@ -313,19 +327,31 @@ function detectTemplate(
   // Check MCP servers
   if (detection.mcpServers) {
     const found = hasMcpServer(detection.mcpServers);
-    if (found) return found;
+    if (found) {
+      // Extract server name from "MCP:servername"
+      const serverName = found.replace("MCP:", "");
+      return { type: "mcp", reason: serverName };
+    }
   }
 
   // Check CLI commands
   if (detection.commands) {
     const found = hasCommand(detection.commands);
-    if (found) return found;
+    if (found) {
+      // Extract command name from "CLI:command"
+      const cmdName = found.replace("CLI:", "");
+      return { type: "file", reason: `${cmdName} installed` };
+    }
   }
 
   // Check git remotes
   if (detection.gitRemotes) {
     const found = hasGitRemote(dir, detection.gitRemotes);
-    if (found) return found;
+    if (found) {
+      // Extract pattern from "remote:pattern"
+      const pattern = found.replace("remote:", "");
+      return { type: "remote", reason: pattern };
+    }
   }
 
   return null;
@@ -338,6 +364,7 @@ export function analyzeDirectory(dir: string): AnalysisResult {
   const absoluteDir = resolve(dir);
   const detectedFiles: string[] = [];
   const recommendedTemplates: Set<string> = new Set();
+  const detections: TemplateDetection[] = [];
 
   // Load templates to get detection rules
   let templates: TemplateRegistry;
@@ -348,6 +375,7 @@ export function analyzeDirectory(dir: string): AnalysisResult {
     return {
       detectedFiles: [],
       recommendedTemplates: ["shell"],
+      detections: [{ template: "shell", type: "always", reason: "always included" }],
       suggestedLevel: PermissionLevel.Restrictive,
       suggestedCommand: "cc-permissions apply --level restrictive",
     };
@@ -358,18 +386,29 @@ export function analyzeDirectory(dir: string): AnalysisResult {
     const detected = detectTemplate(absoluteDir, template.detection);
     if (detected) {
       recommendedTemplates.add(name);
-      // Track detected files/directories (but not "always" marker)
-      if (detected !== "always") {
-        const relativePath = relative(absoluteDir, detected) || detected;
+
+      // Format the reason for display
+      let reason = detected.reason;
+      if (detected.type === "file" || detected.type === "directory") {
+        const relativePath = relative(absoluteDir, detected.reason) || detected.reason;
         if (!detectedFiles.includes(relativePath)) {
           detectedFiles.push(relativePath);
         }
+        reason = relativePath;
       }
+
+      detections.push({ template: name, type: detected.type, reason });
     }
   }
 
   // Ensure shell is always included (even if template loading worked but shell wasn't auto-detected)
-  recommendedTemplates.add("shell");
+  if (!recommendedTemplates.has("shell")) {
+    recommendedTemplates.add("shell");
+    detections.push({ template: "shell", type: "always", reason: "always included" });
+  }
+
+  // Sort detections alphabetically by template name
+  detections.sort((a, b) => a.template.localeCompare(b.template));
 
   // Determine suggested level based on number of templates
   // More templates = more complex project = likely needs standard
@@ -393,9 +432,65 @@ export function analyzeDirectory(dir: string): AnalysisResult {
   return {
     detectedFiles,
     recommendedTemplates: templateNames,
+    detections,
     suggestedLevel,
     suggestedCommand,
   };
+}
+
+// ANSI color codes
+const colors = {
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+  dim: "\x1b[2m",
+  cyan: "\x1b[36m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  magenta: "\x1b[35m",
+  gray: "\x1b[90m",
+};
+
+// Check if colors should be used (not piped, supports colors)
+function useColors(): boolean {
+  return process.stdout.isTTY ?? false;
+}
+
+// Apply color if terminal supports it
+function color(text: string, ...codes: string[]): string {
+  if (!useColors()) return text;
+  return codes.join("") + text + colors.reset;
+}
+
+// Format detection for display with colored type prefix
+function formatDetection(type: string, reason: string): string {
+  const typeInfo: Record<string, { prefix: string; color: string }> = {
+    file: { prefix: "file:", color: colors.green },
+    directory: { prefix: "dir:", color: colors.green },
+    content: { prefix: "content:", color: colors.yellow },
+    mcp: { prefix: "mcp:", color: colors.magenta },
+    remote: { prefix: "remote:", color: colors.blue },
+    always: { prefix: "", color: colors.gray },
+  };
+
+  const info = typeInfo[type] || { prefix: `${type}:`, color: colors.reset };
+
+  if (type === "always") {
+    return color(reason, info.color);
+  }
+
+  return color(info.prefix, info.color) + " " + reason;
+}
+
+// Get plain text length of detection (without color codes)
+function getDetectionLength(type: string, reason: string): number {
+  const prefixes: Record<string, string> = {
+    file: "file:", directory: "dir:", content: "content:",
+    mcp: "mcp:", remote: "remote:", always: "",
+  };
+  const prefix = prefixes[type] || `${type}:`;
+  if (type === "always") return reason.length;
+  return prefix.length + 1 + reason.length; // +1 for space
 }
 
 /**
@@ -403,29 +498,56 @@ export function analyzeDirectory(dir: string): AnalysisResult {
  */
 export function formatAnalysisResult(result: AnalysisResult): string {
   const lines: string[] = [
-    `Project Analysis`,
-    `================`,
+    color(`Project Analysis`, colors.bold, colors.cyan),
+    color(`════════════════`, colors.cyan),
     ``,
   ];
 
-  if (result.detectedFiles.length === 0) {
-    lines.push(`No specific project files detected.`);
-    lines.push(`Recommending shell template only.`);
+  if (result.detections.length === 0) {
+    lines.push(`No templates detected.`);
   } else {
-    lines.push(`Detected Files:`);
-    for (const file of result.detectedFiles) {
-      lines.push(`  - ${file}`);
+    // Calculate column widths
+    const templateWidth = Math.max(
+      8, // "Template" header
+      ...result.detections.map((d) => d.template.length)
+    );
+    const detectedByWidth = Math.max(
+      11, // "Detected By" header
+      ...result.detections.map((d) => getDetectionLength(d.type, d.reason))
+    );
+
+    // Box drawing characters
+    const box = {
+      topLeft: "┌", topRight: "┐", bottomLeft: "└", bottomRight: "┘",
+      horizontal: "─", vertical: "│",
+      leftT: "├", rightT: "┤", topT: "┬", bottomT: "┴", cross: "┼",
+    };
+
+    // Build table
+    const topBorder = `${box.topLeft}${box.horizontal.repeat(templateWidth + 2)}${box.topT}${box.horizontal.repeat(detectedByWidth + 2)}${box.topRight}`;
+    const headerSep = `${box.leftT}${box.horizontal.repeat(templateWidth + 2)}${box.cross}${box.horizontal.repeat(detectedByWidth + 2)}${box.rightT}`;
+    const bottomBorder = `${box.bottomLeft}${box.horizontal.repeat(templateWidth + 2)}${box.bottomT}${box.horizontal.repeat(detectedByWidth + 2)}${box.bottomRight}`;
+
+    const header = `${color(box.vertical, colors.dim)} ${color("Template".padEnd(templateWidth), colors.bold)} ${color(box.vertical, colors.dim)} ${color("Detected By".padEnd(detectedByWidth), colors.bold)} ${color(box.vertical, colors.dim)}`;
+
+    lines.push(color(topBorder, colors.dim));
+    lines.push(header);
+    lines.push(color(headerSep, colors.dim));
+
+    for (const detection of result.detections) {
+      const detectionText = formatDetection(detection.type, detection.reason);
+      const detectionLen = getDetectionLength(detection.type, detection.reason);
+      const padding = " ".repeat(detectedByWidth - detectionLen);
+
+      const row = `${color(box.vertical, colors.dim)} ${detection.template.padEnd(templateWidth)} ${color(box.vertical, colors.dim)} ${detectionText}${padding} ${color(box.vertical, colors.dim)}`;
+      lines.push(row);
     }
+
+    lines.push(color(bottomBorder, colors.dim));
   }
 
   lines.push(``);
-  lines.push(`Recommended Templates:`);
-  for (const template of result.recommendedTemplates) {
-    lines.push(`  - ${template}`);
-  }
-
-  lines.push(``);
-  lines.push(`Suggested Level: ${result.suggestedLevel}`);
+  lines.push(`${color("Suggested Level:", colors.bold)} ${result.suggestedLevel}`);
   lines.push(``);
   lines.push(`Suggested Command:`);
   lines.push(`  ${result.suggestedCommand}`);

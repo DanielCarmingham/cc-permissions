@@ -514,6 +514,7 @@ describe("formatAnalysisResult", () => {
     const result = {
       detectedFiles: [],
       recommendedTemplates: ["shell"],
+      detections: [{ template: "shell", type: "always" as const, reason: "always included" }],
       suggestedLevel: PermissionLevel.Restrictive,
       suggestedCommand: "cc-permissions template shell --level restrictive",
     };
@@ -521,35 +522,43 @@ describe("formatAnalysisResult", () => {
     const formatted = formatAnalysisResult(result);
 
     assert.ok(formatted.includes("Project Analysis"));
-    assert.ok(formatted.includes("No specific project files detected"));
     assert.ok(formatted.includes("shell"));
+    assert.ok(formatted.includes("Template")); // Table header
   });
 
-  it("should list detected files", () => {
+  it("should list detected files in table", () => {
     const result = {
       detectedFiles: ["package.json", "tsconfig.json"],
       recommendedTemplates: ["shell", "nodejs"],
+      detections: [
+        { template: "nodejs", type: "file" as const, reason: "package.json" },
+        { template: "shell", type: "always" as const, reason: "always included" },
+      ],
       suggestedLevel: PermissionLevel.Standard,
       suggestedCommand: "cc-permissions template shell,nodejs --level standard",
     };
 
     const formatted = formatAnalysisResult(result);
 
-    assert.ok(formatted.includes("Detected Files:"));
     assert.ok(formatted.includes("package.json"));
+    assert.ok(formatted.includes("nodejs"));
   });
 
-  it("should list recommended templates", () => {
+  it("should list recommended templates in table", () => {
     const result = {
       detectedFiles: ["package.json"],
       recommendedTemplates: ["shell", "nodejs"],
+      detections: [
+        { template: "nodejs", type: "file" as const, reason: "package.json" },
+        { template: "shell", type: "always" as const, reason: "always included" },
+      ],
       suggestedLevel: PermissionLevel.Standard,
       suggestedCommand: "cc-permissions template shell,nodejs --level standard",
     };
 
     const formatted = formatAnalysisResult(result);
 
-    assert.ok(formatted.includes("Recommended Templates:"));
+    assert.ok(formatted.includes("Template")); // Table header
     assert.ok(formatted.includes("shell"));
     assert.ok(formatted.includes("nodejs"));
   });
@@ -558,19 +567,22 @@ describe("formatAnalysisResult", () => {
     const result = {
       detectedFiles: [],
       recommendedTemplates: ["shell"],
+      detections: [{ template: "shell", type: "always" as const, reason: "always included" }],
       suggestedLevel: PermissionLevel.Standard,
       suggestedCommand: "cc-permissions template shell --level standard",
     };
 
     const formatted = formatAnalysisResult(result);
 
-    assert.ok(formatted.includes("Suggested Level: standard"));
+    assert.ok(formatted.includes("Suggested Level:"));
+    assert.ok(formatted.includes("standard"));
   });
 
   it("should show suggested command", () => {
     const result = {
       detectedFiles: [],
       recommendedTemplates: ["shell"],
+      detections: [{ template: "shell", type: "always" as const, reason: "always included" }],
       suggestedLevel: PermissionLevel.Restrictive,
       suggestedCommand: "cc-permissions template shell --level restrictive",
     };
