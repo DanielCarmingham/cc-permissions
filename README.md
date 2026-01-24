@@ -6,7 +6,7 @@ Claude Code users face a frustrating choice: run in a Docker sandbox with `--dan
 
 This tool offers a middle ground. Generate permission configurations tailored to your workflow, reducing prompt fatigue while maintaining control over what Claude Code can do.
 
-> **Note:** This approach is inherently less safe than a fully isolated environment. You're trading sandbox protection for convenience.
+> ⚠️ **Warning:** This approach is inherently less safe than a fully isolated environment. You're trading sandbox protection for convenience. ⚠️
 
 ## Getting started
 
