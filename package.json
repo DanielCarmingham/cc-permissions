@@ -22,7 +22,8 @@
     "prepublishOnly": "npm run check-version && npm run build",
     "version:show": "node scripts/bump-version.js show",
     "version:bump": "node scripts/bump-version.js bump",
-    "version:set": "node scripts/bump-version.js set"
+    "version:set": "node scripts/bump-version.js set",
+    "docs:templates": "node scripts/generate-template-docs.js"
   },
   "keywords": [
     "claude",
