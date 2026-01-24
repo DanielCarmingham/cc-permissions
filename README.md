@@ -84,28 +84,60 @@ cc-permissions apply nodejs --level permissive
 
 ## Templates
 
+### General
+
 | Template | Description |
 |----------|-------------|
 | [shell](docs/templates/shell.md) | Basic shell and filesystem commands |
+
+### Version Control
+
+| Template | Description |
+|----------|-------------|
 | [git](docs/templates/git.md) | Git version control |
 | [github](docs/templates/github.md) | GitHub CLI (gh) for repository and workflow management |
-| [nodejs](docs/templates/nodejs.md) | Node.js, npm, pnpm, yarn, and bun |
-| [python](docs/templates/python.md) | pip, python, venv, pytest, and common data tools |
-| [go](docs/templates/go.md) | Go development and golangci-lint |
-| [rust](docs/templates/rust.md) | Cargo, rustc, and rustup |
-| [java](docs/templates/java.md) | Maven, Gradle, Java, and JVM development |
+
+### Languages & Runtimes
+
+| Template | Description |
+|----------|-------------|
 | [dotnet](docs/templates/dotnet.md) | dotnet CLI, NuGet, MSBuild |
-| [ruby](docs/templates/ruby.md) | Ruby, Bundler, Rails, and Rake |
+| [go](docs/templates/go.md) | Go development and golangci-lint |
+| [java](docs/templates/java.md) | Maven, Gradle, Java, and JVM development |
+| [nodejs](docs/templates/nodejs.md) | Node.js, npm, pnpm, yarn, and bun |
 | [php](docs/templates/php.md) | PHP, Composer, and Laravel Artisan |
-| [ios](docs/templates/ios.md) | Xcode, Swift, CocoaPods, and iOS development |
-| [android](docs/templates/android.md) | Gradle, ADB, and Android development |
-| [flutter](docs/templates/flutter.md) | Flutter SDK and Dart development |
-| [docker](docs/templates/docker.md) | Docker, Docker Compose, and Buildx |
-| [kubernetes](docs/templates/kubernetes.md) | kubectl, Helm, k9s, and Minikube |
-| [terraform](docs/templates/terraform.md) | Terraform, Terragrunt, and tflint |
+| [python](docs/templates/python.md) | pip, python, venv, pytest, and common data tools |
+| [ruby](docs/templates/ruby.md) | Ruby, Bundler, Rails, and Rake |
+| [rust](docs/templates/rust.md) | Cargo, rustc, and rustup |
+
+### Cloud Providers
+
+| Template | Description |
+|----------|-------------|
 | [aws](docs/templates/aws.md) | AWS CLI, SAM, CDK, Amplify, and Elastic Beanstalk |
 | [azure](docs/templates/azure.md) | Azure CLI, Functions, Bicep, and Azure Developer CLI |
 | [gcp](docs/templates/gcp.md) | Google Cloud CLI, gsutil, Firebase, and BigQuery |
+
+### Container & Infrastructure
+
+| Template | Description |
+|----------|-------------|
+| [docker](docs/templates/docker.md) | Docker, Docker Compose, and Buildx |
+| [kubernetes](docs/templates/kubernetes.md) | kubectl, Helm, k9s, and Minikube |
+| [terraform](docs/templates/terraform.md) | Terraform, Terragrunt, and tflint |
+
+### Mobile Development
+
+| Template | Description |
+|----------|-------------|
+| [android](docs/templates/android.md) | Gradle, ADB, and Android development |
+| [flutter](docs/templates/flutter.md) | Flutter SDK and Dart development |
+| [ios](docs/templates/ios.md) | Xcode, Swift, CocoaPods, and iOS development |
+
+### Utilities
+
+| Template | Description |
+|----------|-------------|
 | [database](docs/templates/database.md) | PostgreSQL, MySQL, MongoDB, and Redis CLI tools |
 
 Click any template to see the full list of commands at each level.
