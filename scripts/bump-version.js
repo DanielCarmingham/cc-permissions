@@ -17,6 +17,7 @@ import { dirname, join } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const packagePath = join(__dirname, "..", "package.json");
+const pluginPath = join(__dirname, "..", ".claude-plugin", "plugin.json");
 
 // Read package.json
 function readPackageJson() {
@@ -26,6 +27,28 @@ function readPackageJson() {
 // Write package.json
 function writePackageJson(pkg) {
   writeFileSync(packagePath, JSON.stringify(pkg, null, 2) + "\n", "utf-8");
+}
+
+// Read plugin.json
+function readPluginJson() {
+  return JSON.parse(readFileSync(pluginPath, "utf-8"));
+}
+
+// Write plugin.json
+function writePluginJson(plugin) {
+  writeFileSync(pluginPath, JSON.stringify(plugin, null, 2) + "\n", "utf-8");
+}
+
+// Update version in both package.json and plugin.json
+function updateVersion(newVersion) {
+  const pkg = readPackageJson();
+  const plugin = readPluginJson();
+
+  pkg.version = newVersion;
+  plugin.version = newVersion;
+
+  writePackageJson(pkg);
+  writePluginJson(plugin);
 }
 
 // Parse semver
@@ -84,8 +107,7 @@ function bumpVersion(bumpType) {
     process.exit(1);
   }
 
-  pkg.version = newVersion;
-  writePackageJson(pkg);
+  updateVersion(newVersion);
   console.log(`Bumped ${bumpType}: ${currentVersion} → ${newVersion}`);
 }
 
@@ -99,8 +121,7 @@ function setVersion(newVersion) {
 
   const pkg = readPackageJson();
   const currentVersion = pkg.version;
-  pkg.version = newVersion;
-  writePackageJson(pkg);
+  updateVersion(newVersion);
   console.log(`Set version: ${currentVersion} → ${newVersion}`);
 }
 

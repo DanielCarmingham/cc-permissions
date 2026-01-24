@@ -56,7 +56,7 @@ jobs:
 
       - name: Commit and Tag
         run: |
-          git add package.json package-lock.json
+          git add package.json package-lock.json .claude-plugin/plugin.json
           git commit -m "Release v${{ steps.version.outputs.version }}"
           git tag -a "v${{ steps.version.outputs.version }}" -m "Release v${{ steps.version.outputs.version }}"
           git push origin main --follow-tags

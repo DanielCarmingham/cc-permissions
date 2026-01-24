@@ -1,7 +1,7 @@
 {
   "name": "cc-permissions",
   "description": "Generate thoughtful permission configs for Claude Code",
-  "version": "0.1.4",
+  "version": "0.1.13",
   "author": {
     "name": "Daniel Carmingham"
   },
