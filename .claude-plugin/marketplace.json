@@ -1,10 +1,13 @@
 {
   "name": "danielcarmingham-cc-permissions",
   "description": "Permission config generator for Claude Code",
+  "owner": {
+    "name": "Daniel Carmingham"
+  },
   "plugins": [
     {
       "name": "cc-permissions",
-      "path": "."
+      "source": "."
     }
   ]
 }
