@@ -35,16 +35,16 @@ Or use as a Claude Code plugin:
 
 ```bash
 # Add the marketplace
-/plugin marketplace add DanielCarmingham/cc-permissions
+claude plugin marketplace add DanielCarmingham/cc-permissions
 
 # Install the plugin
-/plugin install cc-permissions@DanielCarmingham-cc-permissions
+claude plugin install cc-permissions@DanielCarmingham-cc-permissions
 
-# Update to latest version (run in terminal, not as slash command)
+# Update to latest version
 claude plugin update cc-permissions@DanielCarmingham-cc-permissions
 
 # Uninstall
-/plugin uninstall cc-permissions@DanielCarmingham-cc-permissions
+claude plugin uninstall cc-permissions@DanielCarmingham-cc-permissions
 ```
 
 Then use `/cc-permissions:analyze`, `/cc-permissions:apply`, and other slash commands directly in Claude Code.
