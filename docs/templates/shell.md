@@ -74,9 +74,6 @@ Broader access for trusted projects. Includes all standard commands plus:
 |---------|-------------|
 | `rm` | Remove files |
 | `rmdir` | Remove directories |
-| `rm -r` | Remove recursively |
-| `rm -rf` | Force remove recursively |
-| `sudo` | Execute as superuser |
 | `kill` | Terminate processes |
 | `pkill` | Kill processes by name |
 | `killall` | Kill processes by name |

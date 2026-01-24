@@ -58,7 +58,6 @@ Day-to-day development commands. Includes all restrictive commands plus:
 | `kubectl rollout pause` | Pause rollout |
 | `kubectl rollout resume` | Resume rollout |
 | `kubectl rollout restart` | Restart rollout |
-| `kubectl delete pod` | Delete pod (will restart) |
 | `kubectl config use-context` | Switch context |
 | `kubectl config set-context` | Set context |
 | `helm template` | Render chart templates |
@@ -80,6 +79,7 @@ Broader access for trusted projects. Includes all standard commands plus:
 
 | Command | Description |
 |---------|-------------|
+| `kubectl delete pod` | Delete pod |
 | `kubectl delete` | Delete resources |
 | `kubectl scale` | Scale resources |
 | `kubectl autoscale` | Configure autoscaling |

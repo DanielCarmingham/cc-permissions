@@ -45,3 +45,7 @@ Start from pre-built templates for common setups (web development, data science,
 - **Runtime**: Node.js
 - **Language**: TypeScript
 - **Distribution**: npm package (CLI tool)
+
+## Development Notes
+
+- After updating templates in `templates/*.jsonc`, regenerate docs: `node scripts/generate-template-docs.js`

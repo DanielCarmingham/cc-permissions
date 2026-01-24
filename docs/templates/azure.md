@@ -39,7 +39,6 @@ Day-to-day development commands. Includes all restrictive commands plus:
 
 | Command | Description |
 |---------|-------------|
-| `az group create` | Create resource group |
 | `func start` | Start Functions locally |
 | `func new` | Create new function |
 | `func init` | Initialize Functions project |
@@ -66,6 +65,7 @@ Broader access for trusted projects. Includes all standard commands plus:
 
 | Command | Description |
 |---------|-------------|
+| `az group create` | Create resource group |
 | `az deployment group create` | Create resource group deployment |
 | `az deployment sub create` | Create subscription deployment |
 | `az deployment group delete` | Delete deployment |

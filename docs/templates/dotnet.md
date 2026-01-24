@@ -34,7 +34,6 @@ Day-to-day development commands. Includes all restrictive commands plus:
 | `dotnet run` | Run the project |
 | `dotnet watch` | Watch and rebuild |
 | `dotnet clean` | Clean build output |
-| `dotnet publish` | Publish the project |
 | `dotnet test` | Run tests |
 | `dotnet format` | Format code |
 | `dotnet msbuild` | Run MSBuild |
@@ -50,6 +49,7 @@ Broader access for trusted projects. Includes all standard commands plus:
 
 | Command | Description |
 |---------|-------------|
+| `dotnet publish` | Publish the project |
 | `dotnet add package` | Add NuGet package |
 | `dotnet add reference` | Add project reference |
 | `dotnet remove package` | Remove NuGet package |
