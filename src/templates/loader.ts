@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import stripJsonComments from "strip-json-comments";
-import type { TemplateDefinition, TemplateRegistry, Permission, DetectionRules, ContentPattern } from "../types.js";
+import type { TemplateDefinition, TemplateRegistry, Permission, DetectionRules, ContentPattern, PermissionType } from "../types.js";
 
 // Get the bundled templates directory
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -40,10 +40,22 @@ function validatePermission(
     );
   }
 
-  return {
+  if (p.type !== undefined && p.type !== "bash" && p.type !== "mcp") {
+    throw new Error(
+      `Template "${templateName}": levels.${level}[${index}].type must be "bash" or "mcp"`
+    );
+  }
+
+  const result: Permission = {
     command: p.command,
     description: p.description as string | undefined,
   };
+
+  if (p.type) {
+    result.type = p.type as PermissionType;
+  }
+
+  return result;
 }
 
 /**
@@ -141,6 +153,22 @@ function validateDetection(
     result.contentPatterns = d.contentPatterns.map((p, i) =>
       validateContentPattern(p, templateName, i)
     );
+  }
+
+  if (d.mcpServers !== undefined) {
+    if (!Array.isArray(d.mcpServers)) {
+      throw new Error(
+        `Template "${templateName}": detection.mcpServers must be an array`
+      );
+    }
+    for (let i = 0; i < d.mcpServers.length; i++) {
+      if (typeof d.mcpServers[i] !== "string") {
+        throw new Error(
+          `Template "${templateName}": detection.mcpServers[${i}] must be a string`
+        );
+      }
+    }
+    result.mcpServers = d.mcpServers as string[];
   }
 
   if (d.always !== undefined) {

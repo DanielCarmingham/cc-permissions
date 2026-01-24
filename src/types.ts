@@ -5,12 +5,17 @@ export enum PermissionLevel {
   Permissive = "permissive", // Few guardrails (most commands except banned)
 }
 
+// Permission type: bash command or MCP tool
+export type PermissionType = "bash" | "mcp";
+
 // A single permission entry for Claude Code
 export interface Permission {
   // The command/pattern to allow
   command: string;
   // Optional description for documentation
   description?: string;
+  // Permission type: defaults to "bash" for backward compatibility
+  type?: PermissionType;
 }
 
 // Content pattern for detection (file + content check)

@@ -31,7 +31,7 @@ npm install -g cc-permissions
 ```
 Then run: `cc-permissions apply`
 
-Or use as a Claude Code plugin:
+Or use as slash command via a Claude Code plugin:
 
 ```bash
 # Add the marketplace
@@ -95,6 +95,7 @@ cc-permissions apply nodejs --level permissive
 | Template | Description |
 |----------|-------------|
 | [git](docs/templates/git.md) | Git version control |
+| [gitea](docs/templates/gitea.md) | Gitea MCP server for repository and workflow management |
 | [github](docs/templates/github.md) | GitHub CLI (gh) for repository and workflow management |
 
 ### Languages & Runtimes

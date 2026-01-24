@@ -83,13 +83,31 @@ export function formatBashPermission(command: string): string {
 }
 
 /**
+ * Format an MCP tool as a Claude Code MCP permission.
+ * Format: "mcp__server__tool" with optional wildcards.
+ */
+export function formatMcpPermission(tool: string): string {
+  return tool;
+}
+
+/**
+ * Format a permission based on its type.
+ */
+export function formatPermission(permission: Permission): string {
+  if (permission.type === "mcp") {
+    return formatMcpPermission(permission.command);
+  }
+  return formatBashPermission(permission.command);
+}
+
+/**
  * Generate Claude Code permissions format from template permissions.
  */
 export function generateClaudeCodePermissions(
   permissions: Permission[]
 ): ClaudeCodePermissions {
   return {
-    allow: permissions.map((p) => formatBashPermission(p.command)),
+    allow: permissions.map((p) => formatPermission(p)),
     deny: BANNED_PATTERNS.map((p) => formatBashPermission(p.command)),
   };
 }
