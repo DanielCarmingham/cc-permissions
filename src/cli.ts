@@ -18,6 +18,7 @@ import { formatVersionInfo, readPackageJson } from "./version.js";
 interface BuildInfo {
   commitHash: string;
   commitHashFull: string;
+  dirty: boolean;
   buildTime: string;
 }
 
@@ -27,14 +28,20 @@ function loadBuildInfo(): BuildInfo {
     const buildInfoPath = join(__dirname, "build-info.json");
     return JSON.parse(readFileSync(buildInfoPath, "utf-8"));
   } catch {
-    return { commitHash: "dev", commitHashFull: "dev", buildTime: "" };
+    return { commitHash: "dev", commitHashFull: "dev", dirty: true, buildTime: "" };
   }
 }
 
 const buildInfo = loadBuildInfo();
 
 function showHelp(): void {
+  const pkg = readPackageJson();
+  const versionLine = `${pkg.name} v${pkg.version} (${buildInfo.commitHash})`;
+  const dirtyNote = buildInfo.dirty ? "\n  (Local build has uncommitted changes - docs may not match)" : "";
+
   console.log(`
+${versionLine}
+
 cc-permissions - Generate permission configs for Claude Code
 
 Usage:
@@ -72,7 +79,7 @@ Examples:
   cc-permissions list                   List all templates
 
 Documentation:
-  https://github.com/DanielCarmingham/cc-permissions/blob/${buildInfo.commitHashFull}/README.md
+  https://github.com/DanielCarmingham/cc-permissions/blob/${buildInfo.commitHashFull}/README.md${dirtyNote}
 `);
 }
 

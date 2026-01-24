@@ -35,9 +35,21 @@ function getGitCommitHashFull() {
   }
 }
 
+function hasUncommittedChanges() {
+  try {
+    const status = execSync("git status --porcelain", { encoding: "utf-8" }).trim();
+    return status.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+const dirty = hasUncommittedChanges();
+
 const buildInfo = {
-  commitHash: getGitCommitHash(),
+  commitHash: getGitCommitHash() + (dirty ? "-dirty" : ""),
   commitHashFull: getGitCommitHashFull(),
+  dirty,
   buildTime: new Date().toISOString(),
 };
 
