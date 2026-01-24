@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
 import { parseArgs } from "node:util";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { parseLevel, describeLevels } from "./permissions.js";
 import { PermissionLevel } from "./types.js";
 import {
@@ -10,6 +13,25 @@ import {
 import { formatFullOutput, applyPermissions, formatApplyResult, parseScope } from "./output.js";
 import { analyzeDirectory, formatAnalysisResult } from "./analyze.js";
 import { formatVersionInfo, readPackageJson } from "./version.js";
+
+// Load build info (generated at build time)
+interface BuildInfo {
+  commitHash: string;
+  commitHashFull: string;
+  buildTime: string;
+}
+
+function loadBuildInfo(): BuildInfo {
+  try {
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    const buildInfoPath = join(__dirname, "build-info.json");
+    return JSON.parse(readFileSync(buildInfoPath, "utf-8"));
+  } catch {
+    return { commitHash: "dev", commitHashFull: "dev", buildTime: "" };
+  }
+}
+
+const buildInfo = loadBuildInfo();
 
 function showHelp(): void {
   console.log(`
@@ -48,6 +70,9 @@ Examples:
   cc-permissions analyze ./my-project   Analyze a specific path
   cc-permissions template nodejs        Output template permissions
   cc-permissions list                   List all templates
+
+Documentation:
+  https://github.com/DanielCarmingham/cc-permissions/blob/${buildInfo.commitHashFull}/README.md
 `);
 }
 
@@ -454,7 +479,8 @@ function main(): void {
 
   if (values.version) {
     const pkg = readPackageJson();
-    console.log(formatVersionInfo(pkg.version, pkg.name));
+    const commitSuffix = buildInfo.commitHash !== "dev" ? ` (${buildInfo.commitHash})` : "";
+    console.log(`${formatVersionInfo(pkg.version, pkg.name)}${commitSuffix}`);
     process.exit(0);
   }
 

@@ -12,7 +12,7 @@
     "templates"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node scripts/generate-build-info.js && tsc",
     "dev": "tsc --watch",
     "start": "node dist/cli.js",
     "test": "node --import tsx --test --test-concurrency=1 test/**/*.test.ts",
