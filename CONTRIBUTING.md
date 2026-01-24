@@ -150,6 +150,76 @@ rm -rf /tmp/test-project
 - Follow existing patterns in the codebase
 - Keep dependencies minimal
 
+## Releasing
+
+Releases are automated via GitHub Actions. The workflow handles version bumping, tagging, GitHub releases, and npm publishing.
+
+### Triggering a Release
+
+**Via CLI (recommended):**
+
+```bash
+# Patch release (bug fixes: 0.1.6 → 0.1.7)
+gh workflow run release.yml -f version_type=patch
+
+# Minor release (new features: 0.1.6 → 0.2.0)
+gh workflow run release.yml -f version_type=minor
+
+# Major release (breaking changes: 0.1.6 → 1.0.0)
+gh workflow run release.yml -f version_type=major
+
+# Custom version
+gh workflow run release.yml -f version_type=custom -f custom_version=1.0.0
+```
+
+**Via GitHub UI:**
+
+1. Go to **Actions** → **Release** workflow
+2. Click **Run workflow**
+3. Select version type:
+   - `patch` - Bug fixes (0.1.6 → 0.1.7)
+   - `minor` - New features (0.1.6 → 0.2.0)
+   - `major` - Breaking changes (0.1.6 → 1.0.0)
+   - `custom` - Specify exact version in the text field
+4. Click **Run workflow**
+
+The workflow will:
+- Bump the version in package.json
+- Commit the change and create a git tag
+- Push to main with the tag
+- Create a GitHub release with changelog
+- Publish to npm with provenance
+
+### Initial Setup (Maintainers)
+
+npm publishing uses [Trusted Publishers](https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions) (OIDC) instead of tokens.
+
+To configure (one-time setup):
+1. Go to https://www.npmjs.com/package/cc-permission-generator/access
+2. Under "Publishing access" → "Add trusted publisher"
+3. Configure:
+   - **Repository owner**: `DanielCarmingham`
+   - **Repository name**: `cc-permissions`
+   - **Workflow filename**: `release.yml`
+   - **Environment**: (leave blank)
+
+### Manual Version Scripts
+
+For local development or testing:
+
+```bash
+# Check current version
+npm run version:check
+
+# Bump version locally (doesn't commit)
+npm run version:bump -- patch
+npm run version:bump -- minor
+npm run version:bump -- major
+
+# Set specific version
+npm run version:set -- 1.0.0
+```
+
 ## Questions?
 
 Open an issue on GitHub if you have questions or need help.
