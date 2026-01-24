@@ -52,6 +52,11 @@
             "required": ["file", "contains"]
           }
         },
+        "mcpServers": {
+          "type": "array",
+          "description": "MCP server names that indicate this template (checks active servers via `claude mcp list`)",
+          "items": { "type": "string" }
+        },
         "always": {
           "type": "boolean",
           "description": "If true, this template is always recommended (e.g., shell baseline)"

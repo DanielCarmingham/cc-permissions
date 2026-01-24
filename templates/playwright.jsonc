@@ -7,7 +7,8 @@
     "files": ["playwright.config.ts", "playwright.config.js"],
     "contentPatterns": [
       { "file": "package.json", "contains": "@playwright/test" }
-    ]
+    ],
+    "mcpServers": ["playwright"]
   },
   "levels": {
     "restrictive": [

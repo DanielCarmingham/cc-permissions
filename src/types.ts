@@ -27,6 +27,8 @@ export interface DetectionRules {
   directories?: string[];
   // File + content patterns for ambiguous detection
   contentPatterns?: ContentPattern[];
+  // MCP server names that indicate this template (checks active MCP servers via `claude mcp list`)
+  mcpServers?: string[];
   // If true, this template is always recommended (e.g., shell baseline)
   always?: boolean;
 }

@@ -33,7 +33,8 @@ Create `templates/<name>.jsonc` with this structure:
     "files": ["config-file.json", "other-marker.yaml"],
     "contentPatterns": [
       { "file": "package.json", "contains": "some-package" }
-    ]
+    ],
+    "mcpServers": ["my-mcp-server"]
   },
   "levels": {
     "restrictive": [
@@ -62,6 +63,7 @@ Create `templates/<name>.jsonc` with this structure:
 **Detection:**
 - `files`: Array of filenames that indicate this template applies
 - `contentPatterns`: Check if specific files contain certain strings (useful for package.json dependencies)
+- `mcpServers`: Array of MCP server names to check against active servers (via `claude mcp list`)
 
 ### 2. Add category to cli.ts (if new category)
 

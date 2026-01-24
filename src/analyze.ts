@@ -1,8 +1,78 @@
 import { readdirSync, existsSync, statSync, readFileSync } from "node:fs";
 import { join, resolve, relative } from "node:path";
+import { execSync } from "node:child_process";
 import type { AnalysisResult, DetectionRules, TemplateRegistry } from "./types.js";
 import { PermissionLevel } from "./types.js";
 import { getTemplates } from "./templates/loader.js";
+
+// Cache for active MCP servers (avoid running `claude mcp list` multiple times)
+let cachedMcpServers: Set<string> | null = null;
+
+/**
+ * Get the list of active MCP servers by running `claude mcp list`.
+ * Results are cached for the duration of the process.
+ */
+function getActiveMcpServers(): Set<string> {
+  if (cachedMcpServers !== null) {
+    return cachedMcpServers;
+  }
+
+  cachedMcpServers = new Set<string>();
+
+  try {
+    const output = execSync("claude mcp list", {
+      encoding: "utf-8",
+      timeout: 10000,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    // Parse output lines like:
+    // plugin:context7:context7: npx -y @upstash/context7-mcp - ✓ Connected
+    // MCP_DOCKER: docker mcp gateway run - ✓ Connected
+    // playwright: npx @playwright/mcp@latest - ✓ Connected
+    for (const line of output.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("Checking")) continue;
+
+      // Extract server name (everything before the first colon, or the full plugin path)
+      const colonIndex = trimmed.indexOf(":");
+      if (colonIndex > 0) {
+        const serverName = trimmed.substring(0, colonIndex).trim();
+        cachedMcpServers.add(serverName);
+
+        // Also add the last part of plugin paths (e.g., "context7" from "plugin:context7:context7")
+        if (serverName.includes(":")) {
+          const parts = serverName.split(":");
+          cachedMcpServers.add(parts[parts.length - 1]);
+        }
+      }
+    }
+  } catch {
+    // If `claude` CLI is not available or fails, return empty set
+    // This allows the tool to work even without Claude Code installed
+  }
+
+  return cachedMcpServers;
+}
+
+/**
+ * Check if any of the specified MCP servers are active.
+ */
+function hasMcpServer(serverNames: string[]): string | null {
+  const activeMcpServers = getActiveMcpServers();
+
+  for (const name of serverNames) {
+    // Case-insensitive match
+    const lowerName = name.toLowerCase();
+    for (const active of activeMcpServers) {
+      if (active.toLowerCase() === lowerName || active.toLowerCase().includes(lowerName)) {
+        return `MCP:${active}`;
+      }
+    }
+  }
+
+  return null;
+}
 
 /**
  * Check if a file exists in the directory.
@@ -121,6 +191,12 @@ function detectTemplate(
         return join(dir, file);
       }
     }
+  }
+
+  // Check MCP servers
+  if (detection.mcpServers) {
+    const found = hasMcpServer(detection.mcpServers);
+    if (found) return found;
   }
 
   return null;
