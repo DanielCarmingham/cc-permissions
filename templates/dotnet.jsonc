@@ -32,7 +32,6 @@
       { "command": "dotnet run", "description": "Run the project" },
       { "command": "dotnet watch", "description": "Watch and rebuild" },
       { "command": "dotnet clean", "description": "Clean build output" },
-      { "command": "dotnet publish", "description": "Publish the project" },
       // Testing
       { "command": "dotnet test", "description": "Run tests" },
       // Code quality
@@ -49,6 +48,8 @@
       { "command": "dotnet pack", "description": "Create NuGet package" }
     ],
     "permissive": [
+      // Publish
+      { "command": "dotnet publish", "description": "Publish the project" },
       // Package management
       { "command": "dotnet add package", "description": "Add NuGet package" },
       { "command": "dotnet add reference", "description": "Add project reference" },

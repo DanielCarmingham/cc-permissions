@@ -59,8 +59,6 @@
       { "command": "kubectl rollout pause", "description": "Pause rollout" },
       { "command": "kubectl rollout resume", "description": "Resume rollout" },
       { "command": "kubectl rollout restart", "description": "Restart rollout" },
-      // kubectl delete pod (restarts)
-      { "command": "kubectl delete pod", "description": "Delete pod (will restart)" },
       // kubectl config
       { "command": "kubectl config use-context", "description": "Switch context" },
       { "command": "kubectl config set-context", "description": "Set context" },
@@ -82,6 +80,7 @@
     ],
     "permissive": [
       // kubectl delete
+      { "command": "kubectl delete pod", "description": "Delete pod" },
       { "command": "kubectl delete", "description": "Delete resources" },
       // kubectl scale
       { "command": "kubectl scale", "description": "Scale resources" },

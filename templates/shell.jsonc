@@ -62,12 +62,10 @@
     "permissive": [
       { "command": "rm", "description": "Remove files" },
       { "command": "rmdir", "description": "Remove directories" },
-      { "command": "rm -r", "description": "Remove recursively" },
-      { "command": "rm -rf", "description": "Force remove recursively" },
-      { "command": "sudo", "description": "Execute as superuser" },
       { "command": "kill", "description": "Terminate processes" },
       { "command": "pkill", "description": "Kill processes by name" },
       { "command": "killall", "description": "Kill processes by name" }
+      // Note: rm -rf and sudo are always denied regardless of permission level
     ]
   }
 }

@@ -41,8 +41,6 @@
       { "command": "azd env list", "description": "List azd environments" }
     ],
     "standard": [
-      // resource group management
-      { "command": "az group create", "description": "Create resource group" },
       // functions local dev
       { "command": "func start", "description": "Start Functions locally" },
       { "command": "func new", "description": "Create new function" },
@@ -69,6 +67,8 @@
       { "command": "az monitor log-analytics query", "description": "Query logs" }
     ],
     "permissive": [
+      // resource group management
+      { "command": "az group create", "description": "Create resource group" },
       // deployment
       { "command": "az deployment group create", "description": "Create resource group deployment" },
       { "command": "az deployment sub create", "description": "Create subscription deployment" },

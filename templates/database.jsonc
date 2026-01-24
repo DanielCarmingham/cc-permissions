@@ -3,6 +3,10 @@
   "name": "database",
   "description": "PostgreSQL, MySQL, MongoDB, and Redis CLI tools",
   "category": "Utilities",
+  "detection": {
+    "files": [".pgpass", "mongod.conf", "redis.conf", "my.cnf", ".my.cnf"],
+    "directories": ["prisma/", "drizzle/", "migrations/"]
+  },
   "levels": {
     "restrictive": [
       // psql info
