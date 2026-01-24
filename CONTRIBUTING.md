@@ -195,7 +195,7 @@ The workflow will:
 npm publishing uses [Trusted Publishers](https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions) (OIDC) instead of tokens.
 
 To configure (one-time setup):
-1. Go to https://www.npmjs.com/package/cc-permission-generator/access
+1. Go to https://www.npmjs.com/package/cc-permissions/access
 2. Under "Publishing access" → "Add trusted publisher"
 3. Configure:
    - **Repository owner**: `DanielCarmingham`
