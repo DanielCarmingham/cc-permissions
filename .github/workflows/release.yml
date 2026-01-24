@@ -49,6 +49,8 @@ jobs:
           else
             npm run version:bump -- ${{ inputs.version_type }}
           fi
+          # Sync package-lock.json with new version
+          npm install --package-lock-only
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
