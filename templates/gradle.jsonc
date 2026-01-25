@@ -1,0 +1,66 @@
+{
+  "$schema": "template.schema.json",
+  "name": "gradle",
+  "description": "Gradle build tool and wrapper",
+  "category": "Build Tools",
+  "detection": {
+    "files": ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts", "gradle.properties", "gradlew", "gradlew.bat"],
+    "directories": ["gradle"]
+  },
+  "levels": {
+    "restrictive": [
+      // gradle info
+      { "command": "gradle --version", "description": "Check Gradle version" },
+      { "command": "gradle -v", "description": "Check Gradle version" },
+      { "command": "gradle tasks", "description": "List available tasks" },
+      { "command": "gradle dependencies", "description": "Show dependency tree" },
+      { "command": "gradle projects", "description": "List projects" },
+      { "command": "gradle properties", "description": "Show project properties" },
+      { "command": "gradle help", "description": "Show help" },
+      { "command": "gradle --status", "description": "Show daemon status" },
+      // gradle wrapper info
+      { "command": "./gradlew --version", "description": "Check wrapper version" },
+      { "command": "./gradlew -v", "description": "Check wrapper version" },
+      { "command": "./gradlew tasks", "description": "List available tasks" },
+      { "command": "./gradlew dependencies", "description": "Show dependency tree" },
+      { "command": "./gradlew projects", "description": "List projects" },
+      { "command": "./gradlew properties", "description": "Show project properties" },
+      { "command": "./gradlew help", "description": "Show help" }
+    ],
+    "standard": [
+      // gradle build
+      { "command": "gradle build", "description": "Build project" },
+      { "command": "gradle assemble", "description": "Assemble outputs" },
+      { "command": "gradle test", "description": "Run tests" },
+      { "command": "gradle check", "description": "Run all checks" },
+      { "command": "gradle classes", "description": "Compile classes" },
+      { "command": "gradle testClasses", "description": "Compile test classes" },
+      { "command": "gradle jar", "description": "Create JAR" },
+      { "command": "gradle compileJava", "description": "Compile Java sources" },
+      { "command": "gradle compileKotlin", "description": "Compile Kotlin sources" },
+      // gradle wrapper build
+      { "command": "./gradlew build", "description": "Build project" },
+      { "command": "./gradlew assemble", "description": "Assemble outputs" },
+      { "command": "./gradlew test", "description": "Run tests" },
+      { "command": "./gradlew check", "description": "Run all checks" },
+      { "command": "./gradlew classes", "description": "Compile classes" },
+      { "command": "./gradlew testClasses", "description": "Compile test classes" },
+      { "command": "./gradlew jar", "description": "Create JAR" },
+      { "command": "./gradlew compileJava", "description": "Compile Java sources" },
+      { "command": "./gradlew compileKotlin", "description": "Compile Kotlin sources" }
+    ],
+    "permissive": [
+      // gradle publish/clean
+      { "command": "gradle publish", "description": "Publish artifacts" },
+      { "command": "gradle publishToMavenLocal", "description": "Publish to local Maven" },
+      { "command": "gradle clean", "description": "Clean build outputs" },
+      { "command": "gradle wrapper", "description": "Generate Gradle wrapper" },
+      { "command": "gradle init", "description": "Initialize new project" },
+      { "command": "gradle --stop", "description": "Stop Gradle daemon" },
+      // gradle wrapper publish/clean
+      { "command": "./gradlew publish", "description": "Publish artifacts" },
+      { "command": "./gradlew publishToMavenLocal", "description": "Publish to local Maven" },
+      { "command": "./gradlew clean", "description": "Clean build outputs" }
+    ]
+  }
+}

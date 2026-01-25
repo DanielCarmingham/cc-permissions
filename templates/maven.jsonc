@@ -1,0 +1,69 @@
+{
+  "$schema": "template.schema.json",
+  "name": "maven",
+  "description": "Apache Maven build tool",
+  "category": "Build Tools",
+  "detection": {
+    "files": ["pom.xml", ".mvn/wrapper/maven-wrapper.properties"],
+    "directories": [".mvn"]
+  },
+  "levels": {
+    "restrictive": [
+      // maven info
+      { "command": "mvn --version", "description": "Check Maven version" },
+      { "command": "mvn -v", "description": "Check Maven version" },
+      { "command": "mvn help:effective-pom", "description": "Show effective POM" },
+      { "command": "mvn help:effective-settings", "description": "Show effective settings" },
+      { "command": "mvn help:describe", "description": "Describe plugin goals" },
+      { "command": "mvn help:system", "description": "Show system properties" },
+      { "command": "mvn dependency:tree", "description": "Show dependency tree" },
+      { "command": "mvn dependency:list", "description": "List dependencies" },
+      { "command": "mvn dependency:analyze", "description": "Analyze dependencies" },
+      { "command": "mvn versions:display-dependency-updates", "description": "Show dependency updates" },
+      { "command": "mvn versions:display-plugin-updates", "description": "Show plugin updates" },
+      // maven wrapper info
+      { "command": "./mvnw --version", "description": "Check wrapper version" },
+      { "command": "./mvnw -v", "description": "Check wrapper version" },
+      { "command": "./mvnw help:effective-pom", "description": "Show effective POM" },
+      { "command": "./mvnw dependency:tree", "description": "Show dependency tree" }
+    ],
+    "standard": [
+      // maven build (no install/deploy)
+      { "command": "mvn compile", "description": "Compile sources" },
+      { "command": "mvn test-compile", "description": "Compile test sources" },
+      { "command": "mvn test", "description": "Run tests" },
+      { "command": "mvn package", "description": "Package project" },
+      { "command": "mvn verify", "description": "Verify project" },
+      { "command": "mvn validate", "description": "Validate project" },
+      { "command": "mvn site", "description": "Generate site" },
+      // maven plugins
+      { "command": "mvn checkstyle:check", "description": "Run checkstyle" },
+      { "command": "mvn spotbugs:check", "description": "Run SpotBugs" },
+      { "command": "mvn pmd:check", "description": "Run PMD" },
+      { "command": "mvn jacoco:report", "description": "Generate coverage report" },
+      // maven wrapper build
+      { "command": "./mvnw compile", "description": "Compile sources" },
+      { "command": "./mvnw test", "description": "Run tests" },
+      { "command": "./mvnw package", "description": "Package project" },
+      { "command": "./mvnw verify", "description": "Verify project" }
+    ],
+    "permissive": [
+      // maven install/deploy
+      { "command": "mvn install", "description": "Install to local repo" },
+      { "command": "mvn deploy", "description": "Deploy to remote repo" },
+      { "command": "mvn clean", "description": "Clean project" },
+      { "command": "mvn clean install", "description": "Clean and install" },
+      { "command": "mvn clean package", "description": "Clean and package" },
+      { "command": "mvn release:prepare", "description": "Prepare release" },
+      { "command": "mvn release:perform", "description": "Perform release" },
+      // maven dependency management
+      { "command": "mvn dependency:resolve", "description": "Resolve dependencies" },
+      { "command": "mvn dependency:purge-local-repository", "description": "Purge local repo" },
+      { "command": "mvn dependency:copy-dependencies", "description": "Copy dependencies" },
+      // maven wrapper
+      { "command": "./mvnw install", "description": "Install to local repo" },
+      { "command": "./mvnw clean", "description": "Clean project" },
+      { "command": "./mvnw deploy", "description": "Deploy to remote repo" }
+    ]
+  }
+}

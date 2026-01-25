@@ -404,6 +404,7 @@ function handleList(args: string[]): void {
     "General",
     "Version Control",
     "Languages & Runtimes",
+    "Build Tools",
     "Cloud Providers",
     "Container & Infrastructure",
     "Testing",

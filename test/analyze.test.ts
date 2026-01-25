@@ -202,11 +202,11 @@ describe("analyzeDirectory", () => {
       assert.ok(result.recommendedTemplates.includes("docker"));
     });
 
-    it("should detect java project from pom.xml", () => {
+    it("should detect maven project from pom.xml", () => {
       fs.writeFileSync(path.join(tempDir, "pom.xml"), "<project></project>");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("java"));
+      assert.ok(result.recommendedTemplates.includes("maven"));
     });
 
     it("should detect git repository from .git directory", () => {
@@ -289,8 +289,8 @@ dependencies:
 
       const result = analyzeDirectory(tempDir);
       assert.ok(!result.recommendedTemplates.includes("android"));
-      // But should detect java
-      assert.ok(result.recommendedTemplates.includes("java"));
+      // Should detect gradle (java no longer detects build.gradle files)
+      assert.ok(result.recommendedTemplates.includes("gradle"));
     });
   });
 
@@ -584,12 +584,12 @@ describe("formatAnalysisResult", () => {
       recommendedTemplates: ["shell"],
       detections: [{ template: "shell", type: "always" as const, reason: "always included" }],
       suggestedLevel: PermissionLevel.Restrictive,
-      suggestedCommand: "cc-permissions template shell --level restrictive",
+      suggestedCommand: "cc-permissions apply --level restrictive",
     };
 
     const formatted = formatAnalysisResult(result);
 
-    assert.ok(formatted.includes("Suggested Command:"));
-    assert.ok(formatted.includes("cc-permissions template shell --level restrictive"));
+    assert.ok(formatted.includes("Apply Permissions:"));
+    assert.ok(formatted.includes("cc-permissions apply --level restrictive"));
   });
 });

@@ -1,7 +1,7 @@
 {
   "$schema": "template.schema.json",
   "name": "android",
-  "description": "Gradle, ADB, and Android development",
+  "description": "Android SDK, ADB, and emulator",
   "category": "Mobile Development",
   "detection": {
     "files": ["AndroidManifest.xml"],
@@ -12,15 +12,6 @@
   },
   "levels": {
     "restrictive": [
-      // gradle info
-      { "command": "gradle --version", "description": "Check Gradle version" },
-      { "command": "./gradlew --version", "description": "Check Gradle wrapper version" },
-      { "command": "gradle tasks", "description": "List Gradle tasks" },
-      { "command": "./gradlew tasks", "description": "List Gradle wrapper tasks" },
-      { "command": "gradle dependencies", "description": "Show dependencies" },
-      { "command": "./gradlew dependencies", "description": "Show dependencies" },
-      { "command": "gradle projects", "description": "List projects" },
-      { "command": "./gradlew projects", "description": "List projects" },
       // adb info
       { "command": "adb version", "description": "Check ADB version" },
       { "command": "adb devices", "description": "List connected devices" },
@@ -39,17 +30,21 @@
       { "command": "studio --version", "description": "Check Android Studio version" }
     ],
     "standard": [
-      // gradle build (debug only)
+      // android-specific gradle tasks (debug builds)
       { "command": "gradle assembleDebug", "description": "Build debug APK" },
       { "command": "./gradlew assembleDebug", "description": "Build debug APK" },
       { "command": "gradle bundleDebug", "description": "Build debug AAB" },
       { "command": "./gradlew bundleDebug", "description": "Build debug AAB" },
-      // gradle test
-      { "command": "gradle test", "description": "Run unit tests" },
-      { "command": "./gradlew test", "description": "Run unit tests" },
+      { "command": "gradle installDebug", "description": "Install debug APK" },
+      { "command": "./gradlew installDebug", "description": "Install debug APK" },
+      // android-specific gradle test tasks
+      { "command": "gradle testDebugUnitTest", "description": "Run debug unit tests" },
+      { "command": "./gradlew testDebugUnitTest", "description": "Run debug unit tests" },
       { "command": "gradle connectedAndroidTest", "description": "Run instrumented tests" },
       { "command": "./gradlew connectedAndroidTest", "description": "Run instrumented tests" },
-      // gradle lint
+      { "command": "gradle connectedDebugAndroidTest", "description": "Run debug instrumented tests" },
+      { "command": "./gradlew connectedDebugAndroidTest", "description": "Run debug instrumented tests" },
+      // android-specific gradle lint tasks
       { "command": "gradle lint", "description": "Run lint" },
       { "command": "./gradlew lint", "description": "Run lint" },
       { "command": "gradle lintDebug", "description": "Lint debug build" },
@@ -67,14 +62,15 @@
       { "command": "emulator -avd", "description": "Start specific AVD" }
     ],
     "permissive": [
-      // gradle release builds
+      // android-specific gradle release tasks
       { "command": "gradle assembleRelease", "description": "Build release APK" },
       { "command": "./gradlew assembleRelease", "description": "Build release APK" },
       { "command": "gradle bundleRelease", "description": "Build release AAB" },
       { "command": "./gradlew bundleRelease", "description": "Build release AAB" },
-      // gradle clean
-      { "command": "gradle clean", "description": "Clean project" },
-      { "command": "./gradlew clean", "description": "Clean project" },
+      { "command": "gradle installRelease", "description": "Install release APK" },
+      { "command": "./gradlew installRelease", "description": "Install release APK" },
+      { "command": "gradle signingReport", "description": "Show signing info" },
+      { "command": "./gradlew signingReport", "description": "Show signing info" },
       // adb install/push/pull
       { "command": "adb install", "description": "Install APK" },
       { "command": "adb uninstall", "description": "Uninstall app" },

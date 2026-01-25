@@ -4,7 +4,8 @@
   "description": "Terraform, Terragrunt, and tflint",
   "category": "Container & Infrastructure",
   "detection": {
-    "files": ["*.tf", ".terraform.lock.hcl", "terragrunt.hcl"]
+    "files": ["*.tf", ".terraform.lock.hcl", "terragrunt.hcl", "terraform.tfvars", "*.tfvars"],
+    "directories": [".terraform"]
   },
   "levels": {
     "restrictive": [

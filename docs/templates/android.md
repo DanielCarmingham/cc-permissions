@@ -1,6 +1,6 @@
 # android
 
-Gradle, ADB, and Android development
+Android SDK, ADB, and emulator
 
 **Category:** Mobile Development
 
@@ -10,14 +10,6 @@ Read-only operations safe for exploration and code review.
 
 | Command | Description |
 |---------|-------------|
-| `gradle --version` | Check Gradle version |
-| `./gradlew --version` | Check Gradle wrapper version |
-| `gradle tasks` | List Gradle tasks |
-| `./gradlew tasks` | List Gradle wrapper tasks |
-| `gradle dependencies` | Show dependencies |
-| `./gradlew dependencies` | Show dependencies |
-| `gradle projects` | List projects |
-| `./gradlew projects` | List projects |
 | `adb version` | Check ADB version |
 | `adb devices` | List connected devices |
 | `adb get-state` | Get device state |
@@ -41,10 +33,14 @@ Day-to-day development commands. Includes all restrictive commands plus:
 | `./gradlew assembleDebug` | Build debug APK |
 | `gradle bundleDebug` | Build debug AAB |
 | `./gradlew bundleDebug` | Build debug AAB |
-| `gradle test` | Run unit tests |
-| `./gradlew test` | Run unit tests |
+| `gradle installDebug` | Install debug APK |
+| `./gradlew installDebug` | Install debug APK |
+| `gradle testDebugUnitTest` | Run debug unit tests |
+| `./gradlew testDebugUnitTest` | Run debug unit tests |
 | `gradle connectedAndroidTest` | Run instrumented tests |
 | `./gradlew connectedAndroidTest` | Run instrumented tests |
+| `gradle connectedDebugAndroidTest` | Run debug instrumented tests |
+| `./gradlew connectedDebugAndroidTest` | Run debug instrumented tests |
 | `gradle lint` | Run lint |
 | `./gradlew lint` | Run lint |
 | `gradle lintDebug` | Lint debug build |
@@ -68,8 +64,10 @@ Broader access for trusted projects. Includes all standard commands plus:
 | `./gradlew assembleRelease` | Build release APK |
 | `gradle bundleRelease` | Build release AAB |
 | `./gradlew bundleRelease` | Build release AAB |
-| `gradle clean` | Clean project |
-| `./gradlew clean` | Clean project |
+| `gradle installRelease` | Install release APK |
+| `./gradlew installRelease` | Install release APK |
+| `gradle signingReport` | Show signing info |
+| `./gradlew signingReport` | Show signing info |
 | `adb install` | Install APK |
 | `adb uninstall` | Uninstall app |
 | `adb push` | Push file to device |

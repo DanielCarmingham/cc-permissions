@@ -102,11 +102,10 @@ describe("CLI - Template Command", () => {
     assert.ok(stdout.includes("Usage: cc-permissions template"));
     assert.ok(stdout.includes("--level"));
     assert.ok(stdout.includes("--format"));
-    assert.ok(stdout.includes("--apply"));
   });
 
-  it("should generate permissions JSON for valid template", () => {
-    const { stdout, exitCode } = runCli(["template", "shell"]);
+  it("should generate permissions JSON with --format json", () => {
+    const { stdout, exitCode } = runCli(["template", "shell", "--format", "json"]);
 
     assert.equal(exitCode, 0);
     // Should be valid JSON
@@ -117,8 +116,8 @@ describe("CLI - Template Command", () => {
   });
 
   it("should generate permissions with specified level", () => {
-    const restrictive = runCli(["template", "shell", "--level", "restrictive"]);
-    const permissive = runCli(["template", "shell", "--level", "permissive"]);
+    const restrictive = runCli(["template", "shell", "--level", "restrictive", "--format", "json"]);
+    const permissive = runCli(["template", "shell", "--level", "permissive", "--format", "json"]);
 
     assert.equal(restrictive.exitCode, 0);
     assert.equal(permissive.exitCode, 0);
@@ -140,16 +139,18 @@ describe("CLI - Template Command", () => {
     assert.throws(() => JSON.parse(stdout));
   });
 
-  it("should support both format", () => {
-    const { stdout, exitCode } = runCli(["template", "shell", "--format", "both"]);
+  it("should output summary format by default", () => {
+    const { stdout, exitCode } = runCli(["template", "shell"]);
 
     assert.equal(exitCode, 0);
     assert.ok(stdout.includes("Permission Summary"));
-    assert.ok(stdout.includes("JSON Output"));
+    assert.ok(stdout.includes("Allowed Commands"));
+    // Should not be pure JSON
+    assert.throws(() => JSON.parse(stdout));
   });
 
   it("should handle multiple templates (comma-separated)", () => {
-    const { stdout, exitCode } = runCli(["template", "shell,git"]);
+    const { stdout, exitCode } = runCli(["template", "shell,git", "--format", "json"]);
 
     assert.equal(exitCode, 0);
     const parsed = JSON.parse(stdout);
@@ -178,12 +179,12 @@ describe("CLI - Template Command", () => {
     assert.ok(stderr.includes("Invalid format"));
   });
 
-  it("should apply permissions with --apply flag", () => {
+  it("should apply permissions with apply command", () => {
     const tempDir = createTempDir();
 
     try {
       const { stdout, exitCode } = runCli(
-        ["template", "shell", "--level", "standard", "--apply"],
+        ["apply", "shell", "--level", "standard"],
         { cwd: tempDir }
       );
 
@@ -257,7 +258,7 @@ describe("CLI - Analyze Command", () => {
     const { stdout, exitCode } = runCli(["analyze", tempDir]);
 
     assert.equal(exitCode, 0);
-    assert.ok(stdout.includes("Suggested Command:"));
+    assert.ok(stdout.includes("Apply Permissions:"));
     assert.ok(stdout.includes("cc-permissions apply"));
   });
 });
@@ -276,7 +277,7 @@ describe("CLI - List Command", () => {
 
 describe("CLI - Edge Cases", () => {
   it("should handle mixed case template names", () => {
-    const { stdout, exitCode } = runCli(["template", "SHELL"]);
+    const { stdout, exitCode } = runCli(["template", "SHELL", "--format", "json"]);
 
     assert.equal(exitCode, 0);
     const parsed = JSON.parse(stdout);
@@ -292,7 +293,7 @@ describe("CLI - Edge Cases", () => {
   });
 
   it("should handle whitespace in template names (comma-separated)", () => {
-    const { stdout, exitCode } = runCli(["template", "shell, git"]);
+    const { stdout, exitCode } = runCli(["template", "shell, git", "--format", "json"]);
 
     assert.equal(exitCode, 0);
     const parsed = JSON.parse(stdout);

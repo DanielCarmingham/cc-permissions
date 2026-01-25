@@ -105,12 +105,19 @@ cc-permissions apply nodejs --level permissive
 |----------|-------------|
 | [dotnet](docs/templates/dotnet.md) | dotnet CLI, NuGet, MSBuild |
 | [go](docs/templates/go.md) | Go development and golangci-lint |
-| [java](docs/templates/java.md) | Maven, Gradle, Java, and JVM development |
+| [java](docs/templates/java.md) | Java and JVM runtime |
 | [nodejs](docs/templates/nodejs.md) | Node.js, npm, pnpm, yarn, and bun |
 | [php](docs/templates/php.md) | PHP, Composer, and Laravel Artisan |
 | [python](docs/templates/python.md) | pip, python, venv, pytest, and common data tools |
 | [ruby](docs/templates/ruby.md) | Ruby, Bundler, Rails, and Rake |
 | [rust](docs/templates/rust.md) | Cargo, rustc, and rustup |
+
+### Build Tools
+
+| Template | Description |
+|----------|-------------|
+| [gradle](docs/templates/gradle.md) | Gradle build tool and wrapper |
+| [maven](docs/templates/maven.md) | Apache Maven build tool |
 
 ### Cloud Providers
 
@@ -138,7 +145,7 @@ cc-permissions apply nodejs --level permissive
 
 | Template | Description |
 |----------|-------------|
-| [android](docs/templates/android.md) | Gradle, ADB, and Android development |
+| [android](docs/templates/android.md) | Android SDK, ADB, and emulator |
 | [flutter](docs/templates/flutter.md) | Flutter SDK and Dart development |
 | [ios](docs/templates/ios.md) | Xcode, Swift, CocoaPods, and iOS development |
 

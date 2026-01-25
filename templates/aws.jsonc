@@ -4,7 +4,8 @@
   "description": "AWS CLI, SAM, CDK, Amplify, and Elastic Beanstalk",
   "category": "Cloud Providers",
   "detection": {
-    "files": ["cdk.json", "samconfig.toml", "amplify.yml"]
+    "files": ["cdk.json", "samconfig.toml", "amplify.yml", "template.yaml", "template.yml", ".aws/config", ".elasticbeanstalk/config.yml"],
+    "directories": [".aws", ".elasticbeanstalk", "cdk.out"]
   },
   "levels": {
     "restrictive": [

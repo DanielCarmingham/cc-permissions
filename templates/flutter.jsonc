@@ -4,6 +4,8 @@
   "description": "Flutter SDK and Dart development",
   "category": "Mobile Development",
   "detection": {
+    "files": [".flutter-plugins", ".flutter-plugins-dependencies", ".metadata"],
+    "directories": [".dart_tool"],
     "contentPatterns": [
       { "file": "pubspec.yaml", "contains": "flutter:" }
     ]

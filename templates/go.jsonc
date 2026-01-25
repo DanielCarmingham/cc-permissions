@@ -4,7 +4,7 @@
   "description": "Go development and golangci-lint",
   "category": "Languages & Runtimes",
   "detection": {
-    "files": ["go.mod", "go.sum"]
+    "files": ["go.mod", "go.sum", "go.work", "*.go"]
   },
   "levels": {
     "restrictive": [

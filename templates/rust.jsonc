@@ -4,7 +4,7 @@
   "description": "Cargo, rustc, and rustup",
   "category": "Languages & Runtimes",
   "detection": {
-    "files": ["Cargo.toml", "Cargo.lock"]
+    "files": ["Cargo.toml", "Cargo.lock", "rust-toolchain.toml", "rust-toolchain", "*.rs"]
   },
   "levels": {
     "restrictive": [

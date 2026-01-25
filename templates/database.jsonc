@@ -4,8 +4,8 @@
   "description": "PostgreSQL, MySQL, MongoDB, and Redis CLI tools",
   "category": "Utilities",
   "detection": {
-    "files": [".pgpass", "mongod.conf", "redis.conf", "my.cnf", ".my.cnf"],
-    "directories": ["prisma/", "drizzle/", "migrations/"]
+    "files": [".pgpass", "mongod.conf", "redis.conf", "my.cnf", ".my.cnf", "schema.prisma", "drizzle.config.ts", "drizzle.config.js", "knexfile.js", "knexfile.ts", "*.sqlite", "*.db"],
+    "directories": ["prisma", "drizzle", "migrations"]
   },
   "levels": {
     "restrictive": [

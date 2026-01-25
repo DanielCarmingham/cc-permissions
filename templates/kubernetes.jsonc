@@ -4,7 +4,8 @@
   "description": "kubectl, Helm, k9s, and Minikube",
   "category": "Container & Infrastructure",
   "detection": {
-    "files": ["Chart.yaml", "helmfile.yaml", "kustomization.yaml", "skaffold.yaml"]
+    "files": ["Chart.yaml", "helmfile.yaml", "kustomization.yaml", "skaffold.yaml", "kubeconfig", ".kube/config"],
+    "directories": [".kube", "charts"]
   },
   "levels": {
     "restrictive": [

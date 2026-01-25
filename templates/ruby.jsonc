@@ -4,7 +4,7 @@
   "description": "Ruby, Bundler, Rails, and Rake",
   "category": "Languages & Runtimes",
   "detection": {
-    "files": ["Gemfile", "Gemfile.lock", "*.gemspec", "Rakefile"]
+    "files": ["Gemfile", "Gemfile.lock", "*.gemspec", "Rakefile", ".ruby-version", ".rubocop.yml", "config.ru"]
   },
   "levels": {
     "restrictive": [
