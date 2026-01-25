@@ -47,7 +47,7 @@ function hasUncommittedChanges() {
 const dirty = hasUncommittedChanges();
 
 const buildInfo = {
-  commitHash: getGitCommitHash() + (dirty ? "-dirty" : ""),
+  commitHash: getGitCommitHash(),
   commitHashFull: getGitCommitHashFull(),
   dirty,
   buildTime: new Date().toISOString(),

@@ -37,7 +37,8 @@ const buildInfo = loadBuildInfo();
 
 function showHelp(): void {
   const pkg = readPackageJson();
-  const versionInfo = fmt.dim(`v${pkg.version} (${buildInfo.commitHash})`);
+  const dirtyMarker = buildInfo.dirty ? "-dirty" : "";
+  const versionInfo = fmt.dim(`v${pkg.version} (${buildInfo.commitHash}${dirtyMarker})`);
   const dirtyNote = buildInfo.dirty ? fmt.dim("\n  (Local build has uncommitted changes - docs may not match)") : "";
 
   console.log(`
@@ -79,7 +80,7 @@ ${fmt.section("Examples:")}
   ${fmt.example("cc-permissions list")}                   List all templates
 
 ${fmt.section("Documentation:")}
-  ${fmt.url(`https://github.com/DanielCarmingham/cc-permissions/blob/${buildInfo.commitHashFull}/README.md`)}${dirtyNote}
+  ${fmt.url(`https://github.com/DanielCarmingham/cc-permissions/blob/${buildInfo.commitHash}/README.md`)}${dirtyNote}
 
 ${formatSafetyWarning()}
 `);
@@ -465,7 +466,8 @@ function main(): void {
 
   if (values.version) {
     const pkg = readPackageJson();
-    const commitSuffix = buildInfo.commitHash !== "dev" ? fmt.dim(` (${buildInfo.commitHash})`) : "";
+    const dirty = buildInfo.dirty ? "-dirty" : "";
+    const commitSuffix = buildInfo.commitHash !== "dev" ? fmt.dim(` (${buildInfo.commitHash}${dirty})`) : "";
     console.log(`${formatVersionInfo(pkg.version, pkg.name)}${commitSuffix}`);
     process.exit(0);
   }
