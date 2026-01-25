@@ -187,11 +187,8 @@ cc-permissions list
 # View template permissions without applying
 cc-permissions template nodejs
 
-# Output as JSON only
+# Output as JSON (for piping/scripting)
 cc-permissions template nodejs --format json
-
-# Output with summary
-cc-permissions template nodejs --format both
 ```
 
 ## Contributing

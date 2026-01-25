@@ -95,7 +95,7 @@ Arguments:
 
 Options:
   -l, --level       Permission level: restrictive, standard, permissive (default: standard)
-  -f, --format      Output format: json, summary, both (default: json)
+  -f, --format      Output format: summary, json (default: summary)
 
 ${describeLevels()}
 
@@ -104,8 +104,8 @@ Run "cc-permissions list" to see available templates.
 Examples:
   cc-permissions template nodejs
   cc-permissions template nodejs --level restrictive
-  cc-permissions template nodejs,python --format summary
-  cc-permissions template nodejs --format both
+  cc-permissions template nodejs,python
+  cc-permissions template nodejs --format json
 `);
 }
 
@@ -114,7 +114,7 @@ function handleTemplate(args: string[]): void {
     args,
     options: {
       level: { type: "string", short: "l", default: "standard" },
-      format: { type: "string", short: "f", default: "json" },
+      format: { type: "string", short: "f", default: "summary" },
       help: { type: "boolean", short: "h" },
     },
     allowPositionals: true,
@@ -147,14 +147,14 @@ function handleTemplate(args: string[]): void {
 
   // Parse format
   const format = values.format as string;
-  if (!["json", "summary", "both"].includes(format)) {
+  if (!["json", "summary"].includes(format)) {
     console.error(`Invalid format: ${format}`);
-    console.error(`Valid formats: json, summary, both`);
+    console.error(`Valid formats: json, summary`);
     process.exit(1);
   }
 
   // Generate output
-  const output = formatFullOutput(found, level, format as "json" | "summary" | "both");
+  const output = formatFullOutput(found, level, format as "json" | "summary");
   console.log(output);
 }
 
