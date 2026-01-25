@@ -12,6 +12,7 @@ import {
   combineTemplatePermissions,
   generateClaudeCodePermissions,
 } from "./permissions.js";
+import { fmt } from "./format.js";
 
 /**
  * Format for Claude Code settings.json permissions section
@@ -56,25 +57,24 @@ export function formatPermissionsSummary(
   const templateNames = templates.map((t) => t.name).join(", ");
 
   const lines: string[] = [
-    `Permission Summary`,
-    `==================`,
-    `Templates: ${templateNames}`,
-    `Level: ${level}`,
+    fmt.title(`Permission Summary`, "═"),
+    `${fmt.dim("Templates:")} ${fmt.item(templateNames)}`,
+    `${fmt.dim("Level:")} ${fmt.value(level)}`,
     ``,
-    `Allowed Commands (${permissions.length}):`,
+    fmt.section(`Allowed Commands (${permissions.length}):`),
   ];
 
   // Group permissions by template for better readability
   for (const perm of permissions) {
-    const desc = perm.description ? ` - ${perm.description}` : "";
-    lines.push(`  ${perm.command}${desc}`);
+    const desc = perm.description ? ` ${fmt.dim("-")} ${fmt.dim(perm.description)}` : "";
+    lines.push(`  ${fmt.command(perm.command)}${desc}`);
   }
 
   lines.push(``);
-  lines.push(`Denied Patterns (${BANNED_PATTERNS.length}):`);
+  lines.push(fmt.section(`Denied Patterns (${BANNED_PATTERNS.length}):`));
   for (const banned of BANNED_PATTERNS) {
-    const desc = banned.description ? ` - ${banned.description}` : "";
-    lines.push(`  ${banned.command}${desc}`);
+    const desc = banned.description ? ` ${fmt.dim("-")} ${fmt.dim(banned.description)}` : "";
+    lines.push(`  ${fmt.error(banned.command)}${desc}`);
   }
 
   return lines.join("\n");
@@ -259,11 +259,11 @@ export function formatApplyResult(result: ApplyResult): string {
   const lines: string[] = [];
 
   if (result.created) {
-    lines.push(`Created: ${result.settingsPath}`);
+    lines.push(`${fmt.success("Created:")} ${fmt.path(result.settingsPath)}`);
   } else if (result.merged) {
-    lines.push(`Updated: ${result.settingsPath}`);
+    lines.push(`${fmt.success("Updated:")} ${fmt.path(result.settingsPath)}`);
     if (result.backupPath) {
-      lines.push(`Backup:  ${result.backupPath}`);
+      lines.push(`${fmt.dim("Backup:")}  ${fmt.path(result.backupPath)}`);
     }
   }
 

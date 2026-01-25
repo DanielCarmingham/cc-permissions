@@ -13,6 +13,7 @@ import {
 import { formatFullOutput, applyPermissions, formatApplyResult, parseScope } from "./output.js";
 import { analyzeDirectory, formatAnalysisResult } from "./analyze.js";
 import { formatVersionInfo, readPackageJson } from "./version.js";
+import { fmt, formatError, formatHint, formatSafetyWarning } from "./format.js";
 
 // Load build info (generated at build time)
 interface BuildInfo {
@@ -36,76 +37,77 @@ const buildInfo = loadBuildInfo();
 
 function showHelp(): void {
   const pkg = readPackageJson();
-  const versionLine = `${pkg.name} v${pkg.version} (${buildInfo.commitHash})`;
-  const dirtyNote = buildInfo.dirty ? "\n  (Local build has uncommitted changes - docs may not match)" : "";
+  const versionInfo = fmt.dim(`v${pkg.version} (${buildInfo.commitHash})`);
+  const dirtyNote = buildInfo.dirty ? fmt.dim("\n  (Local build has uncommitted changes - docs may not match)") : "";
 
   console.log(`
-${versionLine}
+${fmt.title("cc-permissions")} - Generate permission configs for Claude Code
+${versionInfo}
 
-cc-permissions - Generate permission configs for Claude Code
+${fmt.section("Usage:")}
+  ${fmt.command("cc-permissions")} ${fmt.optionalArg("[options]")}              Analyze current directory
+  ${fmt.command("cc-permissions")} ${fmt.arg("<command>")} ${fmt.optionalArg("[options]")}    Run a specific command
 
-Usage:
-  cc-permissions [options]              Analyze current directory
-  cc-permissions <command> [options]    Run a specific command
+${fmt.section("Commands:")}
+  ${fmt.subcommand("apply")} ${fmt.optionalArg("[templates]")}  Analyze and apply permissions (or apply specific templates)
+  ${fmt.subcommand("analyze")} ${fmt.optionalArg("[path]")}     Analyze project and recommend templates (no changes)
+  ${fmt.subcommand("template")} ${fmt.arg("<names>")}   Output permissions from specific templates (no apply)
+  ${fmt.subcommand("list")}               List available templates
 
-Commands:
-  apply [templates]  Analyze and apply permissions (or apply specific templates)
-  analyze [path]     Analyze project and recommend templates (no changes)
-  template <names>   Output permissions from specific templates (no apply)
-  list               List available templates
+${fmt.section("Global Options:")}
+  ${fmt.option("-h, --help")}        Show this help message
+  ${fmt.option("-v, --version")}     Show version number
+  ${fmt.option("-l, --level")}       Permission level: ${fmt.value("restrictive")}, ${fmt.value("standard")}, ${fmt.value("permissive")}
+  ${fmt.option("-s, --scope")}       Settings scope: ${fmt.value("project")}, ${fmt.value("user")}, ${fmt.value("local")} ${fmt.dim("(default: project)")}
+  ${fmt.option("-o, --output")}      Custom output file path (overrides --scope)
 
-Global Options:
-  -h, --help        Show this help message
-  -v, --version     Show version number
-  -l, --level       Permission level: restrictive, standard, permissive
-  -s, --scope       Settings scope: project, user, local (default: project)
-  -o, --output      Custom output file path (overrides --scope)
+${fmt.section("Scopes:")}
+  ${fmt.value("project")}           ${fmt.path(".claude/settings.json")} (in target directory)
+  ${fmt.value("user")}, ${fmt.value("global")}      ${fmt.path("~/.claude/settings.json")} (user's home directory)
+  ${fmt.value("local")}             ${fmt.path(".claude/settings.local.json")} (gitignored, for personal prefs)
 
-Scopes:
-  project           .claude/settings.json (in target directory)
-  user, global      ~/.claude/settings.json (user's home directory)
-  local             .claude/settings.local.json (gitignored, for personal prefs)
+Run "${fmt.command("cc-permissions")} ${fmt.arg("<command>")} ${fmt.option("--help")}" for command-specific options.
 
-Run "cc-permissions <command> --help" for command-specific options.
+${fmt.section("Examples:")}
+  ${fmt.example("cc-permissions")}                        Analyze current directory
+  ${fmt.example("cc-permissions apply")}                  Analyze and apply permissions
+  ${fmt.example("cc-permissions apply nodejs,docker")}    Apply specific templates
+  ${fmt.example("cc-permissions apply -l permissive")}    Analyze and apply with custom level
+  ${fmt.example("cc-permissions apply --scope user")}     Apply to user-level settings
+  ${fmt.example("cc-permissions analyze ./my-project")}   Analyze a specific path
+  ${fmt.example("cc-permissions template nodejs")}        Output template permissions
+  ${fmt.example("cc-permissions list")}                   List all templates
 
-Examples:
-  cc-permissions                        Analyze current directory
-  cc-permissions apply                  Analyze and apply permissions
-  cc-permissions apply nodejs,docker    Apply specific templates
-  cc-permissions apply -l permissive    Analyze and apply with custom level
-  cc-permissions apply --scope user     Apply to user-level settings
-  cc-permissions analyze ./my-project   Analyze a specific path
-  cc-permissions template nodejs        Output template permissions
-  cc-permissions list                   List all templates
+${fmt.section("Documentation:")}
+  ${fmt.url(`https://github.com/DanielCarmingham/cc-permissions/blob/${buildInfo.commitHashFull}/README.md`)}${dirtyNote}
 
-Documentation:
-  https://github.com/DanielCarmingham/cc-permissions/blob/${buildInfo.commitHashFull}/README.md${dirtyNote}
+${formatSafetyWarning()}
 `);
 }
 
 function showTemplateHelp(): void {
   console.log(`
-Usage: cc-permissions template <names> [options]
+${fmt.section("Usage:")} ${fmt.command("cc-permissions template")} ${fmt.arg("<names>")} ${fmt.optionalArg("[options]")}
 
 View permission configurations from one or more templates.
-Use "cc-permissions apply" to actually apply permissions.
+Use "${fmt.command("cc-permissions apply")}" to actually apply permissions.
 
-Arguments:
-  names             Comma-separated template names (e.g., "nodejs" or "nodejs,python")
+${fmt.section("Arguments:")}
+  ${fmt.arg("names")}             Comma-separated template names (e.g., ${fmt.value('"nodejs"')} or ${fmt.value('"nodejs,python"')})
 
-Options:
-  -l, --level       Permission level: restrictive, standard, permissive (default: standard)
-  -f, --format      Output format: summary, json (default: summary)
+${fmt.section("Options:")}
+  ${fmt.option("-l, --level")}       Permission level: ${fmt.value("restrictive")}, ${fmt.value("standard")}, ${fmt.value("permissive")} ${fmt.dim("(default: standard)")}
+  ${fmt.option("-f, --format")}      Output format: ${fmt.value("summary")}, ${fmt.value("json")} ${fmt.dim("(default: summary)")}
 
 ${describeLevels()}
 
-Run "cc-permissions list" to see available templates.
+Run "${fmt.command("cc-permissions list")}" to see available templates.
 
-Examples:
-  cc-permissions template nodejs
-  cc-permissions template nodejs --level restrictive
-  cc-permissions template nodejs,python
-  cc-permissions template nodejs --format json
+${fmt.section("Examples:")}
+  ${fmt.example("cc-permissions template nodejs")}
+  ${fmt.example("cc-permissions template nodejs --level restrictive")}
+  ${fmt.example("cc-permissions template nodejs,python")}
+  ${fmt.example("cc-permissions template nodejs --format json")}
 `);
 }
 
@@ -132,24 +134,24 @@ function handleTemplate(args: string[]): void {
   const { found, notFound } = getTemplates(templateNames);
 
   if (notFound.length > 0) {
-    console.error(`Unknown template(s): ${notFound.join(", ")}`);
-    console.error(`Available templates: ${listTemplates().map((t) => t.name).join(", ")}`);
+    console.error(formatError(`Unknown template(s): ${fmt.value(notFound.join(", "))}`));
+    console.error(formatHint(`Available templates: ${listTemplates().map((t) => t.name).join(", ")}`));
     process.exit(1);
   }
 
   // Parse level
   const level = parseLevel(values.level as string);
   if (!level) {
-    console.error(`Invalid level: ${values.level}`);
-    console.error(`Valid levels: restrictive, standard, permissive`);
+    console.error(formatError(`Invalid level: ${fmt.value(values.level as string)}`));
+    console.error(formatHint(`Valid levels: ${fmt.value("restrictive")}, ${fmt.value("standard")}, ${fmt.value("permissive")}`));
     process.exit(1);
   }
 
   // Parse format
   const format = values.format as string;
   if (!["json", "summary"].includes(format)) {
-    console.error(`Invalid format: ${format}`);
-    console.error(`Valid formats: json, summary`);
+    console.error(formatError(`Invalid format: ${fmt.value(format)}`));
+    console.error(formatHint(`Valid formats: ${fmt.value("json")}, ${fmt.value("summary")}`));
     process.exit(1);
   }
 
@@ -160,29 +162,29 @@ function handleTemplate(args: string[]): void {
 
 function showApplyHelp(): void {
   console.log(`
-Usage: cc-permissions apply [templates] [options]
+${fmt.section("Usage:")} ${fmt.command("cc-permissions apply")} ${fmt.optionalArg("[templates]")} ${fmt.optionalArg("[options]")}
 
 Analyze project and apply permissions, or apply specific templates.
 
-Arguments:
-  templates         Optional comma-separated template names (e.g., "nodejs,python")
+${fmt.section("Arguments:")}
+  ${fmt.arg("templates")}         Optional comma-separated template names (e.g., ${fmt.value('"nodejs,python"')})
                     If omitted, analyzes project and applies recommended templates
 
-Options:
-  -l, --level       Permission level: restrictive, standard, permissive
-                    (default: auto-detected when analyzing, standard when using templates)
-  -s, --scope       Settings scope: project, user, local (default: project)
-  -o, --output      Custom output file path (overrides --scope)
-  -h, --help        Show this help
+${fmt.section("Options:")}
+  ${fmt.option("-l, --level")}       Permission level: ${fmt.value("restrictive")}, ${fmt.value("standard")}, ${fmt.value("permissive")}
+                    ${fmt.dim("(default: auto-detected when analyzing, standard when using templates)")}
+  ${fmt.option("-s, --scope")}       Settings scope: ${fmt.value("project")}, ${fmt.value("user")}, ${fmt.value("local")} ${fmt.dim("(default: project)")}
+  ${fmt.option("-o, --output")}      Custom output file path (overrides --scope)
+  ${fmt.option("-h, --help")}        Show this help
 
 ${describeLevels()}
 
-Examples:
-  cc-permissions apply                  Analyze and apply recommended templates
-  cc-permissions apply nodejs           Apply nodejs template
-  cc-permissions apply nodejs,python    Apply multiple templates
-  cc-permissions apply -l permissive    Analyze and apply with permissive level
-  cc-permissions apply --scope user     Apply to user-level settings
+${fmt.section("Examples:")}
+  ${fmt.example("cc-permissions apply")}                  Analyze and apply recommended templates
+  ${fmt.example("cc-permissions apply nodejs")}           Apply nodejs template
+  ${fmt.example("cc-permissions apply nodejs,python")}    Apply multiple templates
+  ${fmt.example("cc-permissions apply -l permissive")}    Analyze and apply with permissive level
+  ${fmt.example("cc-permissions apply --scope user")}     Apply to user-level settings
 `);
 }
 
@@ -206,8 +208,8 @@ function handleApply(args: string[]): void {
   // Parse scope
   const scope = parseScope(values.scope as string);
   if (!scope) {
-    console.error(`Invalid scope: ${values.scope}`);
-    console.error(`Valid scopes: project, user, global, local`);
+    console.error(formatError(`Invalid scope: ${fmt.value(values.scope as string)}`));
+    console.error(formatHint(`Valid scopes: ${fmt.value("project")}, ${fmt.value("user")}, ${fmt.value("global")}, ${fmt.value("local")}`));
     process.exit(1);
   }
 
@@ -219,16 +221,16 @@ function handleApply(args: string[]): void {
     const { found, notFound } = getTemplates(templateNames);
 
     if (notFound.length > 0) {
-      console.error(`Unknown template(s): ${notFound.join(", ")}`);
-      console.error(`Available templates: ${listTemplates().map((t) => t.name).join(", ")}`);
+      console.error(formatError(`Unknown template(s): ${fmt.value(notFound.join(", "))}`));
+      console.error(formatHint(`Available templates: ${listTemplates().map((t) => t.name).join(", ")}`));
       process.exit(1);
     }
 
     // Parse level (default to standard for explicit templates)
     const level = values.level ? parseLevel(values.level as string) : PermissionLevel.Standard;
     if (!level) {
-      console.error(`Invalid level: ${values.level}`);
-      console.error(`Valid levels: restrictive, standard, permissive`);
+      console.error(formatError(`Invalid level: ${fmt.value(values.level as string)}`));
+      console.error(formatHint(`Valid levels: ${fmt.value("restrictive")}, ${fmt.value("standard")}, ${fmt.value("permissive")}`));
       process.exit(1);
     }
 
@@ -248,8 +250,8 @@ function handleApply(args: string[]): void {
   if (values.level) {
     const parsedLevel = parseLevel(values.level as string);
     if (!parsedLevel) {
-      console.error(`Invalid level: ${values.level}`);
-      console.error(`Valid levels: restrictive, standard, permissive`);
+      console.error(formatError(`Invalid level: ${fmt.value(values.level as string)}`));
+      console.error(formatHint(`Valid levels: ${fmt.value("restrictive")}, ${fmt.value("standard")}, ${fmt.value("permissive")}`));
       process.exit(1);
     }
     level = parsedLevel;
@@ -259,7 +261,7 @@ function handleApply(args: string[]): void {
   const { found, notFound } = getTemplates(analysisResult.recommendedTemplates);
 
   if (notFound.length > 0) {
-    console.error(`Unknown template(s): ${notFound.join(", ")}`);
+    console.error(formatError(`Unknown template(s): ${fmt.value(notFound.join(", "))}`));
     process.exit(1);
   }
 
@@ -270,33 +272,33 @@ function handleApply(args: string[]): void {
   });
 
   // Show analysis summary then apply result
-  console.log(`Detected templates: ${analysisResult.recommendedTemplates.join(", ")}`);
-  console.log(`Applied level: ${level}`);
+  console.log(`${fmt.dim("Detected templates:")} ${fmt.item(analysisResult.recommendedTemplates.join(", "))}`);
+  console.log(`${fmt.dim("Applied level:")} ${fmt.value(level)}`);
   console.log(formatApplyResult(applyResult));
 }
 
 function showAnalyzeHelp(): void {
   console.log(`
-Usage: cc-permissions analyze [path] [options]
+${fmt.section("Usage:")} ${fmt.command("cc-permissions analyze")} ${fmt.optionalArg("[path]")} ${fmt.optionalArg("[options]")}
 
 Analyze a project directory and recommend templates (no changes made).
 
-Arguments:
-  path              Path to analyze (default: current directory)
+${fmt.section("Arguments:")}
+  ${fmt.arg("path")}              Path to analyze ${fmt.dim("(default: current directory)")}
 
-Options:
-  -l, --level       Permission level: restrictive, standard, permissive
-                    (default: auto-detected based on project complexity)
-  -s, --scope       Settings scope: project, user, local (default: project)
-  -o, --output      Custom output file path (overrides --scope)
-  -h, --help        Show this help
+${fmt.section("Options:")}
+  ${fmt.option("-l, --level")}       Permission level: ${fmt.value("restrictive")}, ${fmt.value("standard")}, ${fmt.value("permissive")}
+                    ${fmt.dim("(default: auto-detected based on project complexity)")}
+  ${fmt.option("-s, --scope")}       Settings scope: ${fmt.value("project")}, ${fmt.value("user")}, ${fmt.value("local")} ${fmt.dim("(default: project)")}
+  ${fmt.option("-o, --output")}      Custom output file path (overrides --scope)
+  ${fmt.option("-h, --help")}        Show this help
 
 ${describeLevels()}
 
-Examples:
-  cc-permissions analyze
-  cc-permissions analyze ./my-project
-  cc-permissions analyze -l permissive
+${fmt.section("Examples:")}
+  ${fmt.example("cc-permissions analyze")}
+  ${fmt.example("cc-permissions analyze ./my-project")}
+  ${fmt.example("cc-permissions analyze -l permissive")}
 `);
 }
 
@@ -329,8 +331,8 @@ function handleAnalyze(args: string[]): void {
     if (values.level) {
       const parsedLevel = parseLevel(values.level as string);
       if (!parsedLevel) {
-        console.error(`Invalid level: ${values.level}`);
-        console.error(`Valid levels: restrictive, standard, permissive`);
+        console.error(formatError(`Invalid level: ${fmt.value(values.level as string)}`));
+        console.error(formatHint(`Valid levels: ${fmt.value("restrictive")}, ${fmt.value("standard")}, ${fmt.value("permissive")}`));
         process.exit(1);
       }
       level = parsedLevel;
@@ -340,15 +342,15 @@ function handleAnalyze(args: string[]): void {
     const { found, notFound } = getTemplates(result.recommendedTemplates);
 
     if (notFound.length > 0) {
-      console.error(`Unknown template(s): ${notFound.join(", ")}`);
+      console.error(formatError(`Unknown template(s): ${fmt.value(notFound.join(", "))}`));
       process.exit(1);
     }
 
     // Parse scope
     const scope = parseScope(values.scope as string);
     if (!scope) {
-      console.error(`Invalid scope: ${values.scope}`);
-      console.error(`Valid scopes: project, user, global, local`);
+      console.error(formatError(`Invalid scope: ${fmt.value(values.scope as string)}`));
+      console.error(formatHint(`Valid scopes: ${fmt.value("project")}, ${fmt.value("user")}, ${fmt.value("global")}, ${fmt.value("local")}`));
       process.exit(1);
     }
 
@@ -359,8 +361,8 @@ function handleAnalyze(args: string[]): void {
     });
 
     // Show analysis summary then apply result
-    console.log(`Detected templates: ${result.recommendedTemplates.join(", ")}`);
-    console.log(`Applied level: ${level}`);
+    console.log(`${fmt.dim("Detected templates:")} ${fmt.item(result.recommendedTemplates.join(", "))}`);
+    console.log(`${fmt.dim("Applied level:")} ${fmt.value(level)}`);
     console.log(formatApplyResult(applyResult));
     return;
   }
@@ -371,15 +373,15 @@ function handleAnalyze(args: string[]): void {
 
 function showListHelp(): void {
   console.log(`
-Usage: cc-permissions list
+${fmt.section("Usage:")} ${fmt.command("cc-permissions list")}
 
 List all available templates grouped by category.
 
-Options:
-  -h, --help        Show this help
+${fmt.section("Options:")}
+  ${fmt.option("-h, --help")}        Show this help
 
-Examples:
-  cc-permissions list
+${fmt.section("Examples:")}
+  ${fmt.example("cc-permissions list")}
 `);
 }
 
@@ -429,21 +431,21 @@ function handleList(args: string[]): void {
     templates.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  console.log("Available Templates:\n");
+  console.log(fmt.title("Available Templates") + "\n");
 
   // Output in fixed category order
   for (const category of categoryOrder) {
     const templates = grouped.get(category);
     if (!templates || templates.length === 0) continue;
 
-    console.log(`${category}:`);
+    console.log(fmt.category(`${category}:`));
     for (const template of templates) {
-      console.log(`  ${template.name.padEnd(12)} ${template.description}`);
+      console.log(`  ${fmt.item(template.name.padEnd(12))} ${fmt.itemDesc(template.description)}`);
     }
     console.log();
   }
 
-  console.log(`Use "cc-permissions template <name> --level <level>" to generate permissions.`);
+  console.log(`Use "${fmt.command("cc-permissions template")} ${fmt.arg("<name>")} ${fmt.option("--level")} ${fmt.arg("<level>")}" to generate permissions.`);
 }
 
 // Main CLI entry point
@@ -463,7 +465,7 @@ function main(): void {
 
   if (values.version) {
     const pkg = readPackageJson();
-    const commitSuffix = buildInfo.commitHash !== "dev" ? ` (${buildInfo.commitHash})` : "";
+    const commitSuffix = buildInfo.commitHash !== "dev" ? fmt.dim(` (${buildInfo.commitHash})`) : "";
     console.log(`${formatVersionInfo(pkg.version, pkg.name)}${commitSuffix}`);
     process.exit(0);
   }
@@ -514,8 +516,8 @@ function main(): void {
       handleList(subArgs);
       break;
     default:
-      console.error(`Unknown command: ${command}`);
-      console.error('Run "cc-permissions --help" for usage information.');
+      console.error(formatError(`Unknown command: ${fmt.value(command)}`));
+      console.error(`Run "${fmt.command("cc-permissions --help")}" for usage information.`);
       process.exit(1);
   }
 }

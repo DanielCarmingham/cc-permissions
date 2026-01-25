@@ -4,6 +4,7 @@ import type {
   ClaudeCodePermissions,
 } from "./types.js";
 import { PermissionLevel } from "./types.js";
+import { fmt } from "./format.js";
 
 // Always banned patterns - dangerous operations that should never be allowed
 // These are stored as raw commands; formatting happens at output time
@@ -137,8 +138,8 @@ export function parseLevel(levelStr: string): PermissionLevel | null {
  * Get a human-readable description of a permission level.
  */
 export function describeLevels(): string {
-  return `Permission Levels:
-  restrictive  Read-only operations (git status, npm list, etc.)
-  standard     Dev workflow (+ git commit/push, npm run/build/test)
-  permissive   Few guardrails (+ npm install, most commands except banned)`;
+  return `${fmt.section("Permission Levels:")}
+  ${fmt.value("restrictive")}  Read-only operations (git status, npm list, etc.)
+  ${fmt.value("standard")}     Dev workflow (+ git commit/push, npm run/build/test)
+  ${fmt.value("permissive")}   Few guardrails (+ npm install, most commands except banned)`;
 }

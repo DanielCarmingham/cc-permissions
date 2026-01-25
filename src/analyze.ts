@@ -4,6 +4,7 @@ import { execSync } from "node:child_process";
 import type { AnalysisResult, DetectionRules, TemplateRegistry, TemplateDetection, DetectionType } from "./types.js";
 import { PermissionLevel } from "./types.js";
 import { getTemplates } from "./templates/loader.js";
+import { fmt, formatSafetyWarning } from "./format.js";
 
 // Cache for active MCP servers (avoid running `claude mcp list` multiple times)
 let cachedMcpServers: Set<string> | null = null;
@@ -438,48 +439,24 @@ export function analyzeDirectory(dir: string): AnalysisResult {
   };
 }
 
-// ANSI color codes
-const colors = {
-  reset: "\x1b[0m",
-  bold: "\x1b[1m",
-  dim: "\x1b[2m",
-  cyan: "\x1b[36m",
-  green: "\x1b[32m",
-  yellow: "\x1b[33m",
-  blue: "\x1b[34m",
-  magenta: "\x1b[35m",
-  gray: "\x1b[90m",
-};
-
-// Check if colors should be used (not piped, supports colors)
-function useColors(): boolean {
-  return process.stdout.isTTY ?? false;
-}
-
-// Apply color if terminal supports it
-function color(text: string, ...codes: string[]): string {
-  if (!useColors()) return text;
-  return codes.join("") + text + colors.reset;
-}
-
 // Format detection for display with colored type prefix (no emojis for consistent alignment)
 function formatDetection(type: string, reason: string): string {
-  const typeInfo: Record<string, { prefix: string; color: string }> = {
-    file: { prefix: "file:", color: colors.green },
-    directory: { prefix: "dir:", color: colors.green },
-    content: { prefix: "content:", color: colors.yellow },
-    mcp: { prefix: "mcp:", color: colors.magenta },
-    remote: { prefix: "remote:", color: colors.blue },
-    always: { prefix: "", color: colors.gray },
-  };
-
-  const info = typeInfo[type] || { prefix: `${type}:`, color: colors.reset };
-
-  if (type === "always") {
-    return color(reason, info.color);
+  switch (type) {
+    case "file":
+      return fmt.fileDetection("file:") + " " + reason;
+    case "directory":
+      return fmt.dirDetection("dir:") + " " + reason;
+    case "content":
+      return fmt.contentDetection("content:") + " " + reason;
+    case "mcp":
+      return fmt.mcpDetection("mcp:") + " " + reason;
+    case "remote":
+      return fmt.remoteDetection("remote:") + " " + reason;
+    case "always":
+      return fmt.alwaysDetection(reason);
+    default:
+      return `${type}: ${reason}`;
   }
-
-  return color(info.prefix, info.color) + " " + reason;
 }
 
 // Get plain text length of detection (without color codes)
@@ -499,8 +476,7 @@ function getDetectionLength(type: string, reason: string): number {
 export function formatAnalysisResult(result: AnalysisResult): string {
   const lines: string[] = [
     ``,
-    color(`Project Analysis`, colors.bold, colors.cyan),
-    color(`════════════════`, colors.cyan),
+    fmt.title(`Project Analysis`, "═"),
     ``,
   ];
 
@@ -529,42 +505,40 @@ export function formatAnalysisResult(result: AnalysisResult): string {
     const headerSep = `${box.leftT}${box.horizontal.repeat(templateWidth + 2)}${box.cross}${box.horizontal.repeat(detectedByWidth + 2)}${box.rightT}`;
     const bottomBorder = `${box.bottomLeft}${box.horizontal.repeat(templateWidth + 2)}${box.bottomT}${box.horizontal.repeat(detectedByWidth + 2)}${box.bottomRight}`;
 
-    const header = `${color(box.vertical, colors.dim)} ${color("Template".padEnd(templateWidth), colors.bold)} ${color(box.vertical, colors.dim)} ${color("Detected By".padEnd(detectedByWidth), colors.bold)} ${color(box.vertical, colors.dim)}`;
+    const header = `${fmt.dim(box.vertical)} ${fmt.section("Template".padEnd(templateWidth))} ${fmt.dim(box.vertical)} ${fmt.section("Detected By".padEnd(detectedByWidth))} ${fmt.dim(box.vertical)}`;
 
-    lines.push(color(topBorder, colors.dim));
+    lines.push(fmt.dim(topBorder));
     lines.push(header);
-    lines.push(color(headerSep, colors.dim));
+    lines.push(fmt.dim(headerSep));
 
     for (const detection of result.detections) {
       const detectionText = formatDetection(detection.type, detection.reason);
       const detectionLen = getDetectionLength(detection.type, detection.reason);
       const padding = " ".repeat(detectedByWidth - detectionLen);
 
-      const row = `${color(box.vertical, colors.dim)} ${detection.template.padEnd(templateWidth)} ${color(box.vertical, colors.dim)} ${detectionText}${padding} ${color(box.vertical, colors.dim)}`;
+      const row = `${fmt.dim(box.vertical)} ${fmt.item(detection.template.padEnd(templateWidth))} ${fmt.dim(box.vertical)} ${detectionText}${padding} ${fmt.dim(box.vertical)}`;
       lines.push(row);
     }
 
-    lines.push(color(bottomBorder, colors.dim));
+    lines.push(fmt.dim(bottomBorder));
   }
 
   lines.push(``);
-  lines.push(`🎚️  ${color("Suggested Level:", colors.bold)} ${result.suggestedLevel}`);
+  lines.push(`${fmt.section("Suggested Level:")} ${fmt.value(result.suggestedLevel)}`);
   lines.push(``);
-  lines.push(`💻 ${color("Apply Permissions:", colors.bold)}`);
-  lines.push(`   ${color(result.suggestedCommand, colors.green)}`);
+  lines.push(`${fmt.section("Apply Permissions:")}`);
+  lines.push(`   ${fmt.example(result.suggestedCommand)}`);
   lines.push(``);
 
   // Show template details command with an example template
   const exampleTemplate = result.recommendedTemplates.find(t => t !== "shell") || result.recommendedTemplates[0];
   if (exampleTemplate) {
-    lines.push(`📋 ${color("View Template Details:", colors.bold)}`);
-    lines.push(`   ${color(`cc-permissions template ${exampleTemplate}`, colors.cyan)}`);
+    lines.push(`${fmt.section("View Template Details:")}`);
+    lines.push(`   ${fmt.command(`cc-permissions template ${exampleTemplate}`)}`);
     lines.push(``);
   }
 
-  lines.push(color(`─────────────────────────────────────────────────────────────────────────`, colors.dim));
-  lines.push(`⚠️  ${color("Warning:", colors.bold, colors.yellow)} This approach is inherently less safe than a fully`);
-  lines.push(`   isolated environment. You're trading sandbox protection for convenience.`);
+  lines.push(formatSafetyWarning());
 
   return lines.join("\n");
 }

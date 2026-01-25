@@ -44,3 +44,16 @@ export {
   analyzeDirectory,
   formatAnalysisResult,
 } from "./analyze.js";
+
+// Formatting utilities
+export {
+  colors,
+  color,
+  useColors,
+  fmt,
+  formatUsage,
+  formatOption,
+  formatExample,
+  formatError,
+  formatHint,
+} from "./format.js";
