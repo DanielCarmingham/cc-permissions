@@ -87,7 +87,8 @@ function showTemplateHelp(): void {
   console.log(`
 Usage: cc-permissions template <names> [options]
 
-Generate permission configurations from one or more templates.
+View permission configurations from one or more templates.
+Use "cc-permissions apply" to actually apply permissions.
 
 Arguments:
   names             Comma-separated template names (e.g., "nodejs" or "nodejs,python")
@@ -95,20 +96,16 @@ Arguments:
 Options:
   -l, --level       Permission level: restrictive, standard, permissive (default: standard)
   -f, --format      Output format: json, summary, both (default: json)
-  -a, --apply       Apply permissions to settings file (creates .bak backup)
-  -s, --scope       Settings scope: project, user, local (default: project)
-  -o, --output      Custom output file path (overrides --scope)
 
 ${describeLevels()}
 
 Run "cc-permissions list" to see available templates.
 
 Examples:
-  cc-permissions template shell --level restrictive
-  cc-permissions template nodejs --level standard
-  cc-permissions template nodejs,python --level permissive --format summary
-  cc-permissions template nodejs --apply
-  cc-permissions template nodejs --apply --scope user
+  cc-permissions template nodejs
+  cc-permissions template nodejs --level restrictive
+  cc-permissions template nodejs,python --format summary
+  cc-permissions template nodejs --format both
 `);
 }
 
@@ -118,9 +115,6 @@ function handleTemplate(args: string[]): void {
     options: {
       level: { type: "string", short: "l", default: "standard" },
       format: { type: "string", short: "f", default: "json" },
-      apply: { type: "boolean", short: "a" },
-      scope: { type: "string", short: "s", default: "project" },
-      output: { type: "string", short: "o" },
       help: { type: "boolean", short: "h" },
     },
     allowPositionals: true,
@@ -149,24 +143,6 @@ function handleTemplate(args: string[]): void {
     console.error(`Invalid level: ${values.level}`);
     console.error(`Valid levels: restrictive, standard, permissive`);
     process.exit(1);
-  }
-
-  // Handle --apply flag
-  if (values.apply) {
-    // Parse scope
-    const scope = parseScope(values.scope as string);
-    if (!scope) {
-      console.error(`Invalid scope: ${values.scope}`);
-      console.error(`Valid scopes: project, user, global, local`);
-      process.exit(1);
-    }
-
-    const result = applyPermissions(found, level, {
-      scope,
-      outputPath: values.output as string | undefined,
-    });
-    console.log(formatApplyResult(result));
-    return;
   }
 
   // Parse format

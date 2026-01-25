@@ -462,37 +462,35 @@ function color(text: string, ...codes: string[]): string {
   return codes.join("") + text + colors.reset;
 }
 
-// Format detection for display with colored type prefix and emoji
+// Format detection for display with colored type prefix (no emojis for consistent alignment)
 function formatDetection(type: string, reason: string): string {
-  const typeInfo: Record<string, { prefix: string; emoji: string; color: string }> = {
-    file: { prefix: "file:", emoji: "📄", color: colors.green },
-    directory: { prefix: "dir:", emoji: "📁", color: colors.green },
-    content: { prefix: "content:", emoji: "📝", color: colors.yellow },
-    mcp: { prefix: "mcp:", emoji: "🔌", color: colors.magenta },
-    remote: { prefix: "remote:", emoji: "🌐", color: colors.blue },
-    always: { prefix: "", emoji: "✓", color: colors.gray },
+  const typeInfo: Record<string, { prefix: string; color: string }> = {
+    file: { prefix: "file:", color: colors.green },
+    directory: { prefix: "dir:", color: colors.green },
+    content: { prefix: "content:", color: colors.yellow },
+    mcp: { prefix: "mcp:", color: colors.magenta },
+    remote: { prefix: "remote:", color: colors.blue },
+    always: { prefix: "", color: colors.gray },
   };
 
-  const info = typeInfo[type] || { prefix: `${type}:`, emoji: "•", color: colors.reset };
+  const info = typeInfo[type] || { prefix: `${type}:`, color: colors.reset };
 
   if (type === "always") {
-    return `${info.emoji} ` + color(reason, info.color);
+    return color(reason, info.color);
   }
 
-  return `${info.emoji} ` + color(info.prefix, info.color) + " " + reason;
+  return color(info.prefix, info.color) + " " + reason;
 }
 
 // Get plain text length of detection (without color codes)
-// Emoji is treated as 2 chars wide for terminal alignment
 function getDetectionLength(type: string, reason: string): number {
   const prefixes: Record<string, string> = {
     file: "file:", directory: "dir:", content: "content:",
     mcp: "mcp:", remote: "remote:", always: "",
   };
   const prefix = prefixes[type] || `${type}:`;
-  const emojiWidth = 2; // emoji + space
-  if (type === "always") return emojiWidth + reason.length;
-  return emojiWidth + prefix.length + 1 + reason.length; // emoji + prefix + space + reason
+  if (type === "always") return reason.length;
+  return prefix.length + 1 + reason.length; // prefix + space + reason
 }
 
 /**
@@ -501,8 +499,8 @@ function getDetectionLength(type: string, reason: string): number {
 export function formatAnalysisResult(result: AnalysisResult): string {
   const lines: string[] = [
     ``,
-    color(`🔍 Project Analysis`, colors.bold, colors.cyan),
-    color(`═══════════════════`, colors.cyan),
+    color(`Project Analysis`, colors.bold, colors.cyan),
+    color(`════════════════`, colors.cyan),
     ``,
   ];
 
