@@ -1,0 +1,168 @@
+{
+  "$schema": "template.schema.json",
+  "name": "github-mcp",
+  "description": "GitHub MCP Server tools for repository and workflow management",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["github"]
+  },
+  "levels": {
+    "restrictive": [
+      // Context
+      { "command": "mcp__github__get_me", "type": "mcp", "description": "Get current user info" },
+
+      // Repository read
+      { "command": "mcp__github__get_file_contents", "type": "mcp", "description": "Get file contents" },
+      { "command": "mcp__github__get_repository_tree", "type": "mcp", "description": "Get repository tree structure" },
+      { "command": "mcp__github__get_commit", "type": "mcp", "description": "Get commit details" },
+      { "command": "mcp__github__list_commits", "type": "mcp", "description": "List commits" },
+      { "command": "mcp__github__list_branches", "type": "mcp", "description": "List branches" },
+      { "command": "mcp__github__get_tag", "type": "mcp", "description": "Get tag details" },
+      { "command": "mcp__github__list_tags", "type": "mcp", "description": "List tags" },
+
+      // Issues read
+      { "command": "mcp__github__issue_read", "type": "mcp", "description": "Read issue details" },
+      { "command": "mcp__github__list_issues", "type": "mcp", "description": "List issues" },
+      { "command": "mcp__github__list_issue_types", "type": "mcp", "description": "List issue types" },
+
+      // Pull requests read
+      { "command": "mcp__github__pull_request_read", "type": "mcp", "description": "Read pull request details" },
+      { "command": "mcp__github__list_pull_requests", "type": "mcp", "description": "List pull requests" },
+
+      // Labels read
+      { "command": "mcp__github__get_label", "type": "mcp", "description": "Get label details" },
+      { "command": "mcp__github__list_label", "type": "mcp", "description": "List labels" },
+
+      // Releases read
+      { "command": "mcp__github__get_latest_release", "type": "mcp", "description": "Get latest release" },
+      { "command": "mcp__github__get_release_by_tag", "type": "mcp", "description": "Get release by tag" },
+      { "command": "mcp__github__list_releases", "type": "mcp", "description": "List releases" },
+
+      // Actions read
+      { "command": "mcp__github__get_workflow_run", "type": "mcp", "description": "Get workflow run details" },
+      { "command": "mcp__github__get_workflow_run_logs", "type": "mcp", "description": "Get workflow run logs" },
+      { "command": "mcp__github__get_workflow_run_usage", "type": "mcp", "description": "Get workflow usage stats" },
+      { "command": "mcp__github__get_job_logs", "type": "mcp", "description": "Get job logs" },
+      { "command": "mcp__github__list_workflows", "type": "mcp", "description": "List workflows" },
+      { "command": "mcp__github__list_workflow_runs", "type": "mcp", "description": "List workflow runs" },
+      { "command": "mcp__github__list_workflow_jobs", "type": "mcp", "description": "List workflow jobs" },
+      { "command": "mcp__github__list_workflow_run_artifacts", "type": "mcp", "description": "List workflow artifacts" },
+      { "command": "mcp__github__download_workflow_run_artifact", "type": "mcp", "description": "Download workflow artifact" },
+
+      // Security read
+      { "command": "mcp__github__get_code_scanning_alert", "type": "mcp", "description": "Get code scanning alert" },
+      { "command": "mcp__github__list_code_scanning_alerts", "type": "mcp", "description": "List code scanning alerts" },
+      { "command": "mcp__github__get_secret_scanning_alert", "type": "mcp", "description": "Get secret scanning alert" },
+      { "command": "mcp__github__list_secret_scanning_alerts", "type": "mcp", "description": "List secret scanning alerts" },
+      { "command": "mcp__github__get_dependabot_alert", "type": "mcp", "description": "Get Dependabot alert" },
+      { "command": "mcp__github__list_dependabot_alerts", "type": "mcp", "description": "List Dependabot alerts" },
+      { "command": "mcp__github__get_global_security_advisory", "type": "mcp", "description": "Get global security advisory" },
+      { "command": "mcp__github__list_global_security_advisories", "type": "mcp", "description": "List global security advisories" },
+      { "command": "mcp__github__list_repository_security_advisories", "type": "mcp", "description": "List repository security advisories" },
+      { "command": "mcp__github__list_org_repository_security_advisories", "type": "mcp", "description": "List org repository security advisories" },
+
+      // Discussions read
+      { "command": "mcp__github__get_discussion", "type": "mcp", "description": "Get discussion details" },
+      { "command": "mcp__github__get_discussion_comments", "type": "mcp", "description": "Get discussion comments" },
+      { "command": "mcp__github__list_discussions", "type": "mcp", "description": "List discussions" },
+      { "command": "mcp__github__list_discussion_categories", "type": "mcp", "description": "List discussion categories" },
+
+      // Gists read
+      { "command": "mcp__github__get_gist", "type": "mcp", "description": "Get gist details" },
+      { "command": "mcp__github__list_gists", "type": "mcp", "description": "List gists" },
+
+      // Projects read
+      { "command": "mcp__github__get_project", "type": "mcp", "description": "Get project details" },
+      { "command": "mcp__github__get_project_field", "type": "mcp", "description": "Get project field" },
+      { "command": "mcp__github__get_project_item", "type": "mcp", "description": "Get project item" },
+      { "command": "mcp__github__list_projects", "type": "mcp", "description": "List projects" },
+      { "command": "mcp__github__list_project_fields", "type": "mcp", "description": "List project fields" },
+      { "command": "mcp__github__list_project_items", "type": "mcp", "description": "List project items" },
+
+      // Organizations read
+      { "command": "mcp__github__get_teams", "type": "mcp", "description": "Get organization teams" },
+      { "command": "mcp__github__get_team_members", "type": "mcp", "description": "Get team members" },
+
+      // Notifications read
+      { "command": "mcp__github__get_notification_details", "type": "mcp", "description": "Get notification details" },
+      { "command": "mcp__github__list_notifications", "type": "mcp", "description": "List notifications" },
+
+      // Stars read
+      { "command": "mcp__github__list_starred_repositories", "type": "mcp", "description": "List starred repositories" },
+
+      // Search
+      { "command": "mcp__github__search_code", "type": "mcp", "description": "Search code" },
+      { "command": "mcp__github__search_issues", "type": "mcp", "description": "Search issues" },
+      { "command": "mcp__github__search_pull_requests", "type": "mcp", "description": "Search pull requests" },
+      { "command": "mcp__github__search_repositories", "type": "mcp", "description": "Search repositories" },
+      { "command": "mcp__github__search_users", "type": "mcp", "description": "Search users" },
+      { "command": "mcp__github__search_orgs", "type": "mcp", "description": "Search organizations" },
+
+      // Copilot read (remote-only)
+      { "command": "mcp__github__get_copilot_space", "type": "mcp", "description": "Get Copilot space details" },
+      { "command": "mcp__github__list_copilot_spaces", "type": "mcp", "description": "List Copilot spaces" },
+      { "command": "mcp__github__github_support_docs_search", "type": "mcp", "description": "Search GitHub support docs" }
+    ],
+    "standard": [
+      // Repository write
+      { "command": "mcp__github__create_branch", "type": "mcp", "description": "Create branch" },
+      { "command": "mcp__github__create_or_update_file", "type": "mcp", "description": "Create or update file" },
+      { "command": "mcp__github__push_files", "type": "mcp", "description": "Push multiple files" },
+
+      // Issues write
+      { "command": "mcp__github__issue_write", "type": "mcp", "description": "Create/update issues" },
+      { "command": "mcp__github__add_issue_comment", "type": "mcp", "description": "Add issue comment" },
+      { "command": "mcp__github__sub_issue_write", "type": "mcp", "description": "Create/update sub-issues" },
+
+      // Pull requests write
+      { "command": "mcp__github__create_pull_request", "type": "mcp", "description": "Create pull request" },
+      { "command": "mcp__github__update_pull_request", "type": "mcp", "description": "Update pull request" },
+      { "command": "mcp__github__update_pull_request_branch", "type": "mcp", "description": "Update PR branch" },
+      { "command": "mcp__github__add_comment_to_pending_review", "type": "mcp", "description": "Add comment to pending review" },
+      { "command": "mcp__github__pull_request_review_write", "type": "mcp", "description": "Submit PR review" },
+      { "command": "mcp__github__merge_pull_request", "type": "mcp", "description": "Merge pull request" },
+
+      // Labels write
+      { "command": "mcp__github__label_write", "type": "mcp", "description": "Create/update labels" },
+
+      // Gists write
+      { "command": "mcp__github__create_gist", "type": "mcp", "description": "Create gist" },
+      { "command": "mcp__github__update_gist", "type": "mcp", "description": "Update gist" },
+
+      // Projects write
+      { "command": "mcp__github__add_project_item", "type": "mcp", "description": "Add project item" },
+      { "command": "mcp__github__update_project_item", "type": "mcp", "description": "Update project item" },
+
+      // Notifications write
+      { "command": "mcp__github__dismiss_notification", "type": "mcp", "description": "Dismiss notification" },
+      { "command": "mcp__github__mark_all_notifications_read", "type": "mcp", "description": "Mark all notifications read" },
+      { "command": "mcp__github__manage_notification_subscription", "type": "mcp", "description": "Manage notification subscription" },
+      { "command": "mcp__github__manage_repository_notification_subscription", "type": "mcp", "description": "Manage repo notification subscription" },
+
+      // Stars write
+      { "command": "mcp__github__star_repository", "type": "mcp", "description": "Star repository" },
+      { "command": "mcp__github__unstar_repository", "type": "mcp", "description": "Unstar repository" },
+
+      // Copilot write (remote-only)
+      { "command": "mcp__github__assign_copilot_to_issue", "type": "mcp", "description": "Assign Copilot to issue" },
+      { "command": "mcp__github__create_pull_request_with_copilot", "type": "mcp", "description": "Create PR with Copilot" },
+      { "command": "mcp__github__request_copilot_review", "type": "mcp", "description": "Request Copilot review" }
+    ],
+    "permissive": [
+      // Repository management
+      { "command": "mcp__github__create_repository", "type": "mcp", "description": "Create repository" },
+      { "command": "mcp__github__fork_repository", "type": "mcp", "description": "Fork repository" },
+      { "command": "mcp__github__delete_file", "type": "mcp", "description": "Delete file" },
+
+      // Projects delete
+      { "command": "mcp__github__delete_project_item", "type": "mcp", "description": "Delete project item" },
+
+      // Workflow management
+      { "command": "mcp__github__run_workflow", "type": "mcp", "description": "Trigger workflow run" },
+      { "command": "mcp__github__cancel_workflow_run", "type": "mcp", "description": "Cancel workflow run" },
+      { "command": "mcp__github__rerun_workflow_run", "type": "mcp", "description": "Rerun entire workflow" },
+      { "command": "mcp__github__rerun_failed_jobs", "type": "mcp", "description": "Rerun failed jobs" },
+      { "command": "mcp__github__delete_workflow_run_logs", "type": "mcp", "description": "Delete workflow logs" }
+    ]
+  }
+}

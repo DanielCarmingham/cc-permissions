@@ -149,6 +149,13 @@ cc-permissions apply nodejs --level permissive
 | [flutter](docs/templates/flutter.md) | Flutter SDK and Dart development |
 | [ios](docs/templates/ios.md) | Xcode, Swift, CocoaPods, and iOS development |
 
+### MCP Servers
+
+| Template | Description |
+|----------|-------------|
+| [github-mcp](docs/templates/github-mcp.md) | GitHub MCP Server tools for repository and workflow management |
+| [gitea](docs/templates/gitea.md) | Gitea MCP Server tools (also includes CLI commands) |
+
 ### Utilities
 
 | Template | Description |

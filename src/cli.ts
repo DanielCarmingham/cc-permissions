@@ -412,6 +412,7 @@ function handleList(args: string[]): void {
     "Container & Infrastructure",
     "Testing",
     "Mobile Development",
+    "MCP Servers",
     "Utilities",
     "Other",
   ];
