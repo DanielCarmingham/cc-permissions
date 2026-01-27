@@ -1,12 +1,11 @@
 {
   "$schema": "template.schema.json",
   "name": "gitlab",
-  "description": "GitLab CLI (glab) and MCP server for repository and workflow management",
+  "description": "GitLab CLI (glab) for repository and workflow management",
   "category": "Version Control",
   "detection": {
     "directories": [".gitlab/", ".gitlab-ci.yml"],
     "files": [".gitlab-ci.yml"],
-    "mcpServers": ["gitlab"],
     "gitRemotes": ["gitlab.com", "gitlab."]
   },
   "levels": {
@@ -61,25 +60,7 @@
       // glab CLI: API
       { "command": "glab api", "description": "GitLab API calls" },
       // glab CLI: duo (AI)
-      { "command": "glab duo ask", "description": "Ask GitLab Duo questions" },
-      // MCP: search
-      { "command": "mcp__gitlab__search", "type": "mcp", "description": "Search GitLab" },
-      { "command": "mcp__gitlab__search_code", "type": "mcp", "description": "Semantic code search" },
-      // MCP: project read
-      { "command": "mcp__gitlab__get_project", "type": "mcp", "description": "Get project details" },
-      { "command": "mcp__gitlab__list_projects", "type": "mcp", "description": "List projects" },
-      { "command": "mcp__gitlab__search_projects", "type": "mcp", "description": "Search projects" },
-      // MCP: file read
-      { "command": "mcp__gitlab__get_file_contents", "type": "mcp", "description": "Get file contents" },
-      { "command": "mcp__gitlab__get_directory_contents", "type": "mcp", "description": "Get directory contents" },
-      // MCP: issue read
-      { "command": "mcp__gitlab__get_issue", "type": "mcp", "description": "Get issue details" },
-      { "command": "mcp__gitlab__list_issues", "type": "mcp", "description": "List issues" },
-      // MCP: MR read
-      { "command": "mcp__gitlab__get_merge_request", "type": "mcp", "description": "Get merge request details" },
-      { "command": "mcp__gitlab__list_merge_requests", "type": "mcp", "description": "List merge requests" },
-      { "command": "mcp__gitlab__get_merge_request_commits", "type": "mcp", "description": "Get MR commits" },
-      { "command": "mcp__gitlab__get_merge_request_diffs", "type": "mcp", "description": "Get MR diffs" }
+      { "command": "glab duo ask", "description": "Ask GitLab Duo questions" }
     ],
     "standard": [
       // glab CLI: MR create/edit
@@ -112,21 +93,7 @@
       { "command": "glab snippet create", "description": "Create snippet" },
       // glab CLI: schedule create
       { "command": "glab schedule create", "description": "Create pipeline schedule" },
-      { "command": "glab schedule run", "description": "Run scheduled pipeline" },
-      // MCP: branch create
-      { "command": "mcp__gitlab__create_branch", "type": "mcp", "description": "Create branch" },
-      // MCP: file create/update
-      { "command": "mcp__gitlab__create_file", "type": "mcp", "description": "Create file" },
-      { "command": "mcp__gitlab__update_file", "type": "mcp", "description": "Update file" },
-      { "command": "mcp__gitlab__push_files", "type": "mcp", "description": "Push multiple files" },
-      // MCP: issue create
-      { "command": "mcp__gitlab__create_issue", "type": "mcp", "description": "Create issue" },
-      { "command": "mcp__gitlab__update_issue", "type": "mcp", "description": "Update issue" },
-      { "command": "mcp__gitlab__create_issue_note", "type": "mcp", "description": "Comment on issue" },
-      // MCP: MR create
-      { "command": "mcp__gitlab__create_merge_request", "type": "mcp", "description": "Create merge request" },
-      { "command": "mcp__gitlab__update_merge_request", "type": "mcp", "description": "Update merge request" },
-      { "command": "mcp__gitlab__create_merge_request_note", "type": "mcp", "description": "Comment on MR" }
+      { "command": "glab schedule run", "description": "Run scheduled pipeline" }
     ],
     "permissive": [
       // glab CLI: MR merge/close
@@ -166,17 +133,7 @@
       // glab CLI: deploy key management
       { "command": "glab deploy-key list", "description": "List deploy keys" },
       { "command": "glab deploy-key create", "description": "Create deploy key" },
-      { "command": "glab deploy-key delete", "description": "Delete deploy key" },
-      // MCP: project management
-      { "command": "mcp__gitlab__create_project", "type": "mcp", "description": "Create project" },
-      { "command": "mcp__gitlab__fork_project", "type": "mcp", "description": "Fork project" },
-      // MCP: branch delete
-      { "command": "mcp__gitlab__delete_branch", "type": "mcp", "description": "Delete branch" },
-      // MCP: MR merge
-      { "command": "mcp__gitlab__merge_merge_request", "type": "mcp", "description": "Merge merge request" },
-      { "command": "mcp__gitlab__close_merge_request", "type": "mcp", "description": "Close merge request" },
-      // MCP: issue close
-      { "command": "mcp__gitlab__close_issue", "type": "mcp", "description": "Close issue" }
+      { "command": "glab deploy-key delete", "description": "Delete deploy key" }
     ]
   }
 }

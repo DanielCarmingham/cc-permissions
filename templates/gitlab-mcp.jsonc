@@ -1,0 +1,59 @@
+{
+  "$schema": "template.schema.json",
+  "name": "gitlab-mcp",
+  "description": "GitLab MCP Server tools for repository and workflow management",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["gitlab"]
+  },
+  "levels": {
+    "restrictive": [
+      // Search
+      { "command": "mcp__gitlab__search", "type": "mcp", "description": "Search GitLab" },
+      { "command": "mcp__gitlab__search_code", "type": "mcp", "description": "Semantic code search" },
+      // Project read
+      { "command": "mcp__gitlab__get_project", "type": "mcp", "description": "Get project details" },
+      { "command": "mcp__gitlab__list_projects", "type": "mcp", "description": "List projects" },
+      { "command": "mcp__gitlab__search_projects", "type": "mcp", "description": "Search projects" },
+      // File read
+      { "command": "mcp__gitlab__get_file_contents", "type": "mcp", "description": "Get file contents" },
+      { "command": "mcp__gitlab__get_directory_contents", "type": "mcp", "description": "Get directory contents" },
+      // Issue read
+      { "command": "mcp__gitlab__get_issue", "type": "mcp", "description": "Get issue details" },
+      { "command": "mcp__gitlab__list_issues", "type": "mcp", "description": "List issues" },
+      // MR read
+      { "command": "mcp__gitlab__get_merge_request", "type": "mcp", "description": "Get merge request details" },
+      { "command": "mcp__gitlab__list_merge_requests", "type": "mcp", "description": "List merge requests" },
+      { "command": "mcp__gitlab__get_merge_request_commits", "type": "mcp", "description": "Get MR commits" },
+      { "command": "mcp__gitlab__get_merge_request_diffs", "type": "mcp", "description": "Get MR diffs" }
+    ],
+    "standard": [
+      // Branch create
+      { "command": "mcp__gitlab__create_branch", "type": "mcp", "description": "Create branch" },
+      // File create/update
+      { "command": "mcp__gitlab__create_file", "type": "mcp", "description": "Create file" },
+      { "command": "mcp__gitlab__update_file", "type": "mcp", "description": "Update file" },
+      { "command": "mcp__gitlab__push_files", "type": "mcp", "description": "Push multiple files" },
+      // Issue create
+      { "command": "mcp__gitlab__create_issue", "type": "mcp", "description": "Create issue" },
+      { "command": "mcp__gitlab__update_issue", "type": "mcp", "description": "Update issue" },
+      { "command": "mcp__gitlab__create_issue_note", "type": "mcp", "description": "Comment on issue" },
+      // MR create
+      { "command": "mcp__gitlab__create_merge_request", "type": "mcp", "description": "Create merge request" },
+      { "command": "mcp__gitlab__update_merge_request", "type": "mcp", "description": "Update merge request" },
+      { "command": "mcp__gitlab__create_merge_request_note", "type": "mcp", "description": "Comment on MR" }
+    ],
+    "permissive": [
+      // Project management
+      { "command": "mcp__gitlab__create_project", "type": "mcp", "description": "Create project" },
+      { "command": "mcp__gitlab__fork_project", "type": "mcp", "description": "Fork project" },
+      // Branch delete
+      { "command": "mcp__gitlab__delete_branch", "type": "mcp", "description": "Delete branch" },
+      // MR merge
+      { "command": "mcp__gitlab__merge_merge_request", "type": "mcp", "description": "Merge merge request" },
+      { "command": "mcp__gitlab__close_merge_request", "type": "mcp", "description": "Close merge request" },
+      // Issue close
+      { "command": "mcp__gitlab__close_issue", "type": "mcp", "description": "Close issue" }
+    ]
+  }
+}

@@ -1,10 +1,9 @@
 {
   "$schema": "template.schema.json",
   "name": "gitea",
-  "description": "Gitea CLI (tea) and MCP server for repository and workflow management",
+  "description": "Gitea CLI (tea) for repository and workflow management",
   "category": "Version Control",
   "detection": {
-    "mcpServers": ["gitea"],
     "gitRemotes": ["gitea.com", "gitea."]
   },
   "levels": {
@@ -43,59 +42,7 @@
       { "command": "tea notifications", "description": "List notifications (alias)" },
       // Gitea MCP CLI
       { "command": "gitea-mcp --version", "description": "Check Gitea MCP version" },
-      { "command": "gitea-mcp --help", "description": "Gitea MCP help" },
-      // MCP: Server info
-      { "command": "mcp__gitea__get_gitea_mcp_server_version", "type": "mcp", "description": "Get MCP server version" },
-      // MCP: User read
-      { "command": "mcp__gitea__get_my_user_info", "type": "mcp", "description": "Get authenticated user info" },
-      { "command": "mcp__gitea__get_user_orgs", "type": "mcp", "description": "Get user organizations" },
-      { "command": "mcp__gitea__search_users", "type": "mcp", "description": "Search users" },
-      // MCP: Repo read
-      { "command": "mcp__gitea__list_my_repos", "type": "mcp", "description": "List user repositories" },
-      { "command": "mcp__gitea__search_repos", "type": "mcp", "description": "Search repositories" },
-      { "command": "mcp__gitea__get_repo", "type": "mcp", "description": "Get repository details" },
-      // MCP: Branch read
-      { "command": "mcp__gitea__list_branches", "type": "mcp", "description": "List branches" },
-      { "command": "mcp__gitea__get_branch", "type": "mcp", "description": "Get branch details" },
-      // MCP: File read
-      { "command": "mcp__gitea__get_file_content", "type": "mcp", "description": "Get file content" },
-      { "command": "mcp__gitea__get_dir_content", "type": "mcp", "description": "List directory entries" },
-      { "command": "mcp__gitea__list_repo_commits", "type": "mcp", "description": "List commits" },
-      // MCP: Issue read
-      { "command": "mcp__gitea__get_issue_by_index", "type": "mcp", "description": "Get issue by index" },
-      { "command": "mcp__gitea__list_repo_issues", "type": "mcp", "description": "List repository issues" },
-      { "command": "mcp__gitea__get_issue_comments_by_index", "type": "mcp", "description": "Get issue comments" },
-      // MCP: PR read
-      { "command": "mcp__gitea__get_pull_request_by_index", "type": "mcp", "description": "Get pull request by index" },
-      { "command": "mcp__gitea__list_repo_pull_requests", "type": "mcp", "description": "List pull requests" },
-      { "command": "mcp__gitea__list_pull_request_reviews", "type": "mcp", "description": "List PR reviews" },
-      { "command": "mcp__gitea__get_pull_request_review", "type": "mcp", "description": "Get PR review" },
-      { "command": "mcp__gitea__list_pull_request_review_comments", "type": "mcp", "description": "List PR review comments" },
-      // MCP: Release/Tag read
-      { "command": "mcp__gitea__get_release", "type": "mcp", "description": "Get release" },
-      { "command": "mcp__gitea__get_latest_release", "type": "mcp", "description": "Get latest release" },
-      { "command": "mcp__gitea__list_releases", "type": "mcp", "description": "List releases" },
-      { "command": "mcp__gitea__get_tag", "type": "mcp", "description": "Get tag" },
-      { "command": "mcp__gitea__list_tags", "type": "mcp", "description": "List tags" },
-      // MCP: Milestone read
-      { "command": "mcp__gitea__get_milestone", "type": "mcp", "description": "Get milestone" },
-      { "command": "mcp__gitea__list_milestones", "type": "mcp", "description": "List milestones" },
-      // MCP: Organization read
-      { "command": "mcp__gitea__search_org_teams", "type": "mcp", "description": "Search organization teams" },
-      { "command": "mcp__gitea__list_org_labels", "type": "mcp", "description": "List organization labels" },
-      // MCP: Wiki read
-      { "command": "mcp__gitea__list_wiki_pages", "type": "mcp", "description": "List wiki pages" },
-      { "command": "mcp__gitea__get_wiki_page", "type": "mcp", "description": "Get wiki page" },
-      { "command": "mcp__gitea__get_wiki_revisions", "type": "mcp", "description": "Get wiki revisions" },
-      // MCP: Actions read
-      { "command": "mcp__gitea__list_workflows", "type": "mcp", "description": "List workflows" },
-      { "command": "mcp__gitea__list_workflow_runs", "type": "mcp", "description": "List workflow runs" },
-      { "command": "mcp__gitea__get_workflow_run", "type": "mcp", "description": "Get workflow run" },
-      { "command": "mcp__gitea__list_workflow_jobs", "type": "mcp", "description": "List workflow jobs" },
-      { "command": "mcp__gitea__get_workflow_job_logs", "type": "mcp", "description": "Get workflow job logs" },
-      // MCP: Time tracking read
-      { "command": "mcp__gitea__list_tracked_times", "type": "mcp", "description": "List tracked times" },
-      { "command": "mcp__gitea__get_stopwatch", "type": "mcp", "description": "Get stopwatch status" }
+      { "command": "gitea-mcp --help", "description": "Gitea MCP help" }
     ],
     "standard": [
       // Tea CLI: issue create/edit
@@ -121,35 +68,7 @@
       // Tea CLI: comment
       { "command": "tea comment", "description": "Add comment" },
       // Tea CLI: clone
-      { "command": "tea clone", "description": "Clone repository" },
-      // MCP: Branch create
-      { "command": "mcp__gitea__create_branch", "type": "mcp", "description": "Create branch" },
-      // MCP: File create/update
-      { "command": "mcp__gitea__create_file", "type": "mcp", "description": "Create file" },
-      { "command": "mcp__gitea__update_file", "type": "mcp", "description": "Update file" },
-      // MCP: Issue create/edit
-      { "command": "mcp__gitea__create_issue", "type": "mcp", "description": "Create issue" },
-      { "command": "mcp__gitea__edit_issue", "type": "mcp", "description": "Edit issue" },
-      { "command": "mcp__gitea__create_issue_comment", "type": "mcp", "description": "Comment on issue" },
-      { "command": "mcp__gitea__edit_issue_comment", "type": "mcp", "description": "Edit issue comment" },
-      // MCP: PR create/edit
-      { "command": "mcp__gitea__create_pull_request", "type": "mcp", "description": "Create pull request" },
-      { "command": "mcp__gitea__create_pull_request_reviewer", "type": "mcp", "description": "Add PR reviewer" },
-      { "command": "mcp__gitea__create_pull_request_review", "type": "mcp", "description": "Create PR review" },
-      { "command": "mcp__gitea__submit_pull_request_review", "type": "mcp", "description": "Submit PR review" },
-      // MCP: Milestone create/edit
-      { "command": "mcp__gitea__create_milestone", "type": "mcp", "description": "Create milestone" },
-      { "command": "mcp__gitea__edit_milestone", "type": "mcp", "description": "Edit milestone" },
-      // MCP: Organization labels create/edit
-      { "command": "mcp__gitea__create_org_label", "type": "mcp", "description": "Create organization label" },
-      { "command": "mcp__gitea__edit_org_label", "type": "mcp", "description": "Edit organization label" },
-      // MCP: Wiki create/update
-      { "command": "mcp__gitea__create_wiki_page", "type": "mcp", "description": "Create wiki page" },
-      { "command": "mcp__gitea__update_wiki_page", "type": "mcp", "description": "Update wiki page" },
-      // MCP: Time tracking
-      { "command": "mcp__gitea__start_stopwatch", "type": "mcp", "description": "Start time tracking" },
-      { "command": "mcp__gitea__stop_stopwatch", "type": "mcp", "description": "Stop time tracking" },
-      { "command": "mcp__gitea__add_tracked_time", "type": "mcp", "description": "Add tracked time" }
+      { "command": "tea clone", "description": "Clone repository" }
     ],
     "permissive": [
       // Tea CLI: repo management
@@ -173,34 +92,7 @@
       { "command": "tea times delete", "description": "Delete tracked time" },
       { "command": "tea times reset", "description": "Reset tracked times" },
       // Tea CLI: notifications
-      { "command": "tea notifications read", "description": "Mark notifications as read" },
-      // MCP: Repo management
-      { "command": "mcp__gitea__create_repo", "type": "mcp", "description": "Create repository" },
-      { "command": "mcp__gitea__fork_repo", "type": "mcp", "description": "Fork repository" },
-      // MCP: Branch delete
-      { "command": "mcp__gitea__delete_branch", "type": "mcp", "description": "Delete branch" },
-      // MCP: File delete
-      { "command": "mcp__gitea__delete_file", "type": "mcp", "description": "Delete file" },
-      // MCP: PR management
-      { "command": "mcp__gitea__delete_pull_request_reviewer", "type": "mcp", "description": "Remove PR reviewer" },
-      { "command": "mcp__gitea__delete_pull_request_review", "type": "mcp", "description": "Delete PR review" },
-      { "command": "mcp__gitea__dismiss_pull_request_review", "type": "mcp", "description": "Dismiss PR review" },
-      // MCP: Release management
-      { "command": "mcp__gitea__create_release", "type": "mcp", "description": "Create release" },
-      { "command": "mcp__gitea__delete_release", "type": "mcp", "description": "Delete release" },
-      // MCP: Tag management
-      { "command": "mcp__gitea__create_tag", "type": "mcp", "description": "Create tag" },
-      { "command": "mcp__gitea__delete_tag", "type": "mcp", "description": "Delete tag" },
-      // MCP: Milestone delete
-      { "command": "mcp__gitea__delete_milestone", "type": "mcp", "description": "Delete milestone" },
-      // MCP: Organization label delete
-      { "command": "mcp__gitea__delete_org_label", "type": "mcp", "description": "Delete organization label" },
-      // MCP: Wiki delete
-      { "command": "mcp__gitea__delete_wiki_page", "type": "mcp", "description": "Delete wiki page" },
-      // MCP: Actions management
-      { "command": "mcp__gitea__trigger_workflow", "type": "mcp", "description": "Trigger workflow" },
-      // MCP: Time tracking delete
-      { "command": "mcp__gitea__delete_tracked_time", "type": "mcp", "description": "Delete tracked time" }
+      { "command": "tea notifications read", "description": "Mark notifications as read" }
     ]
   }
 }
