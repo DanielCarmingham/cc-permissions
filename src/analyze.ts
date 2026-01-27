@@ -282,8 +282,90 @@ interface DetectionResult {
 }
 
 /**
+ * Check file patterns and return first match.
+ */
+function checkFiles(dir: string, files: string[]): DetectionResult | null {
+  for (const pattern of files) {
+    const found = fileExists(dir, pattern);
+    if (found) {
+      return { type: "file", reason: found };
+    }
+  }
+  return null;
+}
+
+/**
+ * Check directory patterns and return first match.
+ */
+function checkDirectories(dir: string, directories: string[]): DetectionResult | null {
+  for (const pattern of directories) {
+    const found = directoryExists(dir, pattern);
+    if (found) {
+      return { type: "directory", reason: found };
+    }
+  }
+  return null;
+}
+
+/**
+ * Check content patterns and return first match.
+ */
+function checkContentPatterns(
+  dir: string,
+  contentPatterns: Array<{ file: string; contains: string }>
+): DetectionResult | null {
+  for (const { file, contains } of contentPatterns) {
+    if (fileContains(dir, file, contains)) {
+      return { type: "content", reason: `${file} contains "${contains}"` };
+    }
+  }
+  return null;
+}
+
+/**
+ * Check MCP servers and return first match.
+ */
+function checkMcpServers(mcpServers: string[]): DetectionResult | null {
+  const found = hasMcpServer(mcpServers);
+  if (found) {
+    const serverName = found.replace("MCP:", "");
+    return { type: "mcp", reason: serverName };
+  }
+  return null;
+}
+
+/**
+ * Check CLI commands and return first match.
+ */
+function checkCommands(commands: string[]): DetectionResult | null {
+  const found = hasCommand(commands);
+  if (found) {
+    const cmdName = found.replace("CLI:", "");
+    return { type: "file", reason: `${cmdName} installed` };
+  }
+  return null;
+}
+
+/**
+ * Check git remotes and return first match.
+ */
+function checkGitRemotes(dir: string, gitRemotes: string[]): DetectionResult | null {
+  const found = hasGitRemote(dir, gitRemotes);
+  if (found) {
+    const pattern = found.replace("remote:", "");
+    return { type: "remote", reason: pattern };
+  }
+  return null;
+}
+
+/**
  * Detect if a template should be recommended based on its detection rules.
  * Returns the detection type and reason if found, null otherwise.
+ *
+ * Logic:
+ * - If `requireAll` is true: AND mode - all specified criteria types must have at least one match
+ * - If `requireAll` is false/undefined: OR mode - first match wins (current behavior)
+ * - Within each criteria type (e.g., multiple files), still uses OR (any match works)
  */
 function detectTemplate(
   dir: string,
@@ -291,68 +373,85 @@ function detectTemplate(
 ): DetectionResult | null {
   if (!detection) return null;
 
-  // Check if always recommended
+  // Check if always recommended (bypasses requireAll)
   if (detection.always) {
     return { type: "always", reason: "always included" };
   }
 
-  // Check simple file patterns
+  // AND mode: all specified criteria types must match
+  if (detection.requireAll) {
+    const results: DetectionResult[] = [];
+
+    // Check each criterion type - if specified but not matched, fail immediately
+    if (detection.files) {
+      const result = checkFiles(dir, detection.files);
+      if (!result) return null;
+      results.push(result);
+    }
+
+    if (detection.directories) {
+      const result = checkDirectories(dir, detection.directories);
+      if (!result) return null;
+      results.push(result);
+    }
+
+    if (detection.contentPatterns) {
+      const result = checkContentPatterns(dir, detection.contentPatterns);
+      if (!result) return null;
+      results.push(result);
+    }
+
+    if (detection.mcpServers) {
+      const result = checkMcpServers(detection.mcpServers);
+      if (!result) return null;
+      results.push(result);
+    }
+
+    if (detection.commands) {
+      const result = checkCommands(detection.commands);
+      if (!result) return null;
+      results.push(result);
+    }
+
+    if (detection.gitRemotes) {
+      const result = checkGitRemotes(dir, detection.gitRemotes);
+      if (!result) return null;
+      results.push(result);
+    }
+
+    // All criteria matched - return the first result as the representative
+    return results.length > 0 ? results[0] : null;
+  }
+
+  // OR mode (default): first match wins
   if (detection.files) {
-    for (const pattern of detection.files) {
-      const found = fileExists(dir, pattern);
-      if (found) {
-        return { type: "file", reason: found };
-      }
-    }
+    const result = checkFiles(dir, detection.files);
+    if (result) return result;
   }
 
-  // Check directory patterns
   if (detection.directories) {
-    for (const pattern of detection.directories) {
-      const found = directoryExists(dir, pattern);
-      if (found) {
-        return { type: "directory", reason: found };
-      }
-    }
+    const result = checkDirectories(dir, detection.directories);
+    if (result) return result;
   }
 
-  // Check content patterns
   if (detection.contentPatterns) {
-    for (const { file, contains } of detection.contentPatterns) {
-      if (fileContains(dir, file, contains)) {
-        return { type: "content", reason: `${file} contains "${contains}"` };
-      }
-    }
+    const result = checkContentPatterns(dir, detection.contentPatterns);
+    if (result) return result;
   }
 
-  // Check MCP servers
   if (detection.mcpServers) {
-    const found = hasMcpServer(detection.mcpServers);
-    if (found) {
-      // Extract server name from "MCP:servername"
-      const serverName = found.replace("MCP:", "");
-      return { type: "mcp", reason: serverName };
-    }
+    const result = checkMcpServers(detection.mcpServers);
+    if (result) return result;
   }
 
-  // Check CLI commands
   if (detection.commands) {
-    const found = hasCommand(detection.commands);
-    if (found) {
-      // Extract command name from "CLI:command"
-      const cmdName = found.replace("CLI:", "");
-      return { type: "file", reason: `${cmdName} installed` };
-    }
+    const result = checkCommands(detection.commands);
+    if (result) return result;
   }
 
-  // Check git remotes
   if (detection.gitRemotes) {
-    const found = hasGitRemote(dir, detection.gitRemotes);
-    if (found) {
-      // Extract pattern from "remote:pattern"
-      const pattern = found.replace("remote:", "");
-      return { type: "remote", reason: pattern };
-    }
+    const result = checkGitRemotes(dir, detection.gitRemotes);
+    if (result) return result;
   }
 
   return null;
@@ -542,3 +641,8 @@ export function formatAnalysisResult(result: AnalysisResult): string {
 
   return lines.join("\n");
 }
+
+// Export for testing (prefixed with _ to indicate internal use)
+export const _testing = {
+  detectTemplate,
+};

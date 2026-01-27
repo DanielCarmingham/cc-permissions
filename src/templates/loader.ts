@@ -212,6 +212,15 @@ function validateDetection(
     result.always = d.always;
   }
 
+  if (d.requireAll !== undefined) {
+    if (typeof d.requireAll !== "boolean") {
+      throw new Error(
+        `Template "${templateName}": detection.requireAll must be a boolean`
+      );
+    }
+    result.requireAll = d.requireAll;
+  }
+
   return result;
 }
 

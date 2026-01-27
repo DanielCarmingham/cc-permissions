@@ -70,6 +70,10 @@
         "always": {
           "type": "boolean",
           "description": "If true, this template is always recommended (e.g., shell baseline)"
+        },
+        "requireAll": {
+          "type": "boolean",
+          "description": "If true, ALL specified criteria must match (AND logic). Default is false (OR logic)."
         }
       }
     },

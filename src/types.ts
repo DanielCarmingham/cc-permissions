@@ -40,6 +40,8 @@ export interface DetectionRules {
   gitRemotes?: string[];
   // If true, this template is always recommended (e.g., shell baseline)
   always?: boolean;
+  // If true, ALL specified criteria must match (AND logic). Default is false (OR logic).
+  requireAll?: boolean;
 }
 
 // Template definition - defines WHAT commands are relevant at each level

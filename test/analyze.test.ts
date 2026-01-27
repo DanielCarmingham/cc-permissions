@@ -4,8 +4,9 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { analyzeDirectory, formatAnalysisResult } from "../src/analyze.js";
+import { analyzeDirectory, formatAnalysisResult, _testing } from "../src/analyze.js";
 import { PermissionLevel } from "../src/types.js";
+import type { DetectionRules } from "../src/types.js";
 
 // Helper to create temp directory
 function createTempDir(): string {
@@ -591,5 +592,266 @@ describe("formatAnalysisResult", () => {
 
     assert.ok(formatted.includes("Apply Permissions:"));
     assert.ok(formatted.includes("cc-permissions apply --level restrictive"));
+  });
+});
+
+describe("detectTemplate - requireAll (AND logic)", () => {
+  let tempDir: string;
+
+  beforeEach(() => {
+    tempDir = createTempDir();
+  });
+
+  afterEach(() => {
+    try {
+      rmSync(tempDir, { recursive: true, force: true });
+    } catch {
+      // Ignore cleanup errors
+    }
+  });
+
+  describe("OR mode (default)", () => {
+    it("should detect when only files match (OR logic)", () => {
+      fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+
+      const detection: DetectionRules = {
+        files: ["package.json"],
+        directories: [".nonexistent/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.notEqual(result, null);
+      assert.equal(result?.type, "file");
+    });
+
+    it("should detect when only directories match (OR logic)", () => {
+      fs.mkdirSync(path.join(tempDir, ".mydir"));
+
+      const detection: DetectionRules = {
+        files: ["nonexistent.json"],
+        directories: [".mydir/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.notEqual(result, null);
+      assert.equal(result?.type, "directory");
+    });
+
+    it("should return first match in OR mode", () => {
+      fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+      fs.mkdirSync(path.join(tempDir, ".github"));
+
+      const detection: DetectionRules = {
+        files: ["package.json"],
+        directories: [".github/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      // Files are checked first, so file should be returned
+      assert.notEqual(result, null);
+      assert.equal(result?.type, "file");
+    });
+  });
+
+  describe("AND mode (requireAll: true)", () => {
+    it("should detect when ALL criteria match", () => {
+      fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+      fs.mkdirSync(path.join(tempDir, ".github"));
+
+      const detection: DetectionRules = {
+        requireAll: true,
+        files: ["package.json"],
+        directories: [".github/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.notEqual(result, null);
+      // Returns first matching result (file in this case)
+      assert.equal(result?.type, "file");
+    });
+
+    it("should NOT detect when files criteria missing", () => {
+      fs.mkdirSync(path.join(tempDir, ".github"));
+
+      const detection: DetectionRules = {
+        requireAll: true,
+        files: ["package.json"],
+        directories: [".github/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.equal(result, null);
+    });
+
+    it("should NOT detect when directories criteria missing", () => {
+      fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+
+      const detection: DetectionRules = {
+        requireAll: true,
+        files: ["package.json"],
+        directories: [".github/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.equal(result, null);
+    });
+
+    it("should detect with single criteria type in AND mode", () => {
+      fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+
+      const detection: DetectionRules = {
+        requireAll: true,
+        files: ["package.json"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.notEqual(result, null);
+      assert.equal(result?.type, "file");
+    });
+
+    it("should use OR logic within a criteria type (multiple files)", () => {
+      // Only one of the files exists
+      fs.writeFileSync(path.join(tempDir, "yarn.lock"), "");
+      fs.mkdirSync(path.join(tempDir, ".config"));
+
+      const detection: DetectionRules = {
+        requireAll: true,
+        files: ["package.json", "yarn.lock"], // Either file works
+        directories: [".config/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.notEqual(result, null);
+      assert.equal(result?.type, "file");
+    });
+
+    it("should return null when no criteria match", () => {
+      const detection: DetectionRules = {
+        requireAll: true,
+        files: ["nonexistent.json"],
+        directories: [".nonexistent/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.equal(result, null);
+    });
+
+    it("should work with content patterns in AND mode", () => {
+      fs.writeFileSync(
+        path.join(tempDir, "pubspec.yaml"),
+        "name: test\nflutter:\n  sdk: flutter"
+      );
+      fs.mkdirSync(path.join(tempDir, "lib"));
+
+      const detection: DetectionRules = {
+        requireAll: true,
+        contentPatterns: [{ file: "pubspec.yaml", contains: "flutter:" }],
+        directories: ["lib/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      // Both criteria must match for detection to succeed
+      assert.notEqual(result, null);
+      // The returned type is the first criteria type checked (directories before content)
+      assert.ok(result?.type === "directory" || result?.type === "content");
+    });
+
+    it("should fail AND mode when content pattern missing", () => {
+      fs.writeFileSync(path.join(tempDir, "pubspec.yaml"), "name: test");
+      fs.mkdirSync(path.join(tempDir, "lib"));
+
+      const detection: DetectionRules = {
+        requireAll: true,
+        contentPatterns: [{ file: "pubspec.yaml", contains: "flutter:" }],
+        directories: ["lib/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.equal(result, null);
+    });
+  });
+
+  describe("always flag behavior", () => {
+    it("should always match when always is true, regardless of requireAll", () => {
+      const detection: DetectionRules = {
+        requireAll: true,
+        always: true,
+        files: ["nonexistent.json"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.notEqual(result, null);
+      assert.equal(result?.type, "always");
+      assert.equal(result?.reason, "always included");
+    });
+  });
+
+  describe("empty detection rules", () => {
+    it("should return null for undefined detection", () => {
+      const result = _testing.detectTemplate(tempDir, undefined);
+      assert.equal(result, null);
+    });
+
+    it("should return null for empty detection with requireAll", () => {
+      const detection: DetectionRules = {
+        requireAll: true,
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.equal(result, null);
+    });
+
+    it("should return null for empty detection without requireAll", () => {
+      const detection: DetectionRules = {};
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.equal(result, null);
+    });
+  });
+
+  describe("backward compatibility", () => {
+    it("should maintain OR logic when requireAll is false", () => {
+      fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+
+      const detection: DetectionRules = {
+        requireAll: false,
+        files: ["package.json"],
+        directories: [".nonexistent/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      assert.notEqual(result, null);
+      assert.equal(result?.type, "file");
+    });
+
+    it("should default to OR logic when requireAll is not specified", () => {
+      fs.mkdirSync(path.join(tempDir, ".mydir"));
+
+      const detection: DetectionRules = {
+        files: ["nonexistent.json"],
+        directories: [".mydir/"],
+      };
+
+      const result = _testing.detectTemplate(tempDir, detection);
+
+      // Should match on directory since files don't exist
+      assert.notEqual(result, null);
+      assert.equal(result?.type, "directory");
+    });
   });
 });
