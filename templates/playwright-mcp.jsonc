@@ -1,0 +1,82 @@
+{
+  "$schema": "template.schema.json",
+  "name": "playwright-mcp",
+  "description": "Playwright MCP Server tools for browser automation",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["playwright"]
+  },
+  "levels": {
+    "restrictive": [
+      // Page inspection (read-only)
+      { "command": "mcp__playwright__browser_snapshot", "type": "mcp", "description": "Capture accessibility snapshot of page" },
+      { "command": "mcp__playwright__browser_take_screenshot", "type": "mcp", "description": "Take screenshot of page" },
+      { "command": "mcp__playwright__browser_console_messages", "type": "mcp", "description": "Get console messages" },
+      { "command": "mcp__playwright__browser_network_requests", "type": "mcp", "description": "Get network requests" },
+
+      // Tab listing (read-only)
+      { "command": "mcp__playwright__browser_tabs", "type": "mcp", "description": "List/create/close/select tabs" },
+
+      // Test assertions (read-only verification)
+      { "command": "mcp__playwright__browser_verify_element_visible", "type": "mcp", "description": "Verify element is visible" },
+      { "command": "mcp__playwright__browser_verify_list_visible", "type": "mcp", "description": "Verify list is visible" },
+      { "command": "mcp__playwright__browser_verify_text_visible", "type": "mcp", "description": "Verify text is visible" },
+      { "command": "mcp__playwright__browser_verify_value", "type": "mcp", "description": "Verify element value" }
+    ],
+    "standard": [
+      // Navigation
+      { "command": "mcp__playwright__browser_navigate", "type": "mcp", "description": "Navigate to URL" },
+      { "command": "mcp__playwright__browser_navigate_back", "type": "mcp", "description": "Go back in history" },
+
+      // User interaction - clicking
+      { "command": "mcp__playwright__browser_click", "type": "mcp", "description": "Click on element" },
+      { "command": "mcp__playwright__browser_hover", "type": "mcp", "description": "Hover over element" },
+      { "command": "mcp__playwright__browser_drag", "type": "mcp", "description": "Drag and drop between elements" },
+
+      // User interaction - typing
+      { "command": "mcp__playwright__browser_type", "type": "mcp", "description": "Type text into element" },
+      { "command": "mcp__playwright__browser_fill_form", "type": "mcp", "description": "Fill multiple form fields" },
+      { "command": "mcp__playwright__browser_select_option", "type": "mcp", "description": "Select dropdown option" },
+      { "command": "mcp__playwright__browser_press_key", "type": "mcp", "description": "Press keyboard key" },
+
+      // Dialog handling
+      { "command": "mcp__playwright__browser_handle_dialog", "type": "mcp", "description": "Handle browser dialog" },
+
+      // Waiting
+      { "command": "mcp__playwright__browser_wait_for", "type": "mcp", "description": "Wait for condition" },
+
+      // Viewport
+      { "command": "mcp__playwright__browser_resize", "type": "mcp", "description": "Resize browser viewport" },
+
+      // JavaScript execution
+      { "command": "mcp__playwright__browser_evaluate", "type": "mcp", "description": "Execute JavaScript on page" },
+      { "command": "mcp__playwright__browser_run_code", "type": "mcp", "description": "Run Playwright code snippet" },
+
+      // Mouse coordinate tools
+      { "command": "mcp__playwright__browser_mouse_click_xy", "type": "mcp", "description": "Click at coordinates" },
+      { "command": "mcp__playwright__browser_mouse_down", "type": "mcp", "description": "Mouse button down" },
+      { "command": "mcp__playwright__browser_mouse_up", "type": "mcp", "description": "Mouse button up" },
+      { "command": "mcp__playwright__browser_mouse_move_xy", "type": "mcp", "description": "Move mouse to coordinates" },
+      { "command": "mcp__playwright__browser_mouse_drag_xy", "type": "mcp", "description": "Drag mouse to coordinates" },
+      { "command": "mcp__playwright__browser_mouse_wheel", "type": "mcp", "description": "Scroll mouse wheel" },
+
+      // Test generation
+      { "command": "mcp__playwright__browser_generate_locator", "type": "mcp", "description": "Generate test locator" },
+
+      // Tracing
+      { "command": "mcp__playwright__browser_start_tracing", "type": "mcp", "description": "Start trace recording" },
+      { "command": "mcp__playwright__browser_stop_tracing", "type": "mcp", "description": "Stop trace recording" }
+    ],
+    "permissive": [
+      // Browser installation
+      { "command": "mcp__playwright__browser_install", "type": "mcp", "description": "Install browser" },
+
+      // File operations
+      { "command": "mcp__playwright__browser_file_upload", "type": "mcp", "description": "Upload files" },
+      { "command": "mcp__playwright__browser_pdf_save", "type": "mcp", "description": "Save page as PDF" },
+
+      // Browser/tab management
+      { "command": "mcp__playwright__browser_close", "type": "mcp", "description": "Close browser page" }
+    ]
+  }
+}
