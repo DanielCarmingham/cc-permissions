@@ -49,3 +49,7 @@ Start from pre-built templates for common setups (web development, data science,
 ## Development Notes
 
 - After updating templates in `templates/*.jsonc`, regenerate docs: `node scripts/generate-template-docs.js`
+- When adding, removing, or renaming templates, also update `README.md`:
+  - Add/remove the template in its technology category section (e.g., Database, Cloud Providers)
+  - If it's an MCP template, also add/remove it in the dedicated "MCP Servers" section
+  - Keep entries sorted alphabetically within each section
