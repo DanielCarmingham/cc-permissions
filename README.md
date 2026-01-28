@@ -153,8 +153,14 @@ cc-permissions apply nodejs --level permissive
 
 | Template | Description |
 |----------|-------------|
+| [aws-mcp](docs/templates/aws-mcp.md) | AWS MCP Server tools for cloud infrastructure and serverless development |
+| [docker-mcp](docs/templates/docker-mcp.md) | Docker MCP Server tools for container management |
+| [gitea-mcp](docs/templates/gitea-mcp.md) | Gitea MCP Server tools for repository and workflow management |
 | [github-mcp](docs/templates/github-mcp.md) | GitHub MCP Server tools for repository and workflow management |
-| [gitea](docs/templates/gitea.md) | Gitea MCP Server tools (also includes CLI commands) |
+| [gitlab-mcp](docs/templates/gitlab-mcp.md) | GitLab MCP Server tools for repository and workflow management |
+| [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
+| [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
+| [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
 
 ### Utilities
 
