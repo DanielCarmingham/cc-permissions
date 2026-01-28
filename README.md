@@ -95,9 +95,12 @@ cc-permissions apply nodejs --level permissive
 | Template | Description |
 |----------|-------------|
 | [git](docs/templates/git.md) | Git version control |
-| [gitea](docs/templates/gitea.md) | Gitea CLI (tea) and MCP server for repository and workflow management |
+| [gitea](docs/templates/gitea.md) | Gitea CLI (tea) for repository and workflow management |
+| [gitea-mcp](docs/templates/gitea-mcp.md) | Gitea MCP Server tools for repository and workflow management |
 | [github](docs/templates/github.md) | GitHub CLI (gh) for repository and workflow management |
-| [gitlab](docs/templates/gitlab.md) | GitLab CLI (glab) and MCP server for repository and workflow management |
+| [github-mcp](docs/templates/github-mcp.md) | GitHub MCP Server tools for repository and workflow management |
+| [gitlab](docs/templates/gitlab.md) | GitLab CLI (glab) for repository and workflow management |
+| [gitlab-mcp](docs/templates/gitlab-mcp.md) | GitLab MCP Server tools for repository and workflow management |
 
 ### Languages & Runtimes
 
@@ -124,6 +127,7 @@ cc-permissions apply nodejs --level permissive
 | Template | Description |
 |----------|-------------|
 | [aws](docs/templates/aws.md) | AWS CLI, SAM, CDK, Amplify, and Elastic Beanstalk |
+| [aws-mcp](docs/templates/aws-mcp.md) | AWS MCP Server tools for cloud infrastructure and serverless development |
 | [azure](docs/templates/azure.md) | Azure CLI, Functions, Bicep, and Azure Developer CLI |
 | [gcp](docs/templates/gcp.md) | Google Cloud CLI, gsutil, Firebase, and BigQuery |
 
@@ -132,14 +136,24 @@ cc-permissions apply nodejs --level permissive
 | Template | Description |
 |----------|-------------|
 | [docker](docs/templates/docker.md) | Docker, Docker Compose, and Buildx |
+| [docker-mcp](docs/templates/docker-mcp.md) | Docker MCP Server tools for container management |
 | [kubernetes](docs/templates/kubernetes.md) | kubectl, Helm, k9s, and Minikube |
 | [terraform](docs/templates/terraform.md) | Terraform, Terragrunt, and tflint |
+
+### Database
+
+| Template | Description |
+|----------|-------------|
+| [database](docs/templates/database.md) | PostgreSQL, MySQL, MongoDB, and Redis CLI tools |
+| [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
+| [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
 
 ### Testing
 
 | Template | Description |
 |----------|-------------|
 | [playwright](docs/templates/playwright.md) | Playwright testing framework |
+| [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
 
 ### Mobile Development
 
@@ -151,6 +165,8 @@ cc-permissions apply nodejs --level permissive
 
 ### MCP Servers
 
+All MCP server templates in one place. These are also listed alongside their CLI counterparts above.
+
 | Template | Description |
 |----------|-------------|
 | [aws-mcp](docs/templates/aws-mcp.md) | AWS MCP Server tools for cloud infrastructure and serverless development |
@@ -161,12 +177,6 @@ cc-permissions apply nodejs --level permissive
 | [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
 | [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
 | [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
-
-### Utilities
-
-| Template | Description |
-|----------|-------------|
-| [database](docs/templates/database.md) | PostgreSQL, MySQL, MongoDB, and Redis CLI tools |
 
 Click any template to see the full list of commands at each level.
 
