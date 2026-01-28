@@ -1,0 +1,21 @@
+{
+  "$schema": "template.schema.json",
+  "name": "sqlite",
+  "description": "SQLite CLI tools (sqlite3)",
+  "category": "Database",
+  "detection": {
+    "files": ["*.sqlite", "*.db"]
+  },
+  "levels": {
+    "restrictive": [
+      // Version
+      { "command": "sqlite3 --version", "description": "Check SQLite version" },
+      { "command": "sqlite3 -version", "description": "Check SQLite version" }
+    ],
+    "standard": [
+      // CLI usage
+      { "command": "sqlite3", "description": "SQLite CLI" }
+    ],
+    "permissive": []
+  }
+}

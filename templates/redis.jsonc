@@ -1,0 +1,47 @@
+{
+  "$schema": "template.schema.json",
+  "name": "redis",
+  "description": "Redis CLI tools (redis-cli)",
+  "category": "Database",
+  "detection": {
+    "files": ["redis.conf"]
+  },
+  "levels": {
+    "restrictive": [
+      // Version and connectivity
+      { "command": "redis-cli --version", "description": "Check redis-cli version" },
+      { "command": "redis-cli -v", "description": "Check redis-cli version" },
+      { "command": "redis-cli ping", "description": "Ping Redis server" },
+      { "command": "redis-cli info", "description": "Get Redis info" }
+    ],
+    "standard": [
+      // Read operations
+      { "command": "redis-cli GET", "description": "Redis GET key" },
+      { "command": "redis-cli KEYS", "description": "Redis list keys" },
+      { "command": "redis-cli SCAN", "description": "Redis scan keys" },
+      { "command": "redis-cli TYPE", "description": "Redis get key type" },
+      { "command": "redis-cli TTL", "description": "Redis get TTL" },
+      { "command": "redis-cli EXISTS", "description": "Redis check key exists" },
+      { "command": "redis-cli HGETALL", "description": "Redis get hash" },
+      { "command": "redis-cli LRANGE", "description": "Redis get list range" },
+      { "command": "redis-cli SMEMBERS", "description": "Redis get set members" },
+      { "command": "redis-cli ZRANGE", "description": "Redis get sorted set range" },
+      { "command": "redis-cli DBSIZE", "description": "Redis get database size" }
+    ],
+    "permissive": [
+      // Write operations
+      { "command": "redis-cli SET", "description": "Redis SET key" },
+      { "command": "redis-cli DEL", "description": "Redis DELETE key" },
+      { "command": "redis-cli HSET", "description": "Redis set hash field" },
+      { "command": "redis-cli HDEL", "description": "Redis delete hash field" },
+      { "command": "redis-cli LPUSH", "description": "Redis push to list" },
+      { "command": "redis-cli RPUSH", "description": "Redis push to list" },
+      { "command": "redis-cli SADD", "description": "Redis add to set" },
+      { "command": "redis-cli SREM", "description": "Redis remove from set" },
+      { "command": "redis-cli ZADD", "description": "Redis add to sorted set" },
+      { "command": "redis-cli ZREM", "description": "Redis remove from sorted set" },
+      { "command": "redis-cli FLUSHDB", "description": "Redis flush database" },
+      { "command": "redis-cli FLUSHALL", "description": "Redis flush all databases" }
+    ]
+  }
+}

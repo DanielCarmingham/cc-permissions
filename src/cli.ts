@@ -413,7 +413,7 @@ function handleList(args: string[]): void {
     "Testing",
     "Mobile Development",
     "MCP Servers",
-    "Utilities",
+    "Database",
     "Other",
   ];
 

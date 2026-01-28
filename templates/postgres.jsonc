@@ -1,0 +1,55 @@
+{
+  "$schema": "template.schema.json",
+  "name": "postgres",
+  "description": "PostgreSQL CLI tools (psql, pg_dump, pg_restore)",
+  "category": "Database",
+  "detection": {
+    "files": [".pgpass", "schema.prisma", "drizzle.config.ts", "drizzle.config.js", "knexfile.js", "knexfile.ts"],
+    "directories": ["prisma", "drizzle", "migrations"]
+  },
+  "levels": {
+    "restrictive": [
+      // Version and connectivity
+      { "command": "psql --version", "description": "Check psql version" },
+      { "command": "psql -V", "description": "Check psql version" },
+      { "command": "pg_config --version", "description": "Check PostgreSQL config" },
+      { "command": "pg_isready", "description": "Check PostgreSQL connection" }
+    ],
+    "standard": [
+      // Read queries
+      { "command": "psql -c \"SELECT", "description": "Run PostgreSQL SELECT query" },
+      { "command": "psql -c 'SELECT", "description": "Run PostgreSQL SELECT query" },
+      { "command": "psql -c \"\\d", "description": "PostgreSQL describe" },
+      { "command": "psql -c '\\d", "description": "PostgreSQL describe" },
+      { "command": "psql -c \"\\dt", "description": "List PostgreSQL tables" },
+      { "command": "psql -c '\\dt", "description": "List PostgreSQL tables" },
+      { "command": "psql -c \"\\l", "description": "List PostgreSQL databases" },
+      { "command": "psql -c '\\l", "description": "List PostgreSQL databases" },
+      { "command": "psql -c \"EXPLAIN", "description": "Explain PostgreSQL query" },
+      { "command": "psql -c 'EXPLAIN", "description": "Explain PostgreSQL query" },
+      { "command": "pg_dump --schema-only", "description": "Dump PostgreSQL schema" }
+    ],
+    "permissive": [
+      // Write queries
+      { "command": "psql -c \"INSERT", "description": "PostgreSQL INSERT" },
+      { "command": "psql -c 'INSERT", "description": "PostgreSQL INSERT" },
+      { "command": "psql -c \"UPDATE", "description": "PostgreSQL UPDATE" },
+      { "command": "psql -c 'UPDATE", "description": "PostgreSQL UPDATE" },
+      { "command": "psql -c \"DELETE", "description": "PostgreSQL DELETE" },
+      { "command": "psql -c 'DELETE", "description": "PostgreSQL DELETE" },
+      { "command": "psql -c \"CREATE", "description": "PostgreSQL CREATE" },
+      { "command": "psql -c 'CREATE", "description": "PostgreSQL CREATE" },
+      { "command": "psql -c \"DROP", "description": "PostgreSQL DROP" },
+      { "command": "psql -c 'DROP", "description": "PostgreSQL DROP" },
+      { "command": "psql -c \"ALTER", "description": "PostgreSQL ALTER" },
+      { "command": "psql -c 'ALTER", "description": "PostgreSQL ALTER" },
+      { "command": "psql -c \"TRUNCATE", "description": "PostgreSQL TRUNCATE" },
+      { "command": "psql -c 'TRUNCATE", "description": "PostgreSQL TRUNCATE" },
+      { "command": "psql -f", "description": "Run PostgreSQL script" },
+      { "command": "pg_dump", "description": "Dump PostgreSQL database" },
+      { "command": "pg_restore", "description": "Restore PostgreSQL database" },
+      { "command": "createdb", "description": "Create PostgreSQL database" },
+      { "command": "dropdb", "description": "Drop PostgreSQL database" }
+    ]
+  }
+}

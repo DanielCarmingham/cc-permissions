@@ -144,8 +144,12 @@ cc-permissions apply nodejs --level permissive
 
 | Template | Description |
 |----------|-------------|
-| [database](docs/templates/database.md) | PostgreSQL, MySQL, MongoDB, and Redis CLI tools |
+| [mongodb](docs/templates/mongodb.md) | MongoDB CLI tools (mongosh, mongodump, mongorestore) |
+| [mysql](docs/templates/mysql.md) | MySQL CLI tools (mysql, mysqldump, mysqladmin) |
+| [postgres](docs/templates/postgres.md) | PostgreSQL CLI tools (psql, pg_dump, pg_restore) |
 | [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
+| [redis](docs/templates/redis.md) | Redis CLI tools (redis-cli) |
+| [sqlite](docs/templates/sqlite.md) | SQLite CLI tools (sqlite3) |
 | [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
 
 ### Testing

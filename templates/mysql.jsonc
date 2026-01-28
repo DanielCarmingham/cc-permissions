@@ -1,0 +1,52 @@
+{
+  "$schema": "template.schema.json",
+  "name": "mysql",
+  "description": "MySQL CLI tools (mysql, mysqldump, mysqladmin)",
+  "category": "Database",
+  "detection": {
+    "files": ["my.cnf", ".my.cnf", "schema.prisma", "drizzle.config.ts", "drizzle.config.js", "knexfile.js", "knexfile.ts"],
+    "directories": ["prisma", "drizzle", "migrations"]
+  },
+  "levels": {
+    "restrictive": [
+      // Version and connectivity
+      { "command": "mysql --version", "description": "Check MySQL version" },
+      { "command": "mysql -V", "description": "Check MySQL version" },
+      { "command": "mysqladmin version", "description": "Check MySQL admin version" },
+      { "command": "mysqladmin ping", "description": "Ping MySQL server" },
+      { "command": "mysqladmin status", "description": "Check MySQL status" }
+    ],
+    "standard": [
+      // Read queries
+      { "command": "mysql -e \"SELECT", "description": "Run MySQL SELECT query" },
+      { "command": "mysql -e 'SELECT", "description": "Run MySQL SELECT query" },
+      { "command": "mysql -e \"SHOW", "description": "MySQL SHOW command" },
+      { "command": "mysql -e 'SHOW", "description": "MySQL SHOW command" },
+      { "command": "mysql -e \"DESCRIBE", "description": "MySQL DESCRIBE" },
+      { "command": "mysql -e 'DESCRIBE", "description": "MySQL DESCRIBE" },
+      { "command": "mysql -e \"EXPLAIN", "description": "Explain MySQL query" },
+      { "command": "mysql -e 'EXPLAIN", "description": "Explain MySQL query" },
+      { "command": "mysqldump --no-data", "description": "Dump MySQL schema only" }
+    ],
+    "permissive": [
+      // Write queries
+      { "command": "mysql -e \"INSERT", "description": "MySQL INSERT" },
+      { "command": "mysql -e 'INSERT", "description": "MySQL INSERT" },
+      { "command": "mysql -e \"UPDATE", "description": "MySQL UPDATE" },
+      { "command": "mysql -e 'UPDATE", "description": "MySQL UPDATE" },
+      { "command": "mysql -e \"DELETE", "description": "MySQL DELETE" },
+      { "command": "mysql -e 'DELETE", "description": "MySQL DELETE" },
+      { "command": "mysql -e \"CREATE", "description": "MySQL CREATE" },
+      { "command": "mysql -e 'CREATE", "description": "MySQL CREATE" },
+      { "command": "mysql -e \"DROP", "description": "MySQL DROP" },
+      { "command": "mysql -e 'DROP", "description": "MySQL DROP" },
+      { "command": "mysql -e \"ALTER", "description": "MySQL ALTER" },
+      { "command": "mysql -e 'ALTER", "description": "MySQL ALTER" },
+      { "command": "mysql -e \"TRUNCATE", "description": "MySQL TRUNCATE" },
+      { "command": "mysql -e 'TRUNCATE", "description": "MySQL TRUNCATE" },
+      { "command": "mysqldump", "description": "Dump MySQL database" },
+      { "command": "mysqladmin create", "description": "Create MySQL database" },
+      { "command": "mysqladmin drop", "description": "Drop MySQL database" }
+    ]
+  }
+}

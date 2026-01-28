@@ -1,0 +1,30 @@
+{
+  "$schema": "template.schema.json",
+  "name": "mongodb",
+  "description": "MongoDB CLI tools (mongosh, mongodump, mongorestore)",
+  "category": "Database",
+  "detection": {
+    "files": ["mongod.conf"]
+  },
+  "levels": {
+    "restrictive": [
+      // Version
+      { "command": "mongosh --version", "description": "Check mongosh version" },
+      { "command": "mongo --version", "description": "Check mongo version" }
+    ],
+    "standard": [
+      // Read operations
+      { "command": "mongosh --eval \"db.getCollectionNames()\"", "description": "List MongoDB collections" },
+      { "command": "mongosh --eval 'db.getCollectionNames()'", "description": "List MongoDB collections" },
+      { "command": "mongosh --eval \"db.stats()\"", "description": "MongoDB database stats" },
+      { "command": "mongosh --eval 'db.stats()'", "description": "MongoDB database stats" }
+    ],
+    "permissive": [
+      // Write operations
+      { "command": "mongosh --eval \"db.", "description": "MongoDB write operations" },
+      { "command": "mongosh --eval 'db.", "description": "MongoDB write operations" },
+      { "command": "mongodump", "description": "Dump MongoDB database" },
+      { "command": "mongorestore", "description": "Restore MongoDB database" }
+    ]
+  }
+}
