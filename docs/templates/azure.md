@@ -19,8 +19,21 @@ Read-only operations safe for exploration and code review.
 | `az resource list` | List resources |
 | `az resource show` | Show resource details |
 | `az storage account list` | List storage accounts |
+| `az storage account show` | Show storage account details |
 | `az storage blob list` | List blobs |
+| `az storage blob show` | Show blob properties |
 | `az storage container list` | List containers |
+| `az storage container show` | Show container properties |
+| `az storage table list` | List storage tables |
+| `az storage queue list` | List storage queues |
+| `az storage share list` | List file shares |
+| `az sql server list` | List SQL servers |
+| `az sql server show` | Show SQL server details |
+| `az sql db list` | List SQL databases |
+| `az sql db show` | Show SQL database details |
+| `az sql elastic-pool list` | List elastic pools |
+| `az sql elastic-pool show` | Show elastic pool details |
+| `az sql server firewall-rule list` | List SQL firewall rules |
 | `az webapp list` | List web apps |
 | `az webapp show` | Show web app details |
 | `az functionapp list` | List function apps |
@@ -55,6 +68,9 @@ Day-to-day development commands. Includes all restrictive commands plus:
 | `azd build` | Build application |
 | `az storage blob download` | Download blob |
 | `az storage blob download-batch` | Download blobs batch |
+| `az sql db audit-policy show` | Show SQL audit policy |
+| `az sql db tde show` | Show SQL TDE status |
+| `az sql db list-editions` | List SQL database editions |
 | `az webapp log tail` | Tail webapp logs |
 | `az functionapp log tail` | Tail function logs |
 | `az monitor log-analytics query` | Query logs |
@@ -80,11 +96,28 @@ Broader access for trusted projects. Includes all standard commands plus:
 | `azd deploy` | Deploy with azd |
 | `azd provision` | Provision Azure resources |
 | `azd down` | Delete azd resources |
+| `az storage account create` | Create storage account |
+| `az storage account delete` | Delete storage account |
 | `az storage blob upload` | Upload blob |
 | `az storage blob upload-batch` | Upload blobs batch |
 | `az storage blob delete` | Delete blob |
-| `az storage container create` | Create container |
-| `az storage container delete` | Delete container |
+| `az storage container create` | Create storage container |
+| `az storage container delete` | Delete storage container |
+| `az storage share create` | Create file share |
+| `az storage share delete` | Delete file share |
+| `az storage table create` | Create storage table |
+| `az storage table delete` | Delete storage table |
+| `az storage queue create` | Create storage queue |
+| `az storage queue delete` | Delete storage queue |
+| `az sql server create` | Create SQL server |
+| `az sql server delete` | Delete SQL server |
+| `az sql db create` | Create SQL database |
+| `az sql db delete` | Delete SQL database |
+| `az sql db update` | Update SQL database |
+| `az sql elastic-pool create` | Create elastic pool |
+| `az sql elastic-pool delete` | Delete elastic pool |
+| `az sql server firewall-rule create` | Create SQL firewall rule |
+| `az sql server firewall-rule delete` | Delete SQL firewall rule |
 | `az group delete` | Delete resource group |
 | `az acr build` | Build with ACR |
 | `az acr login` | Login to ACR |

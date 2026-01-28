@@ -1,0 +1,49 @@
+{
+  "$schema": "template.schema.json",
+  "name": "azure-sql",
+  "description": "Azure SQL Database CLI tools (az sql)",
+  "category": "Database",
+  "detection": {
+    "files": ["*.bicep", "azure.yaml"]
+  },
+  "levels": {
+    "restrictive": [
+      // Server info
+      { "command": "az sql server list", "description": "List SQL servers" },
+      { "command": "az sql server show", "description": "Show SQL server details" },
+      { "command": "az sql server firewall-rule list", "description": "List SQL firewall rules" },
+
+      // Database info
+      { "command": "az sql db list", "description": "List SQL databases" },
+      { "command": "az sql db show", "description": "Show SQL database details" },
+      { "command": "az sql db list-editions", "description": "List SQL database editions" },
+      { "command": "az sql db audit-policy show", "description": "Show SQL audit policy" },
+      { "command": "az sql db tde show", "description": "Show SQL TDE status" },
+
+      // Elastic pools
+      { "command": "az sql elastic-pool list", "description": "List elastic pools" },
+      { "command": "az sql elastic-pool show", "description": "Show elastic pool details" }
+    ],
+    "standard": [
+      // Firewall rules (needed for connectivity)
+      { "command": "az sql server firewall-rule create", "description": "Create SQL firewall rule" },
+      { "command": "az sql server firewall-rule delete", "description": "Delete SQL firewall rule" },
+
+      // Database updates
+      { "command": "az sql db update", "description": "Update SQL database" }
+    ],
+    "permissive": [
+      // Server management
+      { "command": "az sql server create", "description": "Create SQL server" },
+      { "command": "az sql server delete", "description": "Delete SQL server" },
+
+      // Database management
+      { "command": "az sql db create", "description": "Create SQL database" },
+      { "command": "az sql db delete", "description": "Delete SQL database" },
+
+      // Elastic pool management
+      { "command": "az sql elastic-pool create", "description": "Create elastic pool" },
+      { "command": "az sql elastic-pool delete", "description": "Delete elastic pool" }
+    ]
+  }
+}

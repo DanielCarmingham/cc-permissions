@@ -1,0 +1,62 @@
+{
+  "$schema": "template.schema.json",
+  "name": "azure-storage",
+  "description": "Azure Storage CLI tools (az storage) for blobs, tables, queues, and file shares",
+  "category": "Database",
+  "detection": {
+    "files": ["*.bicep", "azure.yaml"]
+  },
+  "levels": {
+    "restrictive": [
+      // Account info
+      { "command": "az storage account list", "description": "List storage accounts" },
+      { "command": "az storage account show", "description": "Show storage account details" },
+
+      // Blob read
+      { "command": "az storage blob list", "description": "List blobs" },
+      { "command": "az storage blob show", "description": "Show blob properties" },
+      { "command": "az storage container list", "description": "List containers" },
+      { "command": "az storage container show", "description": "Show container properties" },
+
+      // Table read
+      { "command": "az storage table list", "description": "List storage tables" },
+
+      // Queue read
+      { "command": "az storage queue list", "description": "List storage queues" },
+
+      // File share read
+      { "command": "az storage share list", "description": "List file shares" }
+    ],
+    "standard": [
+      // Blob download
+      { "command": "az storage blob download", "description": "Download blob" },
+      { "command": "az storage blob download-batch", "description": "Download blobs batch" }
+    ],
+    "permissive": [
+      // Account management
+      { "command": "az storage account create", "description": "Create storage account" },
+      { "command": "az storage account delete", "description": "Delete storage account" },
+
+      // Blob write
+      { "command": "az storage blob upload", "description": "Upload blob" },
+      { "command": "az storage blob upload-batch", "description": "Upload blobs batch" },
+      { "command": "az storage blob delete", "description": "Delete blob" },
+
+      // Container management
+      { "command": "az storage container create", "description": "Create storage container" },
+      { "command": "az storage container delete", "description": "Delete storage container" },
+
+      // File share management
+      { "command": "az storage share create", "description": "Create file share" },
+      { "command": "az storage share delete", "description": "Delete file share" },
+
+      // Table management
+      { "command": "az storage table create", "description": "Create storage table" },
+      { "command": "az storage table delete", "description": "Delete storage table" },
+
+      // Queue management
+      { "command": "az storage queue create", "description": "Create storage queue" },
+      { "command": "az storage queue delete", "description": "Delete storage queue" }
+    ]
+  }
+}

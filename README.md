@@ -144,6 +144,8 @@ cc-permissions apply nodejs --level permissive
 
 | Template | Description |
 |----------|-------------|
+| [azure-sql](docs/templates/azure-sql.md) | Azure SQL Database CLI tools (az sql) |
+| [azure-storage](docs/templates/azure-storage.md) | Azure Storage CLI tools (az storage) for blobs, tables, queues, and file shares |
 | [mongodb](docs/templates/mongodb.md) | MongoDB CLI tools (mongosh, mongodump, mongorestore) |
 | [mysql](docs/templates/mysql.md) | MySQL CLI tools (mysql, mysqldump, mysqladmin) |
 | [postgres](docs/templates/postgres.md) | PostgreSQL CLI tools (psql, pg_dump, pg_restore) |
