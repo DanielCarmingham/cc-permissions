@@ -1,0 +1,51 @@
+{
+  "$schema": "template.schema.json",
+  "name": "mariadb",
+  "description": "MariaDB CLI tools (mariadb, mariadb-dump, mariadb-admin)",
+  "category": "Database",
+  "detection": {
+    "files": [".my.cnf", "my.cnf"]
+  },
+  "levels": {
+    "restrictive": [
+      // Version and connectivity
+      { "command": "mariadb --version", "description": "Check MariaDB version" },
+      { "command": "mariadb -V", "description": "Check MariaDB version" },
+      { "command": "mariadb-admin version", "description": "Check MariaDB admin version" },
+      { "command": "mariadb-admin ping", "description": "Ping MariaDB server" },
+      { "command": "mariadb-admin status", "description": "Check MariaDB status" }
+    ],
+    "standard": [
+      // Read queries
+      { "command": "mariadb -e \"SELECT", "description": "Run MariaDB SELECT query" },
+      { "command": "mariadb -e 'SELECT", "description": "Run MariaDB SELECT query" },
+      { "command": "mariadb -e \"SHOW", "description": "MariaDB SHOW command" },
+      { "command": "mariadb -e 'SHOW", "description": "MariaDB SHOW command" },
+      { "command": "mariadb -e \"DESCRIBE", "description": "MariaDB DESCRIBE" },
+      { "command": "mariadb -e 'DESCRIBE", "description": "MariaDB DESCRIBE" },
+      { "command": "mariadb -e \"EXPLAIN", "description": "Explain MariaDB query" },
+      { "command": "mariadb -e 'EXPLAIN", "description": "Explain MariaDB query" },
+      { "command": "mariadb-dump --no-data", "description": "Dump MariaDB schema only" }
+    ],
+    "permissive": [
+      // Write queries
+      { "command": "mariadb -e \"INSERT", "description": "MariaDB INSERT" },
+      { "command": "mariadb -e 'INSERT", "description": "MariaDB INSERT" },
+      { "command": "mariadb -e \"UPDATE", "description": "MariaDB UPDATE" },
+      { "command": "mariadb -e 'UPDATE", "description": "MariaDB UPDATE" },
+      { "command": "mariadb -e \"DELETE", "description": "MariaDB DELETE" },
+      { "command": "mariadb -e 'DELETE", "description": "MariaDB DELETE" },
+      { "command": "mariadb -e \"CREATE", "description": "MariaDB CREATE" },
+      { "command": "mariadb -e 'CREATE", "description": "MariaDB CREATE" },
+      { "command": "mariadb -e \"DROP", "description": "MariaDB DROP" },
+      { "command": "mariadb -e 'DROP", "description": "MariaDB DROP" },
+      { "command": "mariadb -e \"ALTER", "description": "MariaDB ALTER" },
+      { "command": "mariadb -e 'ALTER", "description": "MariaDB ALTER" },
+      { "command": "mariadb -e \"TRUNCATE", "description": "MariaDB TRUNCATE" },
+      { "command": "mariadb -e 'TRUNCATE", "description": "MariaDB TRUNCATE" },
+      { "command": "mariadb-dump", "description": "Dump MariaDB database" },
+      { "command": "mariadb-admin create", "description": "Create MariaDB database" },
+      { "command": "mariadb-admin drop", "description": "Drop MariaDB database" }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "template.schema.json",
+  "name": "mariadb-mcp",
+  "description": "MariaDB MCP Server tools for database queries",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["mariadb"]
+  },
+  "levels": {
+    "restrictive": [
+      // Read-only SQL
+      { "command": "mcp__mariadb__query", "type": "mcp", "description": "Execute read-only SQL query" }
+    ],
+    "standard": [],
+    "permissive": []
+  }
+}

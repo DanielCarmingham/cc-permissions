@@ -146,6 +146,8 @@ cc-permissions apply nodejs --level permissive
 |----------|-------------|
 | [azure-sql](docs/templates/azure-sql.md) | Azure SQL Database CLI tools (az sql) |
 | [azure-storage](docs/templates/azure-storage.md) | Azure Storage CLI tools (az storage) for blobs, tables, queues, and file shares |
+| [mariadb](docs/templates/mariadb.md) | MariaDB CLI tools (mariadb, mariadb-dump, mariadb-admin) |
+| [mariadb-mcp](docs/templates/mariadb-mcp.md) | MariaDB MCP Server tools for database queries |
 | [mongodb](docs/templates/mongodb.md) | MongoDB CLI tools (mongosh, mongodump, mongorestore) |
 | [mysql](docs/templates/mysql.md) | MySQL CLI tools (mysql, mysqldump, mysqladmin) |
 | [postgres](docs/templates/postgres.md) | PostgreSQL CLI tools (psql, pg_dump, pg_restore) |
@@ -180,6 +182,7 @@ All MCP server templates in one place. These are also listed alongside their CLI
 | [gitea-mcp](docs/templates/gitea-mcp.md) | Gitea MCP Server tools for repository and workflow management |
 | [github-mcp](docs/templates/github-mcp.md) | GitHub MCP Server tools for repository and workflow management |
 | [gitlab-mcp](docs/templates/gitlab-mcp.md) | GitLab MCP Server tools for repository and workflow management |
+| [mariadb-mcp](docs/templates/mariadb-mcp.md) | MariaDB MCP Server tools for database queries |
 | [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
 | [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
 | [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
