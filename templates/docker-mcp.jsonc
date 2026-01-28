@@ -1,0 +1,24 @@
+{
+  "$schema": "template.schema.json",
+  "name": "docker-mcp",
+  "description": "Docker MCP Server tools for container management",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["docker", "docker-mcp"]
+  },
+  "levels": {
+    "restrictive": [
+      // Container inspection (read-only)
+      { "command": "mcp__docker__list-containers", "type": "mcp", "description": "List all Docker containers" },
+      { "command": "mcp__docker__get-logs", "type": "mcp", "description": "Get container logs" }
+    ],
+    "standard": [
+      // Container creation
+      { "command": "mcp__docker__create-container", "type": "mcp", "description": "Create a Docker container" }
+    ],
+    "permissive": [
+      // Compose deployment
+      { "command": "mcp__docker__deploy-compose", "type": "mcp", "description": "Deploy Docker Compose stack" }
+    ]
+  }
+}

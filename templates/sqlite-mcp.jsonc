@@ -1,0 +1,26 @@
+{
+  "$schema": "template.schema.json",
+  "name": "sqlite-mcp",
+  "description": "SQLite MCP Server tools for database operations",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["sqlite"]
+  },
+  "levels": {
+    "restrictive": [
+      // Read-only queries
+      { "command": "mcp__sqlite__read_query", "type": "mcp", "description": "Execute SELECT queries" },
+      { "command": "mcp__sqlite__list_tables", "type": "mcp", "description": "List database tables" },
+      { "command": "mcp__sqlite__describe_table", "type": "mcp", "description": "Get table schema" }
+    ],
+    "standard": [
+      // Write operations
+      { "command": "mcp__sqlite__write_query", "type": "mcp", "description": "Execute INSERT/UPDATE/DELETE queries" },
+      { "command": "mcp__sqlite__create_table", "type": "mcp", "description": "Create new database table" },
+
+      // Insights
+      { "command": "mcp__sqlite__append_insight", "type": "mcp", "description": "Add business insight to memo" }
+    ],
+    "permissive": []
+  }
+}

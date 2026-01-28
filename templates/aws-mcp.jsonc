@@ -1,0 +1,73 @@
+{
+  "$schema": "template.schema.json",
+  "name": "aws-mcp",
+  "description": "AWS MCP Server tools for cloud infrastructure and serverless development",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["aws", "aws-api", "aws-documentation", "aws-serverless", "aws-iac", "aws-cdk", "aws-cloudformation"]
+  },
+  "levels": {
+    "restrictive": [
+      // AWS API Server - read-only
+      { "command": "mcp__aws__suggest_aws_commands", "type": "mcp", "description": "Generate AWS CLI suggestions" },
+      { "command": "mcp__aws__get_execution_plan", "type": "mcp", "description": "Get step-by-step task guidance" },
+
+      // AWS Documentation Server
+      { "command": "mcp__aws__read_documentation", "type": "mcp", "description": "Fetch AWS docs as markdown" },
+      { "command": "mcp__aws__search_documentation", "type": "mcp", "description": "Search AWS documentation" },
+      { "command": "mcp__aws__recommend", "type": "mcp", "description": "Get documentation recommendations" },
+      { "command": "mcp__aws__get_available_services", "type": "mcp", "description": "List available AWS services" },
+
+      // AWS IaC Server - CloudFormation
+      { "command": "mcp__aws__validate_cloudformation_template", "type": "mcp", "description": "Validate CloudFormation template syntax" },
+      { "command": "mcp__aws__check_cloudformation_template_compliance", "type": "mcp", "description": "Check CloudFormation security compliance" },
+      { "command": "mcp__aws__troubleshoot_cloudformation_deployment", "type": "mcp", "description": "Analyze failed CloudFormation stacks" },
+      { "command": "mcp__aws__search_cloudformation_documentation", "type": "mcp", "description": "Search CloudFormation docs" },
+      { "command": "mcp__aws__get_cloudformation_pre_deploy_validation_instructions", "type": "mcp", "description": "Get pre-deploy validation commands" },
+
+      // AWS IaC Server - CDK
+      { "command": "mcp__aws__search_cdk_documentation", "type": "mcp", "description": "Search CDK documentation" },
+      { "command": "mcp__aws__search_cdk_samples_and_constructs", "type": "mcp", "description": "Find CDK code examples" },
+      { "command": "mcp__aws__cdk_best_practices", "type": "mcp", "description": "Get CDK best practices" },
+      { "command": "mcp__aws__read_iac_documentation_page", "type": "mcp", "description": "Read IaC documentation page" },
+
+      // AWS Serverless Server - Guidance
+      { "command": "mcp__aws__get_iac_guidance", "type": "mcp", "description": "Get IaC platform recommendations" },
+      { "command": "mcp__aws__get_lambda_guidance", "type": "mcp", "description": "Get Lambda suitability guidance" },
+      { "command": "mcp__aws__get_lambda_event_schemas", "type": "mcp", "description": "Get Lambda event schemas" },
+      { "command": "mcp__aws__get_serverless_templates", "type": "mcp", "description": "Get SAM template examples" },
+      { "command": "mcp__aws__deploy_serverless_app_help", "type": "mcp", "description": "Get deployment instructions" },
+      { "command": "mcp__aws__webapp_deployment_help", "type": "mcp", "description": "Get web app deployment help" },
+
+      // AWS Serverless Server - Schema/Registry
+      { "command": "mcp__aws__list_registries", "type": "mcp", "description": "List schema registries" },
+      { "command": "mcp__aws__search_schema", "type": "mcp", "description": "Search schemas" },
+      { "command": "mcp__aws__describe_schema", "type": "mcp", "description": "Get schema definitions" },
+
+      // AWS Serverless Server - ESM
+      { "command": "mcp__aws__esm_guidance", "type": "mcp", "description": "Get ESM setup guidance" },
+      { "command": "mcp__aws__esm_kafka_troubleshoot", "type": "mcp", "description": "Troubleshoot Kafka ESM" },
+      { "command": "mcp__aws__esm_optimize", "type": "mcp", "description": "Optimize event source mappings" },
+
+      // AWS Serverless Server - Observability
+      { "command": "mcp__aws__sam_logs", "type": "mcp", "description": "Fetch CloudWatch logs" },
+      { "command": "mcp__aws__get_metrics", "type": "mcp", "description": "Get CloudWatch metrics" }
+    ],
+    "standard": [
+      // AWS Serverless Server - SAM Operations
+      { "command": "mcp__aws__sam_init", "type": "mcp", "description": "Initialize SAM application" },
+      { "command": "mcp__aws__sam_build", "type": "mcp", "description": "Build Lambda code" },
+      { "command": "mcp__aws__sam_local_invoke", "type": "mcp", "description": "Run Lambda function locally" }
+    ],
+    "permissive": [
+      // AWS API Server - execute
+      { "command": "mcp__aws__call_aws", "type": "mcp", "description": "Execute AWS CLI commands" },
+
+      // AWS Serverless Server - Deploy operations
+      { "command": "mcp__aws__sam_deploy", "type": "mcp", "description": "Deploy application to AWS" },
+      { "command": "mcp__aws__deploy_webapp", "type": "mcp", "description": "Deploy web application" },
+      { "command": "mcp__aws__configure_domain", "type": "mcp", "description": "Configure custom domain" },
+      { "command": "mcp__aws__update_webapp_frontend", "type": "mcp", "description": "Update frontend assets" }
+    ]
+  }
+}
