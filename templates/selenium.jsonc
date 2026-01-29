@@ -1,0 +1,48 @@
+{
+  "$schema": "template.schema.json",
+  "name": "selenium",
+  "description": "Selenium testing framework CLI tools",
+  "category": "Testing",
+  "detection": {
+    "files": ["*.side", ".side.yml"],
+    "contentPatterns": [
+      { "file": "package.json", "contains": "selenium-side-runner" },
+      { "file": "package.json", "contains": "selenium-webdriver" }
+    ]
+  },
+  "levels": {
+    "restrictive": [
+      // Version and help info
+      { "command": "selenium-side-runner --version", "description": "Check runner version" },
+      { "command": "selenium-manager --help", "description": "Selenium Manager help" }
+    ],
+    "standard": [
+      // Run .side test files
+      { "command": "selenium-side-runner", "description": "Run .side test files" },
+      { "command": "selenium-side-runner --server", "description": "Run tests on remote Grid" },
+      { "command": "selenium-side-runner -w", "description": "Set parallel workers" },
+      { "command": "selenium-side-runner --base-url", "description": "Override base URL" },
+      { "command": "selenium-side-runner --filter", "description": "Filter tests by pattern" },
+      { "command": "selenium-side-runner --output-directory", "description": "Set output directory" },
+      { "command": "selenium-side-runner --output-format", "description": "Set output format" },
+      { "command": "selenium-side-runner --config-file", "description": "Use custom config file" },
+      { "command": "selenium-side-runner --proxy-type", "description": "Configure proxy type" },
+      { "command": "selenium-side-runner --proxy-options", "description": "Configure proxy options" },
+      { "command": "selenium-side-runner --params", "description": "Pass parameters to tests" },
+      // Driver resolution
+      { "command": "selenium-manager --browser", "description": "Resolve and download browser driver" },
+      { "command": "selenium-manager --driver", "description": "Resolve specific driver version" }
+    ],
+    "permissive": [
+      // Grid servers
+      { "command": "java -jar selenium-server standalone", "description": "Start Grid standalone" },
+      { "command": "java -jar selenium-server hub", "description": "Start Grid Hub" },
+      { "command": "java -jar selenium-server node", "description": "Start Grid Node" },
+      // Downloads and cache management
+      { "command": "selenium-manager --grid", "description": "Download Selenium Grid jar" },
+      { "command": "selenium-manager --clear-cache", "description": "Clear driver cache" },
+      { "command": "selenium-manager --clear-metadata", "description": "Clear metadata cache" },
+      { "command": "selenium-manager --force-browser-download", "description": "Force browser download" }
+    ]
+  }
+}

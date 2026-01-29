@@ -1,0 +1,34 @@
+{
+  "$schema": "template.schema.json",
+  "name": "selenium-mcp",
+  "description": "Selenium MCP Server tools for browser automation",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["selenium"]
+  },
+  "levels": {
+    "restrictive": [
+      // Read-only inspection
+      { "command": "mcp__selenium__find_element", "type": "mcp", "description": "Find element on page" },
+      { "command": "mcp__selenium__get_element_text", "type": "mcp", "description": "Get element text content" },
+      { "command": "mcp__selenium__take_screenshot", "type": "mcp", "description": "Capture page screenshot" }
+    ],
+    "standard": [
+      // Browser interaction
+      { "command": "mcp__selenium__navigate", "type": "mcp", "description": "Navigate to URL" },
+      { "command": "mcp__selenium__click_element", "type": "mcp", "description": "Click on element" },
+      { "command": "mcp__selenium__double_click", "type": "mcp", "description": "Double-click element" },
+      { "command": "mcp__selenium__right_click", "type": "mcp", "description": "Right-click element" },
+      { "command": "mcp__selenium__send_keys", "type": "mcp", "description": "Type text into element" },
+      { "command": "mcp__selenium__press_key", "type": "mcp", "description": "Press keyboard key" },
+      { "command": "mcp__selenium__hover", "type": "mcp", "description": "Hover over element" },
+      { "command": "mcp__selenium__drag_and_drop", "type": "mcp", "description": "Drag and drop between elements" }
+    ],
+    "permissive": [
+      // Session and file management
+      { "command": "mcp__selenium__start_browser", "type": "mcp", "description": "Launch browser session" },
+      { "command": "mcp__selenium__close_session", "type": "mcp", "description": "Close browser session" },
+      { "command": "mcp__selenium__upload_file", "type": "mcp", "description": "Upload file via input element" }
+    ]
+  }
+}

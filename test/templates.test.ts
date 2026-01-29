@@ -370,6 +370,47 @@ describe("templates", () => {
       assert.ok(allCommands.includes("az deployment group create"), "bicep should include deployment create");
     });
 
+    it("selenium template should have selenium commands", () => {
+      const selenium = getTemplate("selenium");
+      assert.ok(selenium);
+
+      const allCommands = [
+        ...selenium.levels.restrictive,
+        ...selenium.levels.standard,
+        ...selenium.levels.permissive,
+      ].map((p) => p.command);
+
+      // Restrictive: version/help
+      assert.ok(allCommands.includes("selenium-side-runner --version"), "selenium should include runner version");
+      // Standard: test execution
+      assert.ok(allCommands.includes("selenium-side-runner"), "selenium should include side runner");
+      assert.ok(allCommands.includes("selenium-manager --browser"), "selenium should include manager browser");
+      // Permissive: grid and cache
+      assert.ok(allCommands.includes("java -jar selenium-server standalone"), "selenium should include grid standalone");
+      assert.ok(allCommands.includes("selenium-manager --clear-cache"), "selenium should include clear cache");
+    });
+
+    it("selenium-mcp template should have Selenium MCP tools", () => {
+      const seleniumMcp = getTemplate("selenium-mcp");
+      assert.ok(seleniumMcp);
+
+      const allCommands = [
+        ...seleniumMcp.levels.restrictive,
+        ...seleniumMcp.levels.standard,
+        ...seleniumMcp.levels.permissive,
+      ].map((p) => p.command);
+
+      // Restrictive: read-only
+      assert.ok(allCommands.includes("mcp__selenium__find_element"), "selenium-mcp should include find_element");
+      assert.ok(allCommands.includes("mcp__selenium__take_screenshot"), "selenium-mcp should include take_screenshot");
+      // Standard: interaction
+      assert.ok(allCommands.includes("mcp__selenium__navigate"), "selenium-mcp should include navigate");
+      assert.ok(allCommands.includes("mcp__selenium__click_element"), "selenium-mcp should include click_element");
+      // Permissive: session management
+      assert.ok(allCommands.includes("mcp__selenium__start_browser"), "selenium-mcp should include start_browser");
+      assert.ok(allCommands.includes("mcp__selenium__close_session"), "selenium-mcp should include close_session");
+    });
+
     it("azure-storage-mcp template should have Azure Storage MCP tools", () => {
       const azStorageMcp = getTemplate("azure-storage-mcp");
       assert.ok(azStorageMcp);

@@ -167,6 +167,8 @@ cc-permissions apply nodejs --level permissive
 |----------|-------------|
 | [playwright](docs/templates/playwright.md) | Playwright testing framework |
 | [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
+| [selenium](docs/templates/selenium.md) | Selenium testing framework CLI tools |
+| [selenium-mcp](docs/templates/selenium-mcp.md) | Selenium MCP Server tools for browser automation |
 
 ### Mobile Development
 
@@ -191,6 +193,7 @@ All MCP server templates in one place. These are also listed alongside their CLI
 | [gitlab-mcp](docs/templates/gitlab-mcp.md) | GitLab MCP Server tools for repository and workflow management |
 | [mariadb-mcp](docs/templates/mariadb-mcp.md) | MariaDB MCP Server tools for database queries |
 | [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
+| [selenium-mcp](docs/templates/selenium-mcp.md) | Selenium MCP Server tools for browser automation |
 | [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
 | [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
 | [typescript-mcp](docs/templates/typescript-mcp.md) | TypeScript MCP Server tools for type checking and compilation |
