@@ -349,6 +349,27 @@ describe("templates", () => {
       assert.ok(allCommands.includes("mcp__azmcp__azmcp_sql_server_create"), "azure-sql-mcp should include server create");
     });
 
+    it("bicep template should have bicep commands", () => {
+      const bicep = getTemplate("bicep");
+      assert.ok(bicep);
+
+      const allCommands = [
+        ...bicep.levels.restrictive,
+        ...bicep.levels.standard,
+        ...bicep.levels.permissive,
+      ].map((p) => p.command);
+
+      // Restrictive: read-only info
+      assert.ok(allCommands.includes("az bicep version"), "bicep should include az bicep version");
+      assert.ok(allCommands.includes("az deployment group validate"), "bicep should include deployment validate");
+      // Standard: day-to-day authoring
+      assert.ok(allCommands.includes("az bicep build"), "bicep should include az bicep build");
+      assert.ok(allCommands.includes("az bicep lint"), "bicep should include az bicep lint");
+      // Permissive: install/deploy
+      assert.ok(allCommands.includes("az bicep install"), "bicep should include az bicep install");
+      assert.ok(allCommands.includes("az deployment group create"), "bicep should include deployment create");
+    });
+
     it("azure-storage-mcp template should have Azure Storage MCP tools", () => {
       const azStorageMcp = getTemplate("azure-storage-mcp");
       assert.ok(azStorageMcp);

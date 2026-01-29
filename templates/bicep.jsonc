@@ -1,0 +1,41 @@
+{
+  "$schema": "template.schema.json",
+  "name": "bicep",
+  "description": "Azure Bicep infrastructure-as-code CLI",
+  "category": "Cloud Providers",
+  "detection": {
+    "files": ["*.bicep", "*.bicepparam", "bicepconfig.json"]
+  },
+  "levels": {
+    "restrictive": [
+      // Bicep CLI info
+      { "command": "az bicep version", "description": "Check Bicep CLI version" },
+      { "command": "az bicep list-versions", "description": "List available Bicep versions" },
+      // Deployment validation
+      { "command": "az deployment group validate", "description": "Validate a Bicep deployment" }
+    ],
+    "standard": [
+      // Compile and decompile
+      { "command": "az bicep build", "description": "Compile Bicep to ARM JSON" },
+      { "command": "az bicep build-params", "description": "Build Bicep parameters file" },
+      { "command": "az bicep decompile", "description": "Decompile ARM JSON to Bicep" },
+      { "command": "az bicep decompile-params", "description": "Decompile parameters to .bicepparam" },
+      // Formatting and linting
+      { "command": "az bicep format", "description": "Format Bicep file" },
+      { "command": "az bicep lint", "description": "Lint Bicep file" },
+      // Parameters and modules
+      { "command": "az bicep generate-params", "description": "Generate parameters file from Bicep" },
+      { "command": "az bicep restore", "description": "Restore external modules" },
+      // Deployment preview
+      { "command": "az deployment group what-if", "description": "Preview deployment changes" }
+    ],
+    "permissive": [
+      // Install and upgrade
+      { "command": "az bicep install", "description": "Install Bicep CLI" },
+      { "command": "az bicep upgrade", "description": "Upgrade Bicep CLI" },
+      // Publish and deploy
+      { "command": "az bicep publish", "description": "Publish module to registry" },
+      { "command": "az deployment group create", "description": "Deploy Bicep template" }
+    ]
+  }
+}

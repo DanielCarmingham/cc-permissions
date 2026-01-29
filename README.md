@@ -133,6 +133,7 @@ cc-permissions apply nodejs --level permissive
 | [aws](docs/templates/aws.md) | AWS CLI, SAM, CDK, Amplify, and Elastic Beanstalk |
 | [aws-mcp](docs/templates/aws-mcp.md) | AWS MCP Server tools for cloud infrastructure and serverless development |
 | [azure](docs/templates/azure.md) | Azure CLI, Functions, Bicep, and Azure Developer CLI |
+| [bicep](docs/templates/bicep.md) | Azure Bicep infrastructure-as-code CLI |
 | [gcp](docs/templates/gcp.md) | Google Cloud CLI, gsutil, Firebase, and BigQuery |
 
 ### Container & Infrastructure
