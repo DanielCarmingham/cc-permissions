@@ -1,0 +1,29 @@
+{
+  "$schema": "template.schema.json",
+  "name": "yarn",
+  "description": "Yarn package manager",
+  "category": "Languages & Runtimes",
+  "detection": {
+    "files": ["yarn.lock"]
+  },
+  "levels": {
+    "restrictive": [
+      { "command": "yarn list", "description": "List installed packages" },
+      { "command": "yarn info", "description": "View package info" },
+      { "command": "yarn outdated", "description": "Check for outdated packages" }
+    ],
+    "standard": [
+      { "command": "yarn run", "description": "Run yarn scripts" },
+      { "command": "yarn test", "description": "Run tests" },
+      { "command": "yarn build", "description": "Build the project" },
+      { "command": "yarn dev", "description": "Run dev server" },
+      { "command": "yarn dlx", "description": "Execute without install" }
+    ],
+    "permissive": [
+      { "command": "yarn install", "description": "Install packages" },
+      { "command": "yarn add", "description": "Add packages" },
+      { "command": "yarn remove", "description": "Remove packages" },
+      { "command": "yarn upgrade", "description": "Upgrade packages" }
+    ]
+  }
+}

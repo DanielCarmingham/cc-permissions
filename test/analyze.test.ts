@@ -81,25 +81,25 @@ describe("analyzeDirectory", () => {
       assert.ok(result.recommendedTemplates.includes("nodejs"));
     });
 
-    it("should detect yarn.lock as nodejs project", () => {
+    it("should detect yarn.lock as yarn project", () => {
       fs.writeFileSync(path.join(tempDir, "yarn.lock"), "");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("nodejs"));
+      assert.ok(result.recommendedTemplates.includes("yarn"));
     });
 
-    it("should detect pnpm-lock.yaml as nodejs project", () => {
+    it("should detect pnpm-lock.yaml as pnpm project", () => {
       fs.writeFileSync(path.join(tempDir, "pnpm-lock.yaml"), "");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("nodejs"));
+      assert.ok(result.recommendedTemplates.includes("pnpm"));
     });
 
-    it("should detect bun.lockb as nodejs project", () => {
+    it("should detect bun.lockb as bun project", () => {
       fs.writeFileSync(path.join(tempDir, "bun.lockb"), "");
 
       const result = analyzeDirectory(tempDir);
-      assert.ok(result.recommendedTemplates.includes("nodejs"));
+      assert.ok(result.recommendedTemplates.includes("bun"));
     });
 
     it("should detect pyproject.toml as python project", () => {

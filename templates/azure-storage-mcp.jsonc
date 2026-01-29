@@ -1,0 +1,25 @@
+{
+  "$schema": "template.schema.json",
+  "name": "azure-storage-mcp",
+  "description": "Azure Storage MCP Server tools (azmcp)",
+  "category": "MCP Servers",
+  // The Azure MCP server binary is azmcp. Users may register it under different names
+  // (azure, azmcp, azure-mcp, etc.). Adjust the mcp__azmcp__ prefix in commands below
+  // to match your server registration name.
+  "detection": {
+    "mcpServers": ["azure", "azmcp", "azure-mcp"]
+  },
+  "levels": {
+    "restrictive": [
+      { "command": "mcp__azmcp__azmcp_storage_account_get", "type": "mcp", "description": "Get storage account details" },
+      { "command": "mcp__azmcp__azmcp_storage_container_get", "type": "mcp", "description": "Get container details" },
+      { "command": "mcp__azmcp__azmcp_storage_blob_get", "type": "mcp", "description": "Get blob details" }
+    ],
+    "standard": [],
+    "permissive": [
+      { "command": "mcp__azmcp__azmcp_storage_account_create", "type": "mcp", "description": "Create storage account" },
+      { "command": "mcp__azmcp__azmcp_storage_container_create", "type": "mcp", "description": "Create storage container" },
+      { "command": "mcp__azmcp__azmcp_storage_blob_upload", "type": "mcp", "description": "Upload blob" }
+    ]
+  }
+}

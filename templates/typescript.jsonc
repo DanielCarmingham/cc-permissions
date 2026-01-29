@@ -1,0 +1,32 @@
+{
+  "$schema": "template.schema.json",
+  "name": "typescript",
+  "description": "TypeScript compiler (tsc)",
+  "category": "Languages & Runtimes",
+  "detection": {
+    "files": ["tsconfig.json"]
+  },
+  "levels": {
+    "restrictive": [
+      { "command": "tsc --version", "description": "Check TypeScript version" },
+      { "command": "tsc --help", "description": "Show tsc help" },
+      { "command": "npx tsc --version", "description": "Check TypeScript version (npx)" },
+      { "command": "tsc --noEmit", "description": "Type-check without emitting" },
+      { "command": "npx tsc --noEmit", "description": "Type-check without emitting (npx)" },
+      { "command": "tsc --showConfig", "description": "Show resolved tsconfig" },
+      { "command": "npx tsc --showConfig", "description": "Show resolved tsconfig (npx)" }
+    ],
+    "standard": [
+      { "command": "tsc", "description": "Compile TypeScript" },
+      { "command": "npx tsc", "description": "Compile TypeScript (npx)" },
+      { "command": "tsc --watch", "description": "Compile in watch mode" },
+      { "command": "npx tsc --watch", "description": "Compile in watch mode (npx)" },
+      { "command": "tsc --build", "description": "Build project references" },
+      { "command": "npx tsc --build", "description": "Build project references (npx)" }
+    ],
+    "permissive": [
+      { "command": "tsc --init", "description": "Initialize tsconfig.json" },
+      { "command": "npx tsc --init", "description": "Initialize tsconfig.json (npx)" }
+    ]
+  }
+}

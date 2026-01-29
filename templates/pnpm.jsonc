@@ -1,0 +1,30 @@
+{
+  "$schema": "template.schema.json",
+  "name": "pnpm",
+  "description": "pnpm package manager",
+  "category": "Languages & Runtimes",
+  "detection": {
+    "files": ["pnpm-lock.yaml", "pnpm-workspace.yaml"]
+  },
+  "levels": {
+    "restrictive": [
+      { "command": "pnpm list", "description": "List installed packages" },
+      { "command": "pnpm ls", "description": "List installed packages (alias)" },
+      { "command": "pnpm outdated", "description": "Check for outdated packages" }
+    ],
+    "standard": [
+      { "command": "pnpm run", "description": "Run pnpm scripts" },
+      { "command": "pnpm test", "description": "Run tests" },
+      { "command": "pnpm build", "description": "Build the project" },
+      { "command": "pnpm dev", "description": "Run dev server" },
+      { "command": "pnpm exec", "description": "Execute package binary" },
+      { "command": "pnpm dlx", "description": "Execute without install" }
+    ],
+    "permissive": [
+      { "command": "pnpm install", "description": "Install packages" },
+      { "command": "pnpm add", "description": "Add packages" },
+      { "command": "pnpm remove", "description": "Remove packages" },
+      { "command": "pnpm update", "description": "Update packages" }
+    ]
+  }
+}

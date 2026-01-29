@@ -256,6 +256,112 @@ describe("templates", () => {
       assert.ok(allCommands.includes("cat"), "Shell template should include cat");
       assert.ok(allCommands.includes("pwd"), "Shell template should include pwd");
     });
+
+    it("yarn template should have yarn commands", () => {
+      const yarn = getTemplate("yarn");
+      assert.ok(yarn);
+
+      const allCommands = [
+        ...yarn.levels.restrictive,
+        ...yarn.levels.standard,
+        ...yarn.levels.permissive,
+      ].map((p) => p.command);
+
+      const hasYarnCommands = allCommands.some((cmd) => cmd.includes("yarn"));
+      assert.ok(hasYarnCommands, "yarn template should include yarn commands");
+      assert.ok(allCommands.includes("yarn list"), "yarn template should include yarn list");
+      assert.ok(allCommands.includes("yarn install"), "yarn template should include yarn install");
+    });
+
+    it("pnpm template should have pnpm commands", () => {
+      const pnpm = getTemplate("pnpm");
+      assert.ok(pnpm);
+
+      const allCommands = [
+        ...pnpm.levels.restrictive,
+        ...pnpm.levels.standard,
+        ...pnpm.levels.permissive,
+      ].map((p) => p.command);
+
+      const hasPnpmCommands = allCommands.some((cmd) => cmd.includes("pnpm"));
+      assert.ok(hasPnpmCommands, "pnpm template should include pnpm commands");
+      assert.ok(allCommands.includes("pnpm list"), "pnpm template should include pnpm list");
+      assert.ok(allCommands.includes("pnpm install"), "pnpm template should include pnpm install");
+    });
+
+    it("bun template should have bun commands", () => {
+      const bun = getTemplate("bun");
+      assert.ok(bun);
+
+      const allCommands = [
+        ...bun.levels.restrictive,
+        ...bun.levels.standard,
+        ...bun.levels.permissive,
+      ].map((p) => p.command);
+
+      const hasBunCommands = allCommands.some((cmd) => cmd.includes("bun"));
+      assert.ok(hasBunCommands, "bun template should include bun commands");
+      assert.ok(allCommands.includes("bun --version"), "bun template should include bun --version");
+      assert.ok(allCommands.includes("bun install"), "bun template should include bun install");
+    });
+
+    it("typescript template should have tsc commands", () => {
+      const ts = getTemplate("typescript");
+      assert.ok(ts);
+
+      const allCommands = [
+        ...ts.levels.restrictive,
+        ...ts.levels.standard,
+        ...ts.levels.permissive,
+      ].map((p) => p.command);
+
+      const hasTscCommands = allCommands.some((cmd) => cmd.includes("tsc"));
+      assert.ok(hasTscCommands, "typescript template should include tsc commands");
+      assert.ok(allCommands.includes("tsc --version"), "typescript template should include tsc --version");
+      assert.ok(allCommands.includes("tsc --noEmit"), "typescript template should include tsc --noEmit");
+    });
+
+    it("typescript-mcp template should have MCP tools", () => {
+      const tsMcp = getTemplate("typescript-mcp");
+      assert.ok(tsMcp);
+
+      const allCommands = [
+        ...tsMcp.levels.restrictive,
+        ...tsMcp.levels.standard,
+        ...tsMcp.levels.permissive,
+      ].map((p) => p.command);
+
+      assert.ok(allCommands.includes("mcp__typescript__check_types"), "typescript-mcp should include check_types");
+      assert.ok(allCommands.includes("mcp__typescript__compile_typescript"), "typescript-mcp should include compile_typescript");
+    });
+
+    it("azure-sql-mcp template should have Azure SQL MCP tools", () => {
+      const azSqlMcp = getTemplate("azure-sql-mcp");
+      assert.ok(azSqlMcp);
+
+      const allCommands = [
+        ...azSqlMcp.levels.restrictive,
+        ...azSqlMcp.levels.standard,
+        ...azSqlMcp.levels.permissive,
+      ].map((p) => p.command);
+
+      assert.ok(allCommands.includes("mcp__azmcp__azmcp_sql_db_list"), "azure-sql-mcp should include db list");
+      assert.ok(allCommands.includes("mcp__azmcp__azmcp_sql_server_create"), "azure-sql-mcp should include server create");
+    });
+
+    it("azure-storage-mcp template should have Azure Storage MCP tools", () => {
+      const azStorageMcp = getTemplate("azure-storage-mcp");
+      assert.ok(azStorageMcp);
+
+      const allCommands = [
+        ...azStorageMcp.levels.restrictive,
+        ...azStorageMcp.levels.standard,
+        ...azStorageMcp.levels.permissive,
+      ].map((p) => p.command);
+
+      assert.ok(allCommands.includes("mcp__azmcp__azmcp_storage_account_get"), "azure-storage-mcp should include account get");
+      assert.ok(allCommands.includes("mcp__azmcp__azmcp_storage_blob_upload"), "azure-storage-mcp should include blob upload");
+    });
   });
 });
 

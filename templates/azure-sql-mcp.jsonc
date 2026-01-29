@@ -1,0 +1,46 @@
+{
+  "$schema": "template.schema.json",
+  "name": "azure-sql-mcp",
+  "description": "Azure SQL Database MCP Server tools (azmcp)",
+  "category": "MCP Servers",
+  // The Azure MCP server binary is azmcp. Users may register it under different names
+  // (azure, azmcp, azure-mcp, etc.). Adjust the mcp__azmcp__ prefix in commands below
+  // to match your server registration name.
+  "detection": {
+    "mcpServers": ["azure", "azmcp", "azure-mcp"]
+  },
+  "levels": {
+    "restrictive": [
+      // Server info
+      { "command": "mcp__azmcp__azmcp_sql_server_list", "type": "mcp", "description": "List SQL servers" },
+      { "command": "mcp__azmcp__azmcp_sql_server_show", "type": "mcp", "description": "Show SQL server details" },
+      { "command": "mcp__azmcp__azmcp_sql_server_list_admins", "type": "mcp", "description": "List SQL server admins" },
+      { "command": "mcp__azmcp__azmcp_sql_firewall_list", "type": "mcp", "description": "List SQL firewall rules" },
+
+      // Database info
+      { "command": "mcp__azmcp__azmcp_sql_db_list", "type": "mcp", "description": "List SQL databases" },
+      { "command": "mcp__azmcp__azmcp_sql_db_show", "type": "mcp", "description": "Show SQL database details" },
+
+      // Elastic pools
+      { "command": "mcp__azmcp__azmcp_sql_elastic_pool_list", "type": "mcp", "description": "List elastic pools" }
+    ],
+    "standard": [
+      // Database updates
+      { "command": "mcp__azmcp__azmcp_sql_db_update", "type": "mcp", "description": "Update SQL database" },
+      { "command": "mcp__azmcp__azmcp_sql_db_rename", "type": "mcp", "description": "Rename SQL database" },
+
+      // Firewall rules
+      { "command": "mcp__azmcp__azmcp_sql_firewall_create", "type": "mcp", "description": "Create SQL firewall rule" },
+      { "command": "mcp__azmcp__azmcp_sql_firewall_delete", "type": "mcp", "description": "Delete SQL firewall rule" }
+    ],
+    "permissive": [
+      // Database management
+      { "command": "mcp__azmcp__azmcp_sql_db_create", "type": "mcp", "description": "Create SQL database" },
+      { "command": "mcp__azmcp__azmcp_sql_db_delete", "type": "mcp", "description": "Delete SQL database" },
+
+      // Server management
+      { "command": "mcp__azmcp__azmcp_sql_server_create", "type": "mcp", "description": "Create SQL server" },
+      { "command": "mcp__azmcp__azmcp_sql_server_delete", "type": "mcp", "description": "Delete SQL server" }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "template.schema.json",
+  "name": "bun",
+  "description": "Bun runtime and package manager",
+  "category": "Languages & Runtimes",
+  "detection": {
+    "files": ["bun.lockb"]
+  },
+  "levels": {
+    "restrictive": [
+      { "command": "bun --version", "description": "Check Bun version" },
+      { "command": "bun pm ls", "description": "List installed packages" }
+    ],
+    "standard": [
+      { "command": "bun run", "description": "Run bun scripts" },
+      { "command": "bun test", "description": "Run tests" },
+      { "command": "bun build", "description": "Build the project" },
+      { "command": "bunx", "description": "Execute bun packages" }
+    ],
+    "permissive": [
+      { "command": "bun install", "description": "Install packages" },
+      { "command": "bun add", "description": "Add packages" },
+      { "command": "bun remove", "description": "Remove packages" },
+      { "command": "bun update", "description": "Update packages" }
+    ]
+  }
+}

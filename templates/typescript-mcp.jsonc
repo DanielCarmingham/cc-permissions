@@ -1,0 +1,23 @@
+{
+  "$schema": "template.schema.json",
+  "name": "typescript-mcp",
+  "description": "TypeScript MCP Server tools for type checking and compilation",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["mcp-typescript-server", "mcp-typescript", "typescript"]
+  },
+  "levels": {
+    "restrictive": [
+      { "command": "mcp__typescript__check_types", "type": "mcp", "description": "Run type checking" },
+      { "command": "mcp__typescript__get_diagnostics", "type": "mcp", "description": "Get TypeScript diagnostics" },
+      { "command": "mcp__typescript__validate_syntax", "type": "mcp", "description": "Validate TypeScript syntax" }
+    ],
+    "standard": [
+      { "command": "mcp__typescript__compile_typescript", "type": "mcp", "description": "Compile TypeScript code" }
+    ],
+    "permissive": [
+      { "command": "mcp__typescript__create_tsconfig", "type": "mcp", "description": "Create tsconfig.json" },
+      { "command": "mcp__typescript__update_tsconfig", "type": "mcp", "description": "Update tsconfig.json" }
+    ]
+  }
+}

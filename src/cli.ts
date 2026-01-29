@@ -435,6 +435,10 @@ function handleList(args: string[]): void {
 
   console.log(fmt.title("Available Templates") + "\n");
 
+  // Compute padding from longest template name
+  const maxNameLength = Math.max(...allTemplates.map((t) => t.name.length));
+  const padWidth = maxNameLength + 2;
+
   // Output in fixed category order
   for (const category of categoryOrder) {
     const templates = grouped.get(category);
@@ -442,7 +446,7 @@ function handleList(args: string[]): void {
 
     console.log(fmt.category(`${category}:`));
     for (const template of templates) {
-      console.log(`  ${fmt.item(template.name.padEnd(12))} ${fmt.itemDesc(template.description)}`);
+      console.log(`  ${fmt.item(template.name.padEnd(padWidth))} ${fmt.itemDesc(template.description)}`);
     }
     console.log();
   }

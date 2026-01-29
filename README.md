@@ -106,14 +106,18 @@ cc-permissions apply nodejs --level permissive
 
 | Template | Description |
 |----------|-------------|
+| [bun](docs/templates/bun.md) | Bun runtime and package manager |
 | [dotnet](docs/templates/dotnet.md) | dotnet CLI, NuGet, MSBuild |
 | [go](docs/templates/go.md) | Go development and golangci-lint |
 | [java](docs/templates/java.md) | Java and JVM runtime |
-| [nodejs](docs/templates/nodejs.md) | Node.js, npm, pnpm, yarn, and bun |
+| [nodejs](docs/templates/nodejs.md) | Node.js, npm, and npx |
 | [php](docs/templates/php.md) | PHP, Composer, and Laravel Artisan |
+| [pnpm](docs/templates/pnpm.md) | pnpm package manager |
 | [python](docs/templates/python.md) | pip, python, venv, pytest, and common data tools |
 | [ruby](docs/templates/ruby.md) | Ruby, Bundler, Rails, and Rake |
 | [rust](docs/templates/rust.md) | Cargo, rustc, and rustup |
+| [typescript](docs/templates/typescript.md) | TypeScript compiler (tsc) |
+| [yarn](docs/templates/yarn.md) | Yarn package manager |
 
 ### Build Tools
 
@@ -178,6 +182,8 @@ All MCP server templates in one place. These are also listed alongside their CLI
 | Template | Description |
 |----------|-------------|
 | [aws-mcp](docs/templates/aws-mcp.md) | AWS MCP Server tools for cloud infrastructure and serverless development |
+| [azure-sql-mcp](docs/templates/azure-sql-mcp.md) | Azure SQL Database MCP Server tools (azmcp) |
+| [azure-storage-mcp](docs/templates/azure-storage-mcp.md) | Azure Storage MCP Server tools (azmcp) |
 | [docker-mcp](docs/templates/docker-mcp.md) | Docker MCP Server tools for container management |
 | [gitea-mcp](docs/templates/gitea-mcp.md) | Gitea MCP Server tools for repository and workflow management |
 | [github-mcp](docs/templates/github-mcp.md) | GitHub MCP Server tools for repository and workflow management |
@@ -186,6 +192,7 @@ All MCP server templates in one place. These are also listed alongside their CLI
 | [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
 | [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
 | [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
+| [typescript-mcp](docs/templates/typescript-mcp.md) | TypeScript MCP Server tools for type checking and compilation |
 
 Click any template to see the full list of commands at each level.
 
