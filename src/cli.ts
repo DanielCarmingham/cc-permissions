@@ -11,7 +11,8 @@ import {
   listTemplates,
 } from "./templates/index.js";
 import { formatFullOutput, applyPermissions, formatApplyResult, parseScope } from "./output.js";
-import { analyzeDirectory, formatAnalysisResult } from "./analyze.js";
+import { formatAnalysisResult } from "./analyze.js";
+import { runAnalysisWithSpinner } from "./spinner.js";
 import { formatVersionInfo, readPackageJson } from "./version.js";
 import { fmt, formatError, formatHint, formatSafetyWarning } from "./format.js";
 
@@ -189,7 +190,7 @@ ${fmt.section("Examples:")}
 `);
 }
 
-function handleApply(args: string[]): void {
+async function handleApply(args: string[]): Promise<void> {
   const { values, positionals } = parseArgs({
     args,
     options: {
@@ -244,7 +245,7 @@ function handleApply(args: string[]): void {
   }
 
   // No templates specified: analyze and apply
-  const analysisResult = analyzeDirectory(".");
+  const analysisResult = await runAnalysisWithSpinner(".");
 
   // Use provided level or the suggested level from analysis
   let level = analysisResult.suggestedLevel;
@@ -303,7 +304,7 @@ ${fmt.section("Examples:")}
 `);
 }
 
-function handleAnalyze(args: string[]): void {
+async function handleAnalyze(args: string[]): Promise<void> {
   const { values, positionals } = parseArgs({
     args,
     options: {
@@ -323,7 +324,7 @@ function handleAnalyze(args: string[]): void {
   }
 
   const targetPath = positionals[0] || ".";
-  const result = analyzeDirectory(targetPath);
+  const result = await runAnalysisWithSpinner(targetPath);
 
   // Handle --apply flag (backwards compatibility - prefer `cc-permissions apply`)
   if (values.apply) {
@@ -369,7 +370,10 @@ function handleAnalyze(args: string[]): void {
   }
 
   // Standard output: show analysis result
-  console.log(formatAnalysisResult(result));
+  const pkg = readPackageJson();
+  const dirtyMarker = buildInfo.dirty ? "-dirty" : "";
+  const versionString = `v${pkg.version} (${buildInfo.commitHash}${dirtyMarker})`;
+  console.log(formatAnalysisResult(result, versionString));
 }
 
 function showListHelp(): void {
@@ -454,9 +458,55 @@ function handleList(args: string[]): void {
   console.log(`Use "${fmt.command("cc-permissions template")} ${fmt.arg("<name>")} ${fmt.option("--level")} ${fmt.arg("<level>")}" to generate permissions.`);
 }
 
+const KNOWN_OPTIONS = new Set(["help", "version", "level", "apply", "scope", "output"]);
+
+function levenshtein(a: string, b: string): number {
+  const m = a.length, n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, (_, i) =>
+    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
+function suggestOption(unknown: string): string | null {
+  let bestMatch: string | null = null;
+  let bestDistance = 3; // threshold: only suggest if distance ≤ 2
+  for (const known of KNOWN_OPTIONS) {
+    // Check prefix match (e.g., "h" is a prefix of "help")
+    if (unknown.length >= 1 && known.startsWith(unknown) && known !== unknown) {
+      return `--${known}`;
+    }
+    const d = levenshtein(unknown, known);
+    if (d < bestDistance) {
+      bestDistance = d;
+      bestMatch = `--${known}`;
+    }
+  }
+  return bestMatch;
+}
+
+function validateNoUnknownOptions(tokens: Array<{ kind: string; name?: string; rawName?: string }>): void {
+  for (const token of tokens) {
+    if (token.kind === "option" && !KNOWN_OPTIONS.has(token.name!)) {
+      const suggestion = suggestOption(token.name!);
+      const hint = suggestion ? ` Did you mean '${suggestion}'?` : "";
+      console.error(formatError(`Unknown option: ${token.rawName}${hint}`));
+      console.error(`Run "${fmt.command("cc-permissions --help")}" for usage information.`);
+      process.exit(1);
+    }
+  }
+}
+
 // Main CLI entry point
-function main(): void {
-  const { values, positionals } = parseArgs({
+async function main(): Promise<void> {
+  const { values, positionals, tokens } = parseArgs({
     options: {
       help: { type: "boolean", short: "h" },
       version: { type: "boolean", short: "v" },
@@ -467,6 +517,7 @@ function main(): void {
     },
     allowPositionals: true,
     strict: false, // Allow unknown options to pass through to subcommands
+    tokens: true,
   });
 
   if (values.version) {
@@ -479,6 +530,13 @@ function main(): void {
 
   // Check if first positional is a command
   const command = positionals[0];
+
+  // When no command is present, validate that all options are known.
+  // (When a command IS present, unknown options pass through to the
+  // subcommand handler which does its own strict parsing.)
+  if (!command) {
+    validateNoUnknownOptions(tokens!);
+  }
 
   // Show help if -h flag with no command
   if (values.help && !command) {
@@ -502,7 +560,7 @@ function main(): void {
     if (values.output) {
       analyzeArgs.push("--output", values.output as string);
     }
-    handleAnalyze(analyzeArgs);
+    await handleAnalyze(analyzeArgs);
     return;
   }
 
@@ -511,13 +569,13 @@ function main(): void {
 
   switch (command) {
     case "apply":
-      handleApply(subArgs);
+      await handleApply(subArgs);
       break;
     case "template":
       handleTemplate(subArgs);
       break;
     case "analyze":
-      handleAnalyze(subArgs);
+      await handleAnalyze(subArgs);
       break;
     case "list":
       handleList(subArgs);
@@ -530,4 +588,7 @@ function main(): void {
 }
 
 // Run main
-main();
+main().catch((error) => {
+  console.error(formatError(error instanceof Error ? error.message : String(error)));
+  process.exit(1);
+});

@@ -275,6 +275,61 @@ describe("CLI - List Command", () => {
   });
 });
 
+describe("CLI - Unknown Options", () => {
+  it("should error on --h (not a valid long option)", () => {
+    const { stderr, exitCode } = runCli(["--h"]);
+
+    assert.equal(exitCode, 1);
+    assert.ok(stderr.includes("Unknown option"));
+    assert.ok(stderr.includes("--h"));
+    assert.ok(stderr.includes("--help"));
+  });
+
+  it("should error on --hlep (typo for --help)", () => {
+    const { stderr, exitCode } = runCli(["--hlep"]);
+
+    assert.equal(exitCode, 1);
+    assert.ok(stderr.includes("Unknown option"));
+    assert.ok(stderr.includes("--hlep"));
+    assert.ok(stderr.includes("--help"));
+  });
+
+  it("should suggest --version for --versiom", () => {
+    const { stderr, exitCode } = runCli(["--versiom"]);
+
+    assert.equal(exitCode, 1);
+    assert.ok(stderr.includes("Unknown option"));
+    assert.ok(stderr.includes("--versiom"));
+    assert.ok(stderr.includes("--version"));
+  });
+
+  it("should error without suggestion for distant typos", () => {
+    const { stderr, exitCode } = runCli(["--zzz"]);
+
+    assert.equal(exitCode, 1);
+    assert.ok(stderr.includes("Unknown option"));
+    assert.ok(stderr.includes("--zzz"));
+    // Should NOT suggest anything (distance > 2)
+    assert.ok(!stderr.includes("Did you mean"));
+  });
+
+  it("should still allow valid flags without command", () => {
+    const { stdout, exitCode } = runCli(["--help"]);
+
+    assert.equal(exitCode, 0);
+    assert.ok(stdout.includes("cc-permissions"));
+    assert.ok(stdout.includes("Usage:"));
+  });
+
+  it("should not validate unknown options when a command is present", () => {
+    const { stdout, exitCode } = runCli(["template", "shell", "--format", "json"]);
+
+    assert.equal(exitCode, 0);
+    const parsed = JSON.parse(stdout);
+    assert.ok(parsed.permissions);
+  });
+});
+
 describe("CLI - Edge Cases", () => {
   it("should handle mixed case template names", () => {
     const { stdout, exitCode } = runCli(["template", "SHELL", "--format", "json"]);
