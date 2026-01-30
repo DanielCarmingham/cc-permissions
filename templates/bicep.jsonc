@@ -4,7 +4,8 @@
   "description": "Azure Bicep infrastructure-as-code CLI",
   "category": "Cloud Providers",
   "detection": {
-    "files": ["*.bicep", "*.bicepparam", "bicepconfig.json"]
+    "files": ["bicepconfig.json"],
+    "repoFiles": ["*.bicep", "*.bicepparam"]
   },
   "levels": {
     "restrictive": [

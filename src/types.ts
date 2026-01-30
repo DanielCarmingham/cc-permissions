@@ -36,6 +36,12 @@ export interface DetectionRules {
   mcpServers?: string[];
   // CLI commands that must be available on the system (checked via `which` or `command -v`)
   commands?: string[];
+  // File patterns to search for in the current and ancestor directories (up to 10 levels)
+  ancestorFiles?: string[];
+  // Directory patterns to search for in the current and ancestor directories (up to 10 levels)
+  ancestorDirectories?: string[];
+  // File patterns to search for in all tracked files under the analyzed directory (uses git ls-files, falls back to bounded directory walk)
+  repoFiles?: string[];
   // Git remote URL patterns to match (e.g., "github.com", "gitea.", "gitlab.com")
   gitRemotes?: string[];
   // If true, this template is always recommended (e.g., shell baseline)
@@ -67,7 +73,7 @@ export interface ClaudeCodePermissions {
 }
 
 // Detection type categories
-export type DetectionType = "file" | "directory" | "content" | "mcp" | "remote" | "always";
+export type DetectionType = "file" | "directory" | "ancestorFile" | "ancestorDirectory" | "repoFile" | "content" | "mcp" | "remote" | "always";
 
 // Detection info for a single template
 export interface TemplateDetection {

@@ -97,7 +97,7 @@ describe("loader module - template loading", () => {
         assert.ok(templateWithDetection.detection);
         // Detection should have at least one type of rule
         const d = templateWithDetection.detection;
-        const hasRules = d.files || d.directories || d.contentPatterns || d.always;
+        const hasRules = d.files || d.directories || d.ancestorFiles || d.ancestorDirectories || d.repoFiles || d.contentPatterns || d.mcpServers || d.commands || d.gitRemotes || d.always;
         assert.ok(hasRules);
       }
     });

@@ -4,7 +4,7 @@
   "description": "SQLite CLI tools (sqlite3)",
   "category": "Database",
   "detection": {
-    "files": ["*.sqlite", "*.db"]
+    "repoFiles": ["*.sqlite", "*.db"]
   },
   "levels": {
     "restrictive": [

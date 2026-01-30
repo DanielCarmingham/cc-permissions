@@ -1,5 +1,5 @@
-import { readdirSync, existsSync, statSync, readFileSync } from "node:fs";
-import { join, resolve, relative } from "node:path";
+import { readdirSync, existsSync, statSync, readFileSync, lstatSync } from "node:fs";
+import { join, resolve, relative, dirname, basename } from "node:path";
 import { execSync } from "node:child_process";
 import type { AnalysisResult, DetectionRules, TemplateRegistry, TemplateDetection, DetectionType } from "./types.js";
 import { PermissionLevel } from "./types.js";
@@ -14,6 +14,20 @@ const cachedCommands: Map<string, boolean> = new Map();
 
 // Cache for git remote URLs (per directory)
 const cachedGitRemotes: Map<string, string[]> = new Map();
+
+// Cache for repo file listings (per analyzed directory)
+const cachedRepoFiles: Map<string, string[]> = new Map();
+
+// Directories to skip during filesystem walk fallback
+const SKIP_DIRS = new Set([
+  "node_modules", ".git", "vendor", "dist", "build", "target",
+  "__pycache__", ".next", ".nuxt", ".output", ".venv", "venv",
+  ".tox", "coverage", ".cache", ".parcel-cache", ".yarn", ".pnp",
+  ".svn", ".hg",
+]);
+
+const MAX_WALK_DEPTH = 5;
+const MAX_WALK_FILES = 10000;
 
 /**
  * Get the list of active MCP servers by running `claude mcp list`.
@@ -131,28 +145,59 @@ function isGitRepoRoot(dir: string): boolean {
   return stat.isDirectory() || stat.isFile();
 }
 
+// Cache for findGitRoot results
+const cachedGitRoot: Map<string, string | null> = new Map();
+
+// Maximum number of ancestor levels to search
+const MAX_ANCESTOR_LEVELS = 10;
+
+/**
+ * Find the nearest git root by walking up from startDir.
+ * Checks startDir itself first, then parent directories up to MAX_ANCESTOR_LEVELS.
+ * Returns the git root path or null if not found.
+ */
+function findGitRoot(startDir: string): string | null {
+  if (cachedGitRoot.has(startDir)) {
+    return cachedGitRoot.get(startDir)!;
+  }
+
+  let dir = startDir;
+  for (let i = 0; i <= MAX_ANCESTOR_LEVELS; i++) {
+    if (isGitRepoRoot(dir)) {
+      cachedGitRoot.set(startDir, dir);
+      return dir;
+    }
+    const parent = dirname(dir);
+    if (parent === dir) break; // filesystem root
+    dir = parent;
+  }
+
+  cachedGitRoot.set(startDir, null);
+  return null;
+}
+
 /**
  * Get git remote URLs for a directory.
- * Only returns remotes if the directory is itself a git repo root.
+ * Walks up to find the nearest git root and reads remotes from there.
  * Returns an array of remote URLs.
  */
 function getGitRemotes(dir: string): string[] {
-  if (cachedGitRemotes.has(dir)) {
-    return cachedGitRemotes.get(dir)!;
+  // Find the nearest git root (may be an ancestor directory)
+  const gitRoot = findGitRoot(dir);
+  if (!gitRoot) {
+    return [];
+  }
+
+  // Cache by git root path so all subdirs share the same result
+  if (cachedGitRemotes.has(gitRoot)) {
+    return cachedGitRemotes.get(gitRoot)!;
   }
 
   const remotes: string[] = [];
 
-  // Only check git remotes if this directory is a git repo root
-  // This prevents detecting parent repo's remotes for subdirectories
-  if (!isGitRepoRoot(dir)) {
-    cachedGitRemotes.set(dir, remotes);
-    return remotes;
-  }
-
   try {
     const output = execSync("git remote -v", {
-      cwd: dir,
+      cwd: gitRoot,
       encoding: "utf-8",
       timeout: 5000,
       stdio: ["pipe", "pipe", "pipe"],
@@ -174,7 +219,7 @@ function getGitRemotes(dir: string): string[] {
     // Not a git repo or git not available
   }
 
-  cachedGitRemotes.set(dir, remotes);
+  cachedGitRemotes.set(gitRoot, remotes);
   return remotes;
 }
 
@@ -308,6 +353,190 @@ function checkDirectories(dir: string, directories: string[]): DetectionResult |
 }
 
 /**
+ * Walk up from startDir checking for a file pattern at each level.
+ * Returns the full path if found, null otherwise.
+ */
+function findAncestorWithFile(startDir: string, pattern: string): string | null {
+  let dir = startDir;
+  for (let i = 0; i <= MAX_ANCESTOR_LEVELS; i++) {
+    const found = fileExists(dir, pattern);
+    if (found) return found;
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return null;
+}
+
+/**
+ * Walk up from startDir checking for a directory pattern at each level.
+ * Returns the full path if found, null otherwise.
+ */
+function findAncestorWithDirectory(startDir: string, pattern: string): string | null {
+  let dir = startDir;
+  for (let i = 0; i <= MAX_ANCESTOR_LEVELS; i++) {
+    const found = directoryExists(dir, pattern);
+    if (found) return found;
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return null;
+}
+
+/**
+ * Check ancestor file patterns and return first match.
+ */
+function checkAncestorFiles(dir: string, patterns: string[]): DetectionResult | null {
+  for (const pattern of patterns) {
+    const found = findAncestorWithFile(dir, pattern);
+    if (found) {
+      return { type: "ancestorFile", reason: found };
+    }
+  }
+  return null;
+}
+
+/**
+ * Check ancestor directory patterns and return first match.
+ */
+function checkAncestorDirectories(dir: string, patterns: string[]): DetectionResult | null {
+  for (const pattern of patterns) {
+    const found = findAncestorWithDirectory(dir, pattern);
+    if (found) {
+      return { type: "ancestorDirectory", reason: found };
+    }
+  }
+  return null;
+}
+
+/**
+ * Walk a directory tree collecting relative file paths.
+ * Skips hidden directories, SKIP_DIRS entries, and symlinks.
+ * Bounded by MAX_WALK_DEPTH and MAX_WALK_FILES.
+ */
+function walkDirectoryForFiles(startDir: string): string[] {
+  const results: string[] = [];
+
+  function walk(dir: string, depth: number): void {
+    if (depth > MAX_WALK_DEPTH || results.length >= MAX_WALK_FILES) return;
+
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+
+    for (const entry of entries) {
+      if (results.length >= MAX_WALK_FILES) return;
+
+      const name = entry.name;
+
+      if (entry.isDirectory()) {
+        // Skip hidden directories and known noise directories
+        if (name.startsWith(".") || SKIP_DIRS.has(name)) continue;
+
+        // Skip symlinks to prevent cycles
+        try {
+          const fullPath = join(dir, name);
+          if (lstatSync(fullPath).isSymbolicLink()) continue;
+        } catch {
+          continue;
+        }
+
+        walk(join(dir, name), depth + 1);
+      } else if (entry.isFile()) {
+        // Skip symlinks
+        try {
+          const fullPath = join(dir, name);
+          if (lstatSync(fullPath).isSymbolicLink()) continue;
+        } catch {
+          continue;
+        }
+
+        results.push(relative(startDir, join(dir, name)));
+      }
+    }
+  }
+
+  walk(startDir, 0);
+  return results;
+}
+
+/**
+ * Get list of all files under a directory.
+ * Uses `git ls-files` for git repos (fast, excludes untracked noise),
+ * falls back to bounded directory walk for non-git repos.
+ * Results are cached per directory.
+ */
+function getRepoFiles(dir: string): string[] {
+  if (cachedRepoFiles.has(dir)) {
+    return cachedRepoFiles.get(dir)!;
+  }
+
+  let files: string[] = [];
+
+  try {
+    const output = execSync("git ls-files", {
+      cwd: dir,
+      encoding: "utf-8",
+      timeout: 10000,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    files = output.split("\n").filter((f) => f.length > 0);
+  } catch {
+    // Not a git repo or git not available — use filesystem walk
+    files = walkDirectoryForFiles(dir);
+  }
+
+  cachedRepoFiles.set(dir, files);
+  return files;
+}
+
+/**
+ * Check if a file pattern matches any file in the repo file list.
+ * Supports glob patterns like "*.tf" (matches basename ending) and exact filenames.
+ * Returns the relative path of the first match, or null.
+ */
+function repoFileExists(repoFiles: string[], pattern: string): string | null {
+  if (pattern.includes("*")) {
+    // Simple glob: "*.tf" → match files ending in ".tf"
+    const suffix = pattern.replace("*", "");
+    for (const file of repoFiles) {
+      const name = basename(file);
+      if (name.endsWith(suffix)) {
+        return file;
+      }
+    }
+  } else {
+    // Exact filename match (anywhere in the tree)
+    for (const file of repoFiles) {
+      const name = basename(file);
+      if (name === pattern) {
+        return file;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Check repo file patterns and return first match.
+ */
+function checkRepoFiles(dir: string, patterns: string[]): DetectionResult | null {
+  const repoFiles = getRepoFiles(dir);
+  for (const pattern of patterns) {
+    const found = repoFileExists(repoFiles, pattern);
+    if (found) {
+      return { type: "repoFile", reason: found };
+    }
+  }
+  return null;
+}
+
+/**
  * Check content patterns and return first match.
  */
 function checkContentPatterns(
@@ -395,6 +624,24 @@ function detectTemplate(
       results.push(result);
     }
 
+    if (detection.ancestorFiles) {
+      const result = checkAncestorFiles(dir, detection.ancestorFiles);
+      if (!result) return null;
+      results.push(result);
+    }
+
+    if (detection.ancestorDirectories) {
+      const result = checkAncestorDirectories(dir, detection.ancestorDirectories);
+      if (!result) return null;
+      results.push(result);
+    }
+
+    if (detection.repoFiles) {
+      const result = checkRepoFiles(dir, detection.repoFiles);
+      if (!result) return null;
+      results.push(result);
+    }
+
     if (detection.contentPatterns) {
       const result = checkContentPatterns(dir, detection.contentPatterns);
       if (!result) return null;
@@ -431,6 +678,21 @@ function detectTemplate(
 
   if (detection.directories) {
     const result = checkDirectories(dir, detection.directories);
+    if (result) return result;
+  }
+
+  if (detection.ancestorFiles) {
+    const result = checkAncestorFiles(dir, detection.ancestorFiles);
+    if (result) return result;
+  }
+
+  if (detection.ancestorDirectories) {
+    const result = checkAncestorDirectories(dir, detection.ancestorDirectories);
+    if (result) return result;
+  }
+
+  if (detection.repoFiles) {
+    const result = checkRepoFiles(dir, detection.repoFiles);
     if (result) return result;
   }
 
@@ -489,12 +751,18 @@ export function analyzeDirectory(dir: string): AnalysisResult {
 
       // Format the reason for display
       let reason = detected.reason;
-      if (detected.type === "file" || detected.type === "directory") {
+      if (detected.type === "file" || detected.type === "directory" ||
+          detected.type === "ancestorFile" || detected.type === "ancestorDirectory") {
         const relativePath = relative(absoluteDir, detected.reason) || detected.reason;
         if (!detectedFiles.includes(relativePath)) {
           detectedFiles.push(relativePath);
         }
         reason = relativePath;
+      } else if (detected.type === "repoFile") {
+        // repoFile reasons are already relative paths
+        if (!detectedFiles.includes(detected.reason)) {
+          detectedFiles.push(detected.reason);
+        }
       }
 
       detections.push({ template: name, type: detected.type, reason });
@@ -545,6 +813,12 @@ function formatDetection(type: string, reason: string): string {
       return fmt.fileDetection("file:") + " " + reason;
     case "directory":
       return fmt.dirDetection("dir:") + " " + reason;
+    case "ancestorFile":
+      return fmt.ancestorFileDetection("ancestor-file:") + " " + reason;
+    case "ancestorDirectory":
+      return fmt.ancestorDirDetection("ancestor-dir:") + " " + reason;
+    case "repoFile":
+      return fmt.repoFileDetection("repo:") + " " + reason;
     case "content":
       return fmt.contentDetection("content:") + " " + reason;
     case "mcp":
@@ -561,8 +835,10 @@ function formatDetection(type: string, reason: string): string {
 // Get plain text length of detection (without color codes)
 function getDetectionLength(type: string, reason: string): number {
   const prefixes: Record<string, string> = {
-    file: "file:", directory: "dir:", content: "content:",
-    mcp: "mcp:", remote: "remote:", always: "",
+    file: "file:", directory: "dir:",
+    ancestorFile: "ancestor-file:", ancestorDirectory: "ancestor-dir:",
+    repoFile: "repo:",
+    content: "content:", mcp: "mcp:", remote: "remote:", always: "",
   };
   const prefix = prefixes[type] || `${type}:`;
   if (type === "always") return reason.length;

@@ -151,6 +151,15 @@ export const fmt = {
   /** MCP server detection - magenta */
   mcpDetection: (text: string) => color(text, colors.magenta),
 
+  /** Ancestor file detection indicator - dim green */
+  ancestorFileDetection: (text: string) => color(text, colors.dim, colors.green),
+
+  /** Ancestor directory detection indicator - dim green */
+  ancestorDirDetection: (text: string) => color(text, colors.dim, colors.green),
+
+  /** Repo file detection indicator - dim cyan */
+  repoFileDetection: (text: string) => color(text, colors.dim, colors.cyan),
+
   /** Git remote detection - blue */
   remoteDetection: (text: string) => color(text, colors.blue),
 

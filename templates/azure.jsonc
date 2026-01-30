@@ -4,7 +4,9 @@
   "description": "Azure CLI, Functions, Bicep, and Azure Developer CLI",
   "category": "Cloud Providers",
   "detection": {
-    "files": ["*.bicep", "azure.yaml", "azure-pipelines.yml"]
+    "files": ["azure.yaml"],
+    "repoFiles": ["*.bicep"],
+    "ancestorFiles": ["azure-pipelines.yml"]
   },
   "levels": {
     "restrictive": [

@@ -39,6 +39,21 @@
           "description": "Directory patterns that indicate this template (e.g., .git/, .github/workflows/)",
           "items": { "type": "string" }
         },
+        "ancestorFiles": {
+          "type": "array",
+          "description": "File patterns to search for in the current and ancestor directories (up to 10 levels)",
+          "items": { "type": "string" }
+        },
+        "ancestorDirectories": {
+          "type": "array",
+          "description": "Directory patterns to search for in the current and ancestor directories (up to 10 levels)",
+          "items": { "type": "string" }
+        },
+        "repoFiles": {
+          "type": "array",
+          "description": "File patterns to search for in all tracked files under the analyzed directory (uses git ls-files, falls back to bounded directory walk)",
+          "items": { "type": "string" }
+        },
         "contentPatterns": {
           "type": "array",
           "description": "File + content patterns for ambiguous detection",

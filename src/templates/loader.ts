@@ -144,6 +144,54 @@ function validateDetection(
     result.directories = d.directories as string[];
   }
 
+  if (d.ancestorFiles !== undefined) {
+    if (!Array.isArray(d.ancestorFiles)) {
+      throw new Error(
+        `Template "${templateName}": detection.ancestorFiles must be an array`
+      );
+    }
+    for (let i = 0; i < d.ancestorFiles.length; i++) {
+      if (typeof d.ancestorFiles[i] !== "string") {
+        throw new Error(
+          `Template "${templateName}": detection.ancestorFiles[${i}] must be a string`
+        );
+      }
+    }
+    result.ancestorFiles = d.ancestorFiles as string[];
+  }
+
+  if (d.ancestorDirectories !== undefined) {
+    if (!Array.isArray(d.ancestorDirectories)) {
+      throw new Error(
+        `Template "${templateName}": detection.ancestorDirectories must be an array`
+      );
+    }
+    for (let i = 0; i < d.ancestorDirectories.length; i++) {
+      if (typeof d.ancestorDirectories[i] !== "string") {
+        throw new Error(
+          `Template "${templateName}": detection.ancestorDirectories[${i}] must be a string`
+        );
+      }
+    }
+    result.ancestorDirectories = d.ancestorDirectories as string[];
+  }
+
+  if (d.repoFiles !== undefined) {
+    if (!Array.isArray(d.repoFiles)) {
+      throw new Error(
+        `Template "${templateName}": detection.repoFiles must be an array`
+      );
+    }
+    for (let i = 0; i < d.repoFiles.length; i++) {
+      if (typeof d.repoFiles[i] !== "string") {
+        throw new Error(
+          `Template "${templateName}": detection.repoFiles[${i}] must be a string`
+        );
+      }
+    }
+    result.repoFiles = d.repoFiles as string[];
+  }
+
   if (d.contentPatterns !== undefined) {
     if (!Array.isArray(d.contentPatterns)) {
       throw new Error(
