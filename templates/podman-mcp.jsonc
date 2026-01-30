@@ -1,0 +1,48 @@
+{
+  "$schema": "template.schema.json",
+  "name": "podman-mcp",
+  "description": "Podman MCP Server tools for container management",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["podman", "podman-mcp", "podman-mcp-server"]
+  },
+  "levels": {
+    "restrictive": [
+      // Container inspection (read-only)
+      // manusa/podman-mcp-server naming (underscored)
+      { "command": "mcp__podman__container_list", "type": "mcp", "description": "List all Podman containers" },
+      { "command": "mcp__podman__container_inspect", "type": "mcp", "description": "Inspect a Podman container" },
+      { "command": "mcp__podman__container_logs", "type": "mcp", "description": "Get container logs" },
+      // Image inspection
+      { "command": "mcp__podman__image_list", "type": "mcp", "description": "List Podman images" },
+      // Network inspection
+      { "command": "mcp__podman__network_list", "type": "mcp", "description": "List Podman networks" },
+      // Volume inspection
+      { "command": "mcp__podman__volume_list", "type": "mcp", "description": "List Podman volumes" },
+      // rimaleon/podman-mcp naming (hyphenated)
+      { "command": "mcp__podman-mcp__list-containers", "type": "mcp", "description": "List all Podman containers" },
+      { "command": "mcp__podman-mcp__get-logs", "type": "mcp", "description": "Get container logs" }
+    ],
+    "standard": [
+      // Container lifecycle
+      // manusa/podman-mcp-server naming
+      { "command": "mcp__podman__container_run", "type": "mcp", "description": "Run a Podman container" },
+      { "command": "mcp__podman__container_stop", "type": "mcp", "description": "Stop a Podman container" },
+      // Image operations
+      { "command": "mcp__podman__image_build", "type": "mcp", "description": "Build container image" },
+      { "command": "mcp__podman__image_pull", "type": "mcp", "description": "Pull image from registry" },
+      // rimaleon/podman-mcp naming
+      { "command": "mcp__podman-mcp__create-container", "type": "mcp", "description": "Create a Podman container" }
+    ],
+    "permissive": [
+      // Container removal
+      // manusa/podman-mcp-server naming
+      { "command": "mcp__podman__container_remove", "type": "mcp", "description": "Remove a Podman container" },
+      // Image management
+      { "command": "mcp__podman__image_push", "type": "mcp", "description": "Push image to registry" },
+      { "command": "mcp__podman__image_remove", "type": "mcp", "description": "Remove a Podman image" },
+      // rimaleon/podman-mcp naming
+      { "command": "mcp__podman-mcp__deploy-compose", "type": "mcp", "description": "Deploy Podman Compose stack" }
+    ]
+  }
+}

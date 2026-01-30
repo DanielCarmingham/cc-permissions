@@ -4,21 +4,54 @@
   "description": "Docker MCP Server tools for container management",
   "category": "MCP Servers",
   "detection": {
-    "mcpServers": ["docker", "docker-mcp"]
+    "mcpServers": ["docker", "docker-mcp", "mcp-server-docker"]
   },
   "levels": {
     "restrictive": [
       // Container inspection (read-only)
+      // quantgeekdev/docker-mcp naming (hyphenated)
       { "command": "mcp__docker__list-containers", "type": "mcp", "description": "List all Docker containers" },
-      { "command": "mcp__docker__get-logs", "type": "mcp", "description": "Get container logs" }
+      { "command": "mcp__docker__get-logs", "type": "mcp", "description": "Get container logs" },
+      // ckreiling/mcp-server-docker naming (underscored)
+      { "command": "mcp__mcp-server-docker__list_containers", "type": "mcp", "description": "List all Docker containers" },
+      { "command": "mcp__mcp-server-docker__fetch_container_logs", "type": "mcp", "description": "Get container logs" },
+      // Image inspection
+      { "command": "mcp__mcp-server-docker__list_images", "type": "mcp", "description": "List Docker images" },
+      // Network inspection
+      { "command": "mcp__mcp-server-docker__list_networks", "type": "mcp", "description": "List Docker networks" },
+      // Volume inspection
+      { "command": "mcp__mcp-server-docker__list_volumes", "type": "mcp", "description": "List Docker volumes" }
     ],
     "standard": [
-      // Container creation
-      { "command": "mcp__docker__create-container", "type": "mcp", "description": "Create a Docker container" }
+      // Container lifecycle
+      // quantgeekdev/docker-mcp naming
+      { "command": "mcp__docker__create-container", "type": "mcp", "description": "Create a Docker container" },
+      // ckreiling/mcp-server-docker naming
+      { "command": "mcp__mcp-server-docker__create_container", "type": "mcp", "description": "Create a Docker container" },
+      { "command": "mcp__mcp-server-docker__run_container", "type": "mcp", "description": "Create and start a container" },
+      { "command": "mcp__mcp-server-docker__start_container", "type": "mcp", "description": "Start a stopped container" },
+      { "command": "mcp__mcp-server-docker__stop_container", "type": "mcp", "description": "Stop a running container" },
+      { "command": "mcp__mcp-server-docker__recreate_container", "type": "mcp", "description": "Recreate a container" },
+      // Image operations
+      { "command": "mcp__mcp-server-docker__pull_image", "type": "mcp", "description": "Pull image from registry" },
+      { "command": "mcp__mcp-server-docker__build_image", "type": "mcp", "description": "Build image from Dockerfile" },
+      // Network operations
+      { "command": "mcp__mcp-server-docker__create_network", "type": "mcp", "description": "Create a Docker network" },
+      // Volume operations
+      { "command": "mcp__mcp-server-docker__create_volume", "type": "mcp", "description": "Create a Docker volume" }
     ],
     "permissive": [
       // Compose deployment
-      { "command": "mcp__docker__deploy-compose", "type": "mcp", "description": "Deploy Docker Compose stack" }
+      { "command": "mcp__docker__deploy-compose", "type": "mcp", "description": "Deploy Docker Compose stack" },
+      // Container removal
+      { "command": "mcp__mcp-server-docker__remove_container", "type": "mcp", "description": "Remove a container" },
+      // Image management
+      { "command": "mcp__mcp-server-docker__push_image", "type": "mcp", "description": "Push image to registry" },
+      { "command": "mcp__mcp-server-docker__remove_image", "type": "mcp", "description": "Remove a Docker image" },
+      // Network removal
+      { "command": "mcp__mcp-server-docker__remove_network", "type": "mcp", "description": "Remove a Docker network" },
+      // Volume removal
+      { "command": "mcp__mcp-server-docker__remove_volume", "type": "mcp", "description": "Remove a Docker volume" }
     ]
   }
 }

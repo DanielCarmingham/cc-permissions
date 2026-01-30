@@ -1,0 +1,104 @@
+{
+  "$schema": "template.schema.json",
+  "name": "podman",
+  "description": "Podman, Podman Compose, and Podman Machine",
+  "category": "Container & Infrastructure",
+  "detection": {
+    "files": ["Containerfile", "podman-compose.yml", "podman-compose.yaml"],
+    "commands": ["podman"]
+  },
+  "levels": {
+    "restrictive": [
+      // podman info
+      { "command": "podman --version", "description": "Check Podman version" },
+      { "command": "podman version", "description": "Show Podman version details" },
+      { "command": "podman info", "description": "Show Podman system info" },
+      // container read-only
+      { "command": "podman ps", "description": "List running containers" },
+      { "command": "podman container ls", "description": "List containers" },
+      { "command": "podman container inspect", "description": "Inspect container" },
+      { "command": "podman logs", "description": "View container logs" },
+      { "command": "podman top", "description": "Show container processes" },
+      { "command": "podman stats", "description": "Show container stats" },
+      { "command": "podman port", "description": "Show port mappings" },
+      { "command": "podman diff", "description": "Show container changes" },
+      // image read-only
+      { "command": "podman images", "description": "List images" },
+      { "command": "podman image ls", "description": "List images" },
+      { "command": "podman image inspect", "description": "Inspect image" },
+      { "command": "podman image history", "description": "Show image history" },
+      { "command": "podman search", "description": "Search container registries" },
+      // network read-only
+      { "command": "podman network ls", "description": "List networks" },
+      { "command": "podman network inspect", "description": "Inspect network" },
+      // volume read-only
+      { "command": "podman volume ls", "description": "List volumes" },
+      { "command": "podman volume inspect", "description": "Inspect volume" },
+      // podman-compose info
+      { "command": "podman-compose --version", "description": "Check Podman Compose version" },
+      { "command": "podman-compose version", "description": "Check Podman Compose version" },
+      { "command": "podman-compose config", "description": "Validate Compose config" },
+      { "command": "podman-compose ps", "description": "List Compose containers" },
+      // podman machine read-only
+      { "command": "podman machine list", "description": "List Podman machines" },
+      { "command": "podman machine info", "description": "Show Podman machine info" },
+      { "command": "podman machine inspect", "description": "Inspect Podman machine" }
+    ],
+    "standard": [
+      // build
+      { "command": "podman build", "description": "Build container image" },
+      { "command": "podman image build", "description": "Build container image" },
+      // run containers
+      { "command": "podman run", "description": "Run container" },
+      { "command": "podman container run", "description": "Run container" },
+      { "command": "podman start", "description": "Start container" },
+      { "command": "podman stop", "description": "Stop container" },
+      { "command": "podman restart", "description": "Restart container" },
+      { "command": "podman exec", "description": "Execute in container" },
+      { "command": "podman attach", "description": "Attach to container" },
+      { "command": "podman cp", "description": "Copy files to/from container" },
+      // podman-compose operations
+      { "command": "podman-compose up", "description": "Start Compose services" },
+      { "command": "podman-compose down", "description": "Stop Compose services" },
+      { "command": "podman-compose build", "description": "Build Compose services" },
+      { "command": "podman-compose logs", "description": "View Compose logs" },
+      { "command": "podman-compose exec", "description": "Execute in Compose service" },
+      { "command": "podman-compose run", "description": "Run Compose command" },
+      // podman machine lifecycle
+      { "command": "podman machine start", "description": "Start Podman machine" },
+      { "command": "podman machine stop", "description": "Stop Podman machine" }
+    ],
+    "permissive": [
+      // registry operations
+      { "command": "podman push", "description": "Push image to registry" },
+      { "command": "podman pull", "description": "Pull image from registry" },
+      { "command": "podman login", "description": "Login to registry" },
+      { "command": "podman logout", "description": "Logout from registry" },
+      { "command": "podman tag", "description": "Tag image" },
+      // remove containers
+      { "command": "podman rm", "description": "Remove container" },
+      { "command": "podman container rm", "description": "Remove container" },
+      { "command": "podman container prune", "description": "Remove stopped containers" },
+      { "command": "podman kill", "description": "Kill container" },
+      // remove images
+      { "command": "podman rmi", "description": "Remove image" },
+      { "command": "podman image rm", "description": "Remove image" },
+      { "command": "podman image prune", "description": "Remove unused images" },
+      // network operations
+      { "command": "podman network create", "description": "Create network" },
+      { "command": "podman network rm", "description": "Remove network" },
+      { "command": "podman network prune", "description": "Remove unused networks" },
+      { "command": "podman network connect", "description": "Connect to network" },
+      { "command": "podman network disconnect", "description": "Disconnect from network" },
+      // volume operations
+      { "command": "podman volume create", "description": "Create volume" },
+      { "command": "podman volume rm", "description": "Remove volume" },
+      { "command": "podman volume prune", "description": "Remove unused volumes" },
+      // system operations
+      { "command": "podman system prune", "description": "Remove unused data" },
+      { "command": "podman system reset", "description": "Reset Podman storage" },
+      // podman machine management
+      { "command": "podman machine rm", "description": "Remove Podman machine" }
+    ]
+  }
+}

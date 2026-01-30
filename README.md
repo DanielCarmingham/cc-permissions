@@ -143,6 +143,8 @@ cc-permissions apply nodejs --level permissive
 | [docker](docs/templates/docker.md) | Docker, Docker Compose, and Buildx |
 | [docker-mcp](docs/templates/docker-mcp.md) | Docker MCP Server tools for container management |
 | [kubernetes](docs/templates/kubernetes.md) | kubectl, Helm, k9s, and Minikube |
+| [podman](docs/templates/podman.md) | Podman, Podman Compose, and Podman Machine |
+| [podman-mcp](docs/templates/podman-mcp.md) | Podman MCP Server tools for container management |
 | [terraform](docs/templates/terraform.md) | Terraform, Terragrunt, and tflint |
 
 ### Database
@@ -193,6 +195,7 @@ All MCP server templates in one place. These are also listed alongside their CLI
 | [gitlab-mcp](docs/templates/gitlab-mcp.md) | GitLab MCP Server tools for repository and workflow management |
 | [mariadb-mcp](docs/templates/mariadb-mcp.md) | MariaDB MCP Server tools for database queries |
 | [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
+| [podman-mcp](docs/templates/podman-mcp.md) | Podman MCP Server tools for container management |
 | [selenium-mcp](docs/templates/selenium-mcp.md) | Selenium MCP Server tools for browser automation |
 | [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
 | [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
