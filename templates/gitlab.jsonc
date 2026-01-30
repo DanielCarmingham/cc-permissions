@@ -4,8 +4,8 @@
   "description": "GitLab CLI (glab) for repository and workflow management",
   "category": "Version Control",
   "detection": {
-    "directories": [".gitlab/", ".gitlab-ci.yml"],
-    "files": [".gitlab-ci.yml"],
+    "ancestorDirectories": [".gitlab/"],
+    "ancestorFiles": [".gitlab-ci.yml"],
     "gitRemotes": ["gitlab.com", "gitlab."]
   },
   "levels": {

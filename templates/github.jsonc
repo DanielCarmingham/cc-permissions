@@ -4,7 +4,7 @@
   "description": "GitHub CLI (gh) for repository and workflow management",
   "category": "Version Control",
   "detection": {
-    "directories": [".github/workflows/", ".github/"],
+    "ancestorDirectories": [".github/workflows/", ".github/"],
     "gitRemotes": ["github.com"]
   },
   "levels": {

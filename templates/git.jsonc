@@ -4,8 +4,7 @@
   "description": "Git version control",
   "category": "Version Control",
   "detection": {
-    "directories": [".git/"],
-    "files": [".git"]
+    "ancestorDirectories": [".git/"]
   },
   "levels": {
     "restrictive": [
