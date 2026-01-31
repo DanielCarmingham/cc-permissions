@@ -848,7 +848,7 @@ function getDetectionLength(type: string, reason: string): number {
 /**
  * Format analysis result for display.
  */
-export function formatAnalysisResult(result: AnalysisResult): string {
+export function formatAnalysisResult(result: AnalysisResult, versionString?: string): string {
   const lines: string[] = [
     ``,
     fmt.title(`Project Analysis`, "═"),
@@ -899,17 +899,14 @@ export function formatAnalysisResult(result: AnalysisResult): string {
   }
 
   lines.push(``);
-  lines.push(`${fmt.section("Suggested Level:")} ${fmt.value(result.suggestedLevel)}`);
-  lines.push(``);
   lines.push(`${fmt.section("Apply Permissions:")}`);
   lines.push(`   ${fmt.example(result.suggestedCommand)}`);
   lines.push(``);
+  lines.push(`Run ${fmt.command("cc-permissions --help")} for usage information.`);
+  lines.push(``);
 
-  // Show template details command with an example template
-  const exampleTemplate = result.recommendedTemplates.find(t => t !== "shell") || result.recommendedTemplates[0];
-  if (exampleTemplate) {
-    lines.push(`${fmt.section("View Template Details:")}`);
-    lines.push(`   ${fmt.command(`cc-permissions template ${exampleTemplate}`)}`);
+  if (versionString) {
+    lines.push(fmt.dim(`cc-permissions ${versionString}`));
     lines.push(``);
   }
 

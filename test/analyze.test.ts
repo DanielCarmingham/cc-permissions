@@ -569,7 +569,7 @@ describe("formatAnalysisResult", () => {
     assert.ok(formatted.includes("nodejs"));
   });
 
-  it("should show suggested level", () => {
+  it("should show help hint and version footer", () => {
     const result = {
       detectedFiles: [],
       recommendedTemplates: ["shell"],
@@ -580,8 +580,11 @@ describe("formatAnalysisResult", () => {
 
     const formatted = formatAnalysisResult(result);
 
-    assert.ok(formatted.includes("Suggested Level:"));
-    assert.ok(formatted.includes("standard"));
+    assert.ok(formatted.includes("cc-permissions --help"));
+
+    // With version string
+    const formattedWithVersion = formatAnalysisResult(result, "v0.1.16 (abc1234)");
+    assert.ok(formattedWithVersion.includes("cc-permissions v0.1.16 (abc1234)"));
   });
 
   it("should show suggested command", () => {
