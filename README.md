@@ -153,6 +153,7 @@ cc-permissions apply nodejs --level permissive
 |----------|-------------|
 | [azure-sql](docs/templates/azure-sql.md) | Azure SQL Database CLI tools (az sql) |
 | [azure-storage](docs/templates/azure-storage.md) | Azure Storage CLI tools (az storage) for blobs, tables, queues, and file shares |
+| [excel-mcp](docs/templates/excel-mcp.md) | Excel MCP Server tools for spreadsheet operations |
 | [mariadb](docs/templates/mariadb.md) | MariaDB CLI tools (mariadb, mariadb-dump, mariadb-admin) |
 | [mariadb-mcp](docs/templates/mariadb-mcp.md) | MariaDB MCP Server tools for database queries |
 | [mongodb](docs/templates/mongodb.md) | MongoDB CLI tools (mongosh, mongodump, mongorestore) |
@@ -190,6 +191,7 @@ All MCP server templates in one place. These are also listed alongside their CLI
 | [azure-sql-mcp](docs/templates/azure-sql-mcp.md) | Azure SQL Database MCP Server tools (azmcp) |
 | [azure-storage-mcp](docs/templates/azure-storage-mcp.md) | Azure Storage MCP Server tools (azmcp) |
 | [docker-mcp](docs/templates/docker-mcp.md) | Docker MCP Server tools for container management |
+| [excel-mcp](docs/templates/excel-mcp.md) | Excel MCP Server tools for spreadsheet operations |
 | [gitea-mcp](docs/templates/gitea-mcp.md) | Gitea MCP Server tools for repository and workflow management |
 | [github-mcp](docs/templates/github-mcp.md) | GitHub MCP Server tools for repository and workflow management |
 | [gitlab-mcp](docs/templates/gitlab-mcp.md) | GitLab MCP Server tools for repository and workflow management |

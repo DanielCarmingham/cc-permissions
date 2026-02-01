@@ -1,0 +1,57 @@
+{
+  "$schema": "template.schema.json",
+  "name": "excel-mcp",
+  "description": "Excel MCP Server tools for spreadsheet operations",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["excel", "excel-mcp", "excel-mcp-server", "mcp-excel"]
+  },
+  "levels": {
+    "restrictive": [
+      // Read-only operations
+      // haris-musa/excel-mcp-server naming (Python/uvx)
+      { "command": "mcp__excel__read_data_from_excel", "type": "mcp", "description": "Read data from Excel file" },
+      { "command": "mcp__excel__get_workbook_metadata", "type": "mcp", "description": "Get workbook metadata" },
+      { "command": "mcp__excel__validate_excel_range", "type": "mcp", "description": "Validate an Excel range reference" },
+      { "command": "mcp__excel__validate_formula_syntax", "type": "mcp", "description": "Validate formula syntax" },
+      { "command": "mcp__excel__get_data_validation_info", "type": "mcp", "description": "Get data validation info" },
+      { "command": "mcp__excel__get_merged_cells", "type": "mcp", "description": "Get merged cells info" },
+      // negokaz/excel-mcp-server naming (Node/npx)
+      { "command": "mcp__excel-mcp-server__excel_describe_sheets", "type": "mcp", "description": "Describe sheets in workbook" },
+      { "command": "mcp__excel-mcp-server__excel_read_sheet", "type": "mcp", "description": "Read data from sheet" },
+      { "command": "mcp__excel-mcp-server__excel_screen_capture", "type": "mcp", "description": "Capture sheet screenshot" }
+    ],
+    "standard": [
+      // Write operations
+      // haris-musa/excel-mcp-server naming
+      { "command": "mcp__excel__write_data_to_excel", "type": "mcp", "description": "Write data to Excel file" },
+      { "command": "mcp__excel__create_workbook", "type": "mcp", "description": "Create a new workbook" },
+      { "command": "mcp__excel__create_worksheet", "type": "mcp", "description": "Create a new worksheet" },
+      { "command": "mcp__excel__apply_formula", "type": "mcp", "description": "Apply formula to cells" },
+      { "command": "mcp__excel__format_range", "type": "mcp", "description": "Format a cell range" },
+      { "command": "mcp__excel__merge_cells", "type": "mcp", "description": "Merge cells" },
+      { "command": "mcp__excel__unmerge_cells", "type": "mcp", "description": "Unmerge cells" },
+      { "command": "mcp__excel__create_table", "type": "mcp", "description": "Create a table" },
+      { "command": "mcp__excel__create_chart", "type": "mcp", "description": "Create a chart" },
+      { "command": "mcp__excel__insert_rows", "type": "mcp", "description": "Insert rows" },
+      { "command": "mcp__excel__insert_columns", "type": "mcp", "description": "Insert columns" },
+      { "command": "mcp__excel__copy_range", "type": "mcp", "description": "Copy a cell range" },
+      { "command": "mcp__excel__copy_worksheet", "type": "mcp", "description": "Copy a worksheet" },
+      { "command": "mcp__excel__rename_worksheet", "type": "mcp", "description": "Rename a worksheet" },
+      // negokaz/excel-mcp-server naming
+      { "command": "mcp__excel-mcp-server__excel_write_to_sheet", "type": "mcp", "description": "Write data to sheet" },
+      { "command": "mcp__excel-mcp-server__excel_create_table", "type": "mcp", "description": "Create a table in sheet" },
+      { "command": "mcp__excel-mcp-server__excel_copy_sheet", "type": "mcp", "description": "Copy a sheet" },
+      { "command": "mcp__excel-mcp-server__excel_format_range", "type": "mcp", "description": "Format a cell range" }
+    ],
+    "permissive": [
+      // Destructive operations
+      // haris-musa/excel-mcp-server naming
+      { "command": "mcp__excel__create_pivot_table", "type": "mcp", "description": "Create a pivot table" },
+      { "command": "mcp__excel__delete_worksheet", "type": "mcp", "description": "Delete a worksheet" },
+      { "command": "mcp__excel__delete_range", "type": "mcp", "description": "Delete a cell range" },
+      { "command": "mcp__excel__delete_sheet_rows", "type": "mcp", "description": "Delete rows from sheet" },
+      { "command": "mcp__excel__delete_sheet_columns", "type": "mcp", "description": "Delete columns from sheet" }
+    ]
+  }
+}
