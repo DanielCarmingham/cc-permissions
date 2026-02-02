@@ -1,0 +1,106 @@
+{
+  "$schema": "template.schema.json",
+  "name": "chrome-devtools-mcp",
+  "description": "Chrome DevTools MCP Server tools for browser inspection and debugging",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["chrome-devtools", "chrome-devtools-mcp", "chrome-tools", "mcp-chrome"]
+  },
+  "levels": {
+    "restrictive": [
+      // Page and network inspection (read-only)
+      // ChromeDevTools/chrome-devtools-mcp naming
+      { "command": "mcp__chrome-devtools__list_pages", "type": "mcp", "description": "List open browser pages" },
+      { "command": "mcp__chrome-devtools__list_network_requests", "type": "mcp", "description": "List network requests" },
+      { "command": "mcp__chrome-devtools__get_network_request", "type": "mcp", "description": "Get network request details" },
+      { "command": "mcp__chrome-devtools__list_console_messages", "type": "mcp", "description": "List console messages" },
+      { "command": "mcp__chrome-devtools__take_screenshot", "type": "mcp", "description": "Take page screenshot" },
+      { "command": "mcp__chrome-devtools__take_snapshot", "type": "mcp", "description": "Take accessibility snapshot" },
+
+      // benjaminr/chrome-devtools-mcp naming
+      // Connection and page info
+      { "command": "mcp__chrome-devtools__get_connection_status", "type": "mcp", "description": "Get browser connection status" },
+      { "command": "mcp__chrome-devtools__get_page_info", "type": "mcp", "description": "Get current page information" },
+      // Console (read-only)
+      { "command": "mcp__chrome-devtools__get_console_logs", "type": "mcp", "description": "Get console log messages" },
+      { "command": "mcp__chrome-devtools__get_console_error_summary", "type": "mcp", "description": "Get console error summary" },
+      // Network (read-only)
+      { "command": "mcp__chrome-devtools__get_network_requests", "type": "mcp", "description": "Get network requests" },
+      { "command": "mcp__chrome-devtools__get_network_response", "type": "mcp", "description": "Get network response body" },
+      // Performance (read-only)
+      { "command": "mcp__chrome-devtools__get_performance_metrics", "type": "mcp", "description": "Get performance metrics" },
+      // DOM inspection (read-only)
+      { "command": "mcp__chrome-devtools__get_document", "type": "mcp", "description": "Get document tree" },
+      { "command": "mcp__chrome-devtools__query_selector", "type": "mcp", "description": "Query single DOM element" },
+      { "command": "mcp__chrome-devtools__query_selector_all", "type": "mcp", "description": "Query multiple DOM elements" },
+      { "command": "mcp__chrome-devtools__get_element_attributes", "type": "mcp", "description": "Get element attributes" },
+      { "command": "mcp__chrome-devtools__get_element_outer_html", "type": "mcp", "description": "Get element outer HTML" },
+      { "command": "mcp__chrome-devtools__get_element_box_model", "type": "mcp", "description": "Get element box model" },
+      { "command": "mcp__chrome-devtools__describe_element", "type": "mcp", "description": "Describe DOM element" },
+      { "command": "mcp__chrome-devtools__get_computed_styles", "type": "mcp", "description": "Get computed styles" },
+      { "command": "mcp__chrome-devtools__get_matched_styles", "type": "mcp", "description": "Get matched CSS styles" },
+      // Storage (read-only)
+      { "command": "mcp__chrome-devtools__get_all_cookies", "type": "mcp", "description": "Get all browser cookies" },
+      { "command": "mcp__chrome-devtools__get_cookies", "type": "mcp", "description": "Get cookies for URL" },
+      { "command": "mcp__chrome-devtools__get_storage_usage_and_quota", "type": "mcp", "description": "Get storage usage and quota" }
+    ],
+    "standard": [
+      // User interaction
+      // ChromeDevTools/chrome-devtools-mcp naming
+      { "command": "mcp__chrome-devtools__click", "type": "mcp", "description": "Click on element" },
+      { "command": "mcp__chrome-devtools__drag", "type": "mcp", "description": "Drag element" },
+      { "command": "mcp__chrome-devtools__fill", "type": "mcp", "description": "Fill input field" },
+      { "command": "mcp__chrome-devtools__fill_form", "type": "mcp", "description": "Fill multiple form fields" },
+      { "command": "mcp__chrome-devtools__hover", "type": "mcp", "description": "Hover over element" },
+      { "command": "mcp__chrome-devtools__press_key", "type": "mcp", "description": "Press keyboard key" },
+      { "command": "mcp__chrome-devtools__handle_dialog", "type": "mcp", "description": "Handle browser dialog" },
+      { "command": "mcp__chrome-devtools__upload_file", "type": "mcp", "description": "Upload file to input" },
+      // Navigation and page management
+      { "command": "mcp__chrome-devtools__navigate_page", "type": "mcp", "description": "Navigate to URL" },
+      { "command": "mcp__chrome-devtools__new_page", "type": "mcp", "description": "Open new page" },
+      { "command": "mcp__chrome-devtools__select_page", "type": "mcp", "description": "Select a page/tab" },
+      { "command": "mcp__chrome-devtools__close_page", "type": "mcp", "description": "Close a page/tab" },
+      { "command": "mcp__chrome-devtools__wait_for", "type": "mcp", "description": "Wait for condition" },
+      // JavaScript execution and viewport
+      { "command": "mcp__chrome-devtools__evaluate_script", "type": "mcp", "description": "Evaluate JavaScript on page" },
+      { "command": "mcp__chrome-devtools__resize_page", "type": "mcp", "description": "Resize browser viewport" },
+
+      // benjaminr/chrome-devtools-mcp naming
+      // Browser connection
+      { "command": "mcp__chrome-devtools__start_chrome", "type": "mcp", "description": "Start Chrome browser" },
+      { "command": "mcp__chrome-devtools__start_chrome_and_connect", "type": "mcp", "description": "Start Chrome and connect" },
+      { "command": "mcp__chrome-devtools__connect_to_browser", "type": "mcp", "description": "Connect to running browser" },
+      { "command": "mcp__chrome-devtools__disconnect_from_browser", "type": "mcp", "description": "Disconnect from browser" },
+      // Navigation and scripting
+      { "command": "mcp__chrome-devtools__navigate_to_url", "type": "mcp", "description": "Navigate to URL" },
+      { "command": "mcp__chrome-devtools__execute_javascript", "type": "mcp", "description": "Execute JavaScript on page" },
+      { "command": "mcp__chrome-devtools__evaluate_in_all_frames", "type": "mcp", "description": "Evaluate script in all frames" },
+      // Console inspection
+      { "command": "mcp__chrome-devtools__inspect_console_object", "type": "mcp", "description": "Inspect console object" },
+      { "command": "mcp__chrome-devtools__monitor_console_live", "type": "mcp", "description": "Monitor console live" },
+      // Storage and CSS
+      { "command": "mcp__chrome-devtools__set_cookie", "type": "mcp", "description": "Set a browser cookie" },
+      { "command": "mcp__chrome-devtools__start_css_coverage_tracking", "type": "mcp", "description": "Start CSS coverage tracking" },
+      { "command": "mcp__chrome-devtools__stop_css_coverage_tracking", "type": "mcp", "description": "Stop CSS coverage tracking" }
+    ],
+    "permissive": [
+      // Emulation and performance profiling
+      // ChromeDevTools/chrome-devtools-mcp naming
+      { "command": "mcp__chrome-devtools__emulate_cpu", "type": "mcp", "description": "Emulate CPU throttling" },
+      { "command": "mcp__chrome-devtools__emulate_network", "type": "mcp", "description": "Emulate network conditions" },
+      { "command": "mcp__chrome-devtools__performance_start_trace", "type": "mcp", "description": "Start performance trace" },
+      { "command": "mcp__chrome-devtools__performance_stop_trace", "type": "mcp", "description": "Stop performance trace" },
+      { "command": "mcp__chrome-devtools__performance_analyze_insight", "type": "mcp", "description": "Analyze performance insight" },
+
+      // Destructive operations
+      // benjaminr/chrome-devtools-mcp naming
+      { "command": "mcp__chrome-devtools__clear_console", "type": "mcp", "description": "Clear console messages" },
+      { "command": "mcp__chrome-devtools__clear_all_cookies", "type": "mcp", "description": "Clear all browser cookies" },
+      { "command": "mcp__chrome-devtools__clear_storage_for_origin", "type": "mcp", "description": "Clear storage for origin" },
+      // Storage tracking and overrides
+      { "command": "mcp__chrome-devtools__track_cache_storage", "type": "mcp", "description": "Track cache storage events" },
+      { "command": "mcp__chrome-devtools__track_indexeddb", "type": "mcp", "description": "Track IndexedDB events" },
+      { "command": "mcp__chrome-devtools__override_storage_quota", "type": "mcp", "description": "Override storage quota" }
+    ]
+  }
+}

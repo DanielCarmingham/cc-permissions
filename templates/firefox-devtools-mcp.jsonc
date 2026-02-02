@@ -1,0 +1,98 @@
+{
+  "$schema": "template.schema.json",
+  "name": "firefox-devtools-mcp",
+  "description": "Firefox DevTools MCP Server tools for browser inspection and debugging",
+  "category": "MCP Servers",
+  "detection": {
+    "mcpServers": ["firefox-devtools", "firefox-devtools-mcp", "firefox", "firefox-mcp"]
+  },
+  "levels": {
+    "restrictive": [
+      // Page and network inspection (read-only)
+      // freema/firefox-devtools-mcp naming
+      { "command": "mcp__firefox-devtools__list_pages", "type": "mcp", "description": "List open browser pages" },
+      { "command": "mcp__firefox-devtools__list_network_requests", "type": "mcp", "description": "List network requests" },
+      { "command": "mcp__firefox-devtools__get_network_request", "type": "mcp", "description": "Get network request details" },
+      { "command": "mcp__firefox-devtools__list_console_messages", "type": "mcp", "description": "List console messages" },
+      { "command": "mcp__firefox-devtools__take_snapshot", "type": "mcp", "description": "Take accessibility snapshot" },
+      { "command": "mcp__firefox-devtools__get_firefox_info", "type": "mcp", "description": "Get Firefox browser information" },
+      { "command": "mcp__firefox-devtools__get_firefox_output", "type": "mcp", "description": "Get Firefox process output" },
+
+      // JediLuke/firefox-mcp-server naming
+      // Page inspection (read-only)
+      { "command": "mcp__firefox__url_get_current", "type": "mcp", "description": "Get current page URL" },
+      { "command": "mcp__firefox__html_extract", "type": "mcp", "description": "Extract page HTML" },
+      { "command": "mcp__firefox__text_extract", "type": "mcp", "description": "Extract page text content" },
+      { "command": "mcp__firefox__page_screenshot", "type": "mcp", "description": "Take page screenshot" },
+      { "command": "mcp__firefox__session_list", "type": "mcp", "description": "List browser sessions" },
+      // Debug inspection (read-only)
+      { "command": "mcp__firefox__debug_console_logs", "type": "mcp", "description": "Get console log messages" },
+      { "command": "mcp__firefox__debug_javascript_errors", "type": "mcp", "description": "Get JavaScript errors" },
+      { "command": "mcp__firefox__debug_network_activity", "type": "mcp", "description": "Get network activity" },
+      { "command": "mcp__firefox__debug_websocket_messages", "type": "mcp", "description": "Get WebSocket messages" },
+      { "command": "mcp__firefox__debug_performance_metrics", "type": "mcp", "description": "Get performance metrics" },
+      { "command": "mcp__firefox__debug_activity_all", "type": "mcp", "description": "Get all debug activity" }
+    ],
+    "standard": [
+      // User interaction and navigation
+      // freema/firefox-devtools-mcp naming
+      { "command": "mcp__firefox-devtools__click_by_uid", "type": "mcp", "description": "Click element by UID" },
+      { "command": "mcp__firefox-devtools__fill_by_uid", "type": "mcp", "description": "Fill input by UID" },
+      { "command": "mcp__firefox-devtools__fill_form_by_uid", "type": "mcp", "description": "Fill form by UID" },
+      { "command": "mcp__firefox-devtools__hover_by_uid", "type": "mcp", "description": "Hover element by UID" },
+      { "command": "mcp__firefox-devtools__drag_by_uid_to_uid", "type": "mcp", "description": "Drag between elements" },
+      { "command": "mcp__firefox-devtools__upload_file_by_uid", "type": "mcp", "description": "Upload file by UID" },
+      // Navigation
+      { "command": "mcp__firefox-devtools__navigate_page", "type": "mcp", "description": "Navigate to URL" },
+      { "command": "mcp__firefox-devtools__new_page", "type": "mcp", "description": "Open new page" },
+      { "command": "mcp__firefox-devtools__select_page", "type": "mcp", "description": "Select a page/tab" },
+      { "command": "mcp__firefox-devtools__close_page", "type": "mcp", "description": "Close a page/tab" },
+      { "command": "mcp__firefox-devtools__navigate_history", "type": "mcp", "description": "Navigate browser history" },
+      // Viewport and scripting
+      { "command": "mcp__firefox-devtools__set_viewport_size", "type": "mcp", "description": "Set viewport size" },
+      { "command": "mcp__firefox-devtools__evaluate_script", "type": "mcp", "description": "Evaluate JavaScript on page" },
+      { "command": "mcp__firefox-devtools__resolve_uid_to_selector", "type": "mcp", "description": "Resolve UID to CSS selector" },
+      // Screenshots and dialogs
+      { "command": "mcp__firefox-devtools__screenshot_page", "type": "mcp", "description": "Take full page screenshot" },
+      { "command": "mcp__firefox-devtools__screenshot_by_uid", "type": "mcp", "description": "Take element screenshot" },
+      { "command": "mcp__firefox-devtools__accept_dialog", "type": "mcp", "description": "Accept browser dialog" },
+      { "command": "mcp__firefox-devtools__dismiss_dialog", "type": "mcp", "description": "Dismiss browser dialog" },
+
+      // JediLuke/firefox-mcp-server naming
+      // Browser and session management
+      { "command": "mcp__firefox__browser_launch", "type": "mcp", "description": "Launch Firefox browser" },
+      { "command": "mcp__firefox__session_create", "type": "mcp", "description": "Create browser session" },
+      { "command": "mcp__firefox__session_set_active", "type": "mcp", "description": "Set active session" },
+      // Navigation
+      { "command": "mcp__firefox__page_navigate", "type": "mcp", "description": "Navigate to URL" },
+      { "command": "mcp__firefox__page_reload", "type": "mcp", "description": "Reload current page" },
+      { "command": "mcp__firefox__history_back", "type": "mcp", "description": "Navigate back in history" },
+      { "command": "mcp__firefox__history_forward", "type": "mcp", "description": "Navigate forward in history" },
+      // User interaction
+      { "command": "mcp__firefox__element_click", "type": "mcp", "description": "Click on element" },
+      { "command": "mcp__firefox__element_drag", "type": "mcp", "description": "Drag element" },
+      { "command": "mcp__firefox__input_type", "type": "mcp", "description": "Type text into input" },
+      { "command": "mcp__firefox__keyboard_press", "type": "mcp", "description": "Press keyboard key" },
+      { "command": "mcp__firefox__element_wait", "type": "mcp", "description": "Wait for element" },
+      // JavaScript and debugging
+      { "command": "mcp__firefox__javascript_execute", "type": "mcp", "description": "Execute JavaScript on page" },
+      { "command": "mcp__firefox__debug_monitoring_start", "type": "mcp", "description": "Start debug monitoring" },
+      { "command": "mcp__firefox__debug_helpers_inject", "type": "mcp", "description": "Inject debug helpers" }
+    ],
+    "permissive": [
+      // Destructive and privileged operations
+      // freema/firefox-devtools-mcp naming
+      { "command": "mcp__firefox-devtools__clear_console", "type": "mcp", "description": "Clear console messages" },
+      { "command": "mcp__firefox-devtools__restart_firefox", "type": "mcp", "description": "Restart Firefox browser" },
+      // Firefox chrome (privileged) context
+      { "command": "mcp__firefox-devtools__list_chrome_contexts", "type": "mcp", "description": "List Firefox chrome contexts" },
+      { "command": "mcp__firefox-devtools__select_chrome_context", "type": "mcp", "description": "Select Firefox chrome context" },
+      { "command": "mcp__firefox-devtools__evaluate_chrome_script", "type": "mcp", "description": "Evaluate script in chrome context" },
+
+      // JediLuke/firefox-mcp-server naming
+      { "command": "mcp__firefox__browser_close", "type": "mcp", "description": "Close Firefox browser" },
+      { "command": "mcp__firefox__session_close", "type": "mcp", "description": "Close browser session" },
+      { "command": "mcp__firefox__debug_buffers_clear", "type": "mcp", "description": "Clear debug buffers" }
+    ]
+  }
+}

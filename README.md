@@ -168,6 +168,8 @@ cc-permissions apply nodejs --level permissive
 
 | Template | Description |
 |----------|-------------|
+| [chrome-devtools-mcp](docs/templates/chrome-devtools-mcp.md) | Chrome DevTools MCP Server tools for browser inspection and debugging |
+| [firefox-devtools-mcp](docs/templates/firefox-devtools-mcp.md) | Firefox DevTools MCP Server tools for browser inspection and debugging |
 | [playwright](docs/templates/playwright.md) | Playwright testing framework |
 | [playwright-mcp](docs/templates/playwright-mcp.md) | Playwright MCP Server tools for browser automation |
 | [selenium](docs/templates/selenium.md) | Selenium testing framework CLI tools |
@@ -190,8 +192,10 @@ All MCP server templates in one place. These are also listed alongside their CLI
 | [aws-mcp](docs/templates/aws-mcp.md) | AWS MCP Server tools for cloud infrastructure and serverless development |
 | [azure-sql-mcp](docs/templates/azure-sql-mcp.md) | Azure SQL Database MCP Server tools (azmcp) |
 | [azure-storage-mcp](docs/templates/azure-storage-mcp.md) | Azure Storage MCP Server tools (azmcp) |
+| [chrome-devtools-mcp](docs/templates/chrome-devtools-mcp.md) | Chrome DevTools MCP Server tools for browser inspection and debugging |
 | [docker-mcp](docs/templates/docker-mcp.md) | Docker MCP Server tools for container management |
 | [excel-mcp](docs/templates/excel-mcp.md) | Excel MCP Server tools for spreadsheet operations |
+| [firefox-devtools-mcp](docs/templates/firefox-devtools-mcp.md) | Firefox DevTools MCP Server tools for browser inspection and debugging |
 | [gitea-mcp](docs/templates/gitea-mcp.md) | Gitea MCP Server tools for repository and workflow management |
 | [github-mcp](docs/templates/github-mcp.md) | GitHub MCP Server tools for repository and workflow management |
 | [gitlab-mcp](docs/templates/gitlab-mcp.md) | GitLab MCP Server tools for repository and workflow management |
