@@ -14,6 +14,7 @@ Read-only operations safe for exploration and code review.
 | `mcp__chrome-devtools__list_network_requests` | List network requests |
 | `mcp__chrome-devtools__get_network_request` | Get network request details |
 | `mcp__chrome-devtools__list_console_messages` | List console messages |
+| `mcp__chrome-devtools__get_console_message` | Get console message by ID |
 | `mcp__chrome-devtools__take_screenshot` | Take page screenshot |
 | `mcp__chrome-devtools__take_snapshot` | Take accessibility snapshot |
 | `mcp__chrome-devtools__get_connection_status` | Get browser connection status |
@@ -30,11 +31,20 @@ Read-only operations safe for exploration and code review.
 | `mcp__chrome-devtools__get_element_outer_html` | Get element outer HTML |
 | `mcp__chrome-devtools__get_element_box_model` | Get element box model |
 | `mcp__chrome-devtools__describe_element` | Describe DOM element |
+| `mcp__chrome-devtools__get_element_at_position` | Get element at coordinates |
+| `mcp__chrome-devtools__search_elements` | Search DOM elements |
 | `mcp__chrome-devtools__get_computed_styles` | Get computed styles |
 | `mcp__chrome-devtools__get_matched_styles` | Get matched CSS styles |
+| `mcp__chrome-devtools__get_inline_styles` | Get inline styles |
+| `mcp__chrome-devtools__get_stylesheet_text` | Get stylesheet text |
+| `mcp__chrome-devtools__get_background_colors` | Get background colors |
+| `mcp__chrome-devtools__get_platform_fonts` | Get platform fonts |
+| `mcp__chrome-devtools__get_media_queries` | Get media queries |
+| `mcp__chrome-devtools__collect_css_class_names` | Collect CSS class names |
 | `mcp__chrome-devtools__get_all_cookies` | Get all browser cookies |
 | `mcp__chrome-devtools__get_cookies` | Get cookies for URL |
 | `mcp__chrome-devtools__get_storage_usage_and_quota` | Get storage usage and quota |
+| `mcp__chrome-devtools__get_storage_key_for_frame` | Get storage key for frame |
 
 ## Standard
 
@@ -66,6 +76,7 @@ Day-to-day development commands. Includes all restrictive commands plus:
 | `mcp__chrome-devtools__evaluate_in_all_frames` | Evaluate script in all frames |
 | `mcp__chrome-devtools__inspect_console_object` | Inspect console object |
 | `mcp__chrome-devtools__monitor_console_live` | Monitor console live |
+| `mcp__chrome-devtools__focus_element` | Focus DOM element |
 | `mcp__chrome-devtools__set_cookie` | Set a browser cookie |
 | `mcp__chrome-devtools__start_css_coverage_tracking` | Start CSS coverage tracking |
 | `mcp__chrome-devtools__stop_css_coverage_tracking` | Stop CSS coverage tracking |
@@ -76,8 +87,7 @@ Broader access for trusted projects. Includes all standard commands plus:
 
 | Command | Description |
 |---------|-------------|
-| `mcp__chrome-devtools__emulate_cpu` | Emulate CPU throttling |
-| `mcp__chrome-devtools__emulate_network` | Emulate network conditions |
+| `mcp__chrome-devtools__emulate` | Emulate device conditions (CPU, network, viewport, geolocation) |
 | `mcp__chrome-devtools__performance_start_trace` | Start performance trace |
 | `mcp__chrome-devtools__performance_stop_trace` | Stop performance trace |
 | `mcp__chrome-devtools__performance_analyze_insight` | Analyze performance insight |

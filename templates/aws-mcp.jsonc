@@ -1,37 +1,57 @@
 {
   "$schema": "template.schema.json",
   "name": "aws-mcp",
-  "description": "AWS MCP Server tools for cloud infrastructure and serverless development",
+  "description": "AWS MCP Server tools for cloud infrastructure and serverless development (awslabs/mcp)",
   "category": "MCP Servers",
+  // Supports multiple AWS MCP servers from awslabs/mcp:
+  // - aws-iac-mcp-server: Template validation, compliance, troubleshooting (recommended)
+  // - cdk-mcp-server: CDK-specific guidance (deprecated, use IaC server instead)
+  // - cfn-mcp-server: CRUD operations on AWS resources via Cloud Control API
+  // - aws-serverless-mcp-server: SAM and serverless development
+  // - aws-documentation-mcp-server: AWS documentation search
+  // - aws-api-mcp-server: AWS CLI suggestions and execution
   "detection": {
     "mcpServers": ["aws", "aws-api", "aws-documentation", "aws-serverless", "aws-iac", "aws-cdk", "aws-cloudformation"]
   },
   "levels": {
     "restrictive": [
-      // AWS API Server - read-only
+      // AWS API Server (awslabs.aws-api-mcp-server) - read-only
       { "command": "mcp__aws__suggest_aws_commands", "type": "mcp", "description": "Generate AWS CLI suggestions" },
       { "command": "mcp__aws__get_execution_plan", "type": "mcp", "description": "Get step-by-step task guidance" },
 
-      // AWS Documentation Server
+      // AWS Documentation Server (awslabs.aws-documentation-mcp-server)
       { "command": "mcp__aws__read_documentation", "type": "mcp", "description": "Fetch AWS docs as markdown" },
       { "command": "mcp__aws__search_documentation", "type": "mcp", "description": "Search AWS documentation" },
       { "command": "mcp__aws__recommend", "type": "mcp", "description": "Get documentation recommendations" },
       { "command": "mcp__aws__get_available_services", "type": "mcp", "description": "List available AWS services" },
 
-      // AWS IaC Server - CloudFormation
+      // AWS IaC Server (awslabs.aws-iac-mcp-server) - Template validation & docs (recommended)
       { "command": "mcp__aws__validate_cloudformation_template", "type": "mcp", "description": "Validate CloudFormation template syntax" },
       { "command": "mcp__aws__check_cloudformation_template_compliance", "type": "mcp", "description": "Check CloudFormation security compliance" },
       { "command": "mcp__aws__troubleshoot_cloudformation_deployment", "type": "mcp", "description": "Analyze failed CloudFormation stacks" },
       { "command": "mcp__aws__search_cloudformation_documentation", "type": "mcp", "description": "Search CloudFormation docs" },
       { "command": "mcp__aws__get_cloudformation_pre_deploy_validation_instructions", "type": "mcp", "description": "Get pre-deploy validation commands" },
-
-      // AWS IaC Server - CDK
       { "command": "mcp__aws__search_cdk_documentation", "type": "mcp", "description": "Search CDK documentation" },
       { "command": "mcp__aws__search_cdk_samples_and_constructs", "type": "mcp", "description": "Find CDK code examples" },
       { "command": "mcp__aws__cdk_best_practices", "type": "mcp", "description": "Get CDK best practices" },
       { "command": "mcp__aws__read_iac_documentation_page", "type": "mcp", "description": "Read IaC documentation page" },
 
-      // AWS Serverless Server - Guidance
+      // AWS CDK Server (awslabs.cdk-mcp-server) - DEPRECATED, migrate to IaC server
+      { "command": "mcp__aws__CDKGeneralGuidance", "type": "mcp", "description": "Get prescriptive CDK advice" },
+      { "command": "mcp__aws__GetAwsSolutionsConstructPattern", "type": "mcp", "description": "Find architecture patterns" },
+      { "command": "mcp__aws__SearchGenAICDKConstructs", "type": "mcp", "description": "Discover GenAI CDK constructs" },
+      { "command": "mcp__aws__GenerateBedrockAgentSchema", "type": "mcp", "description": "Create OpenAPI schemas for Bedrock" },
+      { "command": "mcp__aws__LambdaLayerDocumentationProvider", "type": "mcp", "description": "Get Lambda layer documentation" },
+      { "command": "mcp__aws__ExplainCDKNagRule", "type": "mcp", "description": "Get CDK Nag rule guidance" },
+      { "command": "mcp__aws__CheckCDKNagSuppressions", "type": "mcp", "description": "Validate CDK Nag suppressions" },
+
+      // AWS CloudFormation Server (awslabs.cfn-mcp-server) - Resource management read-only
+      { "command": "mcp__aws__get_resource", "type": "mcp", "description": "Get AWS resource details" },
+      { "command": "mcp__aws__list_resources", "type": "mcp", "description": "List AWS resources" },
+      { "command": "mcp__aws__get_resource_schema_information", "type": "mcp", "description": "Get resource schema info" },
+      { "command": "mcp__aws__get_request_status", "type": "mcp", "description": "Get mutation request status" },
+
+      // AWS Serverless Server (awslabs.aws-serverless-mcp-server) - Guidance
       { "command": "mcp__aws__get_iac_guidance", "type": "mcp", "description": "Get IaC platform recommendations" },
       { "command": "mcp__aws__get_lambda_guidance", "type": "mcp", "description": "Get Lambda suitability guidance" },
       { "command": "mcp__aws__get_lambda_event_schemas", "type": "mcp", "description": "Get Lambda event schemas" },
@@ -57,11 +77,19 @@
       // AWS Serverless Server - SAM Operations
       { "command": "mcp__aws__sam_init", "type": "mcp", "description": "Initialize SAM application" },
       { "command": "mcp__aws__sam_build", "type": "mcp", "description": "Build Lambda code" },
-      { "command": "mcp__aws__sam_local_invoke", "type": "mcp", "description": "Run Lambda function locally" }
+      { "command": "mcp__aws__sam_local_invoke", "type": "mcp", "description": "Run Lambda function locally" },
+
+      // AWS CloudFormation Server - Template creation
+      { "command": "mcp__aws__create_template", "type": "mcp", "description": "Create CloudFormation template" }
     ],
     "permissive": [
       // AWS API Server - execute
       { "command": "mcp__aws__call_aws", "type": "mcp", "description": "Execute AWS CLI commands" },
+
+      // AWS CloudFormation Server - resource mutations
+      { "command": "mcp__aws__create_resource", "type": "mcp", "description": "Create CloudFormation resource" },
+      { "command": "mcp__aws__update_resource", "type": "mcp", "description": "Update CloudFormation resource" },
+      { "command": "mcp__aws__delete_resource", "type": "mcp", "description": "Delete CloudFormation resource" },
 
       // AWS Serverless Server - Deploy operations
       { "command": "mcp__aws__sam_deploy", "type": "mcp", "description": "Deploy application to AWS" },

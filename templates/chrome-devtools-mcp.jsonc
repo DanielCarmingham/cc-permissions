@@ -14,6 +14,7 @@
       { "command": "mcp__chrome-devtools__list_network_requests", "type": "mcp", "description": "List network requests" },
       { "command": "mcp__chrome-devtools__get_network_request", "type": "mcp", "description": "Get network request details" },
       { "command": "mcp__chrome-devtools__list_console_messages", "type": "mcp", "description": "List console messages" },
+      { "command": "mcp__chrome-devtools__get_console_message", "type": "mcp", "description": "Get console message by ID" },
       { "command": "mcp__chrome-devtools__take_screenshot", "type": "mcp", "description": "Take page screenshot" },
       { "command": "mcp__chrome-devtools__take_snapshot", "type": "mcp", "description": "Take accessibility snapshot" },
 
@@ -37,12 +38,22 @@
       { "command": "mcp__chrome-devtools__get_element_outer_html", "type": "mcp", "description": "Get element outer HTML" },
       { "command": "mcp__chrome-devtools__get_element_box_model", "type": "mcp", "description": "Get element box model" },
       { "command": "mcp__chrome-devtools__describe_element", "type": "mcp", "description": "Describe DOM element" },
+      { "command": "mcp__chrome-devtools__get_element_at_position", "type": "mcp", "description": "Get element at coordinates" },
+      { "command": "mcp__chrome-devtools__search_elements", "type": "mcp", "description": "Search DOM elements" },
+      // CSS inspection (read-only)
       { "command": "mcp__chrome-devtools__get_computed_styles", "type": "mcp", "description": "Get computed styles" },
       { "command": "mcp__chrome-devtools__get_matched_styles", "type": "mcp", "description": "Get matched CSS styles" },
+      { "command": "mcp__chrome-devtools__get_inline_styles", "type": "mcp", "description": "Get inline styles" },
+      { "command": "mcp__chrome-devtools__get_stylesheet_text", "type": "mcp", "description": "Get stylesheet text" },
+      { "command": "mcp__chrome-devtools__get_background_colors", "type": "mcp", "description": "Get background colors" },
+      { "command": "mcp__chrome-devtools__get_platform_fonts", "type": "mcp", "description": "Get platform fonts" },
+      { "command": "mcp__chrome-devtools__get_media_queries", "type": "mcp", "description": "Get media queries" },
+      { "command": "mcp__chrome-devtools__collect_css_class_names", "type": "mcp", "description": "Collect CSS class names" },
       // Storage (read-only)
       { "command": "mcp__chrome-devtools__get_all_cookies", "type": "mcp", "description": "Get all browser cookies" },
       { "command": "mcp__chrome-devtools__get_cookies", "type": "mcp", "description": "Get cookies for URL" },
-      { "command": "mcp__chrome-devtools__get_storage_usage_and_quota", "type": "mcp", "description": "Get storage usage and quota" }
+      { "command": "mcp__chrome-devtools__get_storage_usage_and_quota", "type": "mcp", "description": "Get storage usage and quota" },
+      { "command": "mcp__chrome-devtools__get_storage_key_for_frame", "type": "mcp", "description": "Get storage key for frame" }
     ],
     "standard": [
       // User interaction
@@ -78,6 +89,8 @@
       // Console inspection
       { "command": "mcp__chrome-devtools__inspect_console_object", "type": "mcp", "description": "Inspect console object" },
       { "command": "mcp__chrome-devtools__monitor_console_live", "type": "mcp", "description": "Monitor console live" },
+      // DOM interaction
+      { "command": "mcp__chrome-devtools__focus_element", "type": "mcp", "description": "Focus DOM element" },
       // Storage and CSS
       { "command": "mcp__chrome-devtools__set_cookie", "type": "mcp", "description": "Set a browser cookie" },
       { "command": "mcp__chrome-devtools__start_css_coverage_tracking", "type": "mcp", "description": "Start CSS coverage tracking" },
@@ -86,8 +99,7 @@
     "permissive": [
       // Emulation and performance profiling
       // ChromeDevTools/chrome-devtools-mcp naming
-      { "command": "mcp__chrome-devtools__emulate_cpu", "type": "mcp", "description": "Emulate CPU throttling" },
-      { "command": "mcp__chrome-devtools__emulate_network", "type": "mcp", "description": "Emulate network conditions" },
+      { "command": "mcp__chrome-devtools__emulate", "type": "mcp", "description": "Emulate device conditions (CPU, network, viewport, geolocation)" },
       { "command": "mcp__chrome-devtools__performance_start_trace", "type": "mcp", "description": "Start performance trace" },
       { "command": "mcp__chrome-devtools__performance_stop_trace", "type": "mcp", "description": "Stop performance trace" },
       { "command": "mcp__chrome-devtools__performance_analyze_insight", "type": "mcp", "description": "Analyze performance insight" },

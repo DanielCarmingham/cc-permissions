@@ -331,8 +331,8 @@ describe("templates", () => {
         ...tsMcp.levels.permissive,
       ].map((p) => p.command);
 
-      assert.ok(allCommands.includes("mcp__typescript__check_types"), "typescript-mcp should include check_types");
-      assert.ok(allCommands.includes("mcp__typescript__compile_typescript"), "typescript-mcp should include compile_typescript");
+      assert.ok(allCommands.includes("mcp__typescript__type-check"), "typescript-mcp should include type-check");
+      assert.ok(allCommands.includes("mcp__typescript__lint-check"), "typescript-mcp should include lint-check");
     });
 
     it("azure-sql-mcp template should have Azure SQL MCP tools", () => {
@@ -346,7 +346,7 @@ describe("templates", () => {
       ].map((p) => p.command);
 
       assert.ok(allCommands.includes("mcp__azmcp__azmcp_sql_db_list"), "azure-sql-mcp should include db list");
-      assert.ok(allCommands.includes("mcp__azmcp__azmcp_sql_server_create"), "azure-sql-mcp should include server create");
+      assert.ok(allCommands.includes("mcp__azmcp__azmcp_sql_server_list"), "azure-sql-mcp should include server list");
     });
 
     it("bicep template should have bicep commands", () => {
@@ -421,7 +421,7 @@ describe("templates", () => {
         ...azStorageMcp.levels.permissive,
       ].map((p) => p.command);
 
-      assert.ok(allCommands.includes("mcp__azmcp__azmcp_storage_account_get"), "azure-storage-mcp should include account get");
+      assert.ok(allCommands.includes("mcp__azmcp__azmcp_storage_account_details"), "azure-storage-mcp should include account details");
       assert.ok(allCommands.includes("mcp__azmcp__azmcp_storage_blob_upload"), "azure-storage-mcp should include blob upload");
     });
   });

@@ -1,7 +1,7 @@
 {
   "$schema": "template.schema.json",
   "name": "playwright-mcp",
-  "description": "Playwright MCP Server tools for browser automation",
+  "description": "Playwright MCP Server tools for browser automation (microsoft/playwright-mcp)",
   "category": "MCP Servers",
   "detection": {
     "mcpServers": ["playwright"]
@@ -17,7 +17,7 @@
       // Tab listing (read-only)
       { "command": "mcp__playwright__browser_tabs", "type": "mcp", "description": "List/create/close/select tabs" },
 
-      // Test assertions (read-only verification)
+      // Test assertions (--caps=testing, read-only verification)
       { "command": "mcp__playwright__browser_verify_element_visible", "type": "mcp", "description": "Verify element is visible" },
       { "command": "mcp__playwright__browser_verify_list_visible", "type": "mcp", "description": "Verify list is visible" },
       { "command": "mcp__playwright__browser_verify_text_visible", "type": "mcp", "description": "Verify text is visible" },
@@ -48,22 +48,21 @@
       // Viewport
       { "command": "mcp__playwright__browser_resize", "type": "mcp", "description": "Resize browser viewport" },
 
-      // JavaScript execution
+      // JavaScript execution (--caps=devtools)
       { "command": "mcp__playwright__browser_evaluate", "type": "mcp", "description": "Execute JavaScript on page" },
+
+      // Playwright code execution
       { "command": "mcp__playwright__browser_run_code", "type": "mcp", "description": "Run Playwright code snippet" },
 
-      // Mouse coordinate tools
+      // Mouse coordinate tools (--caps=vision)
       { "command": "mcp__playwright__browser_mouse_click_xy", "type": "mcp", "description": "Click at coordinates" },
-      { "command": "mcp__playwright__browser_mouse_down", "type": "mcp", "description": "Mouse button down" },
-      { "command": "mcp__playwright__browser_mouse_up", "type": "mcp", "description": "Mouse button up" },
       { "command": "mcp__playwright__browser_mouse_move_xy", "type": "mcp", "description": "Move mouse to coordinates" },
       { "command": "mcp__playwright__browser_mouse_drag_xy", "type": "mcp", "description": "Drag mouse to coordinates" },
-      { "command": "mcp__playwright__browser_mouse_wheel", "type": "mcp", "description": "Scroll mouse wheel" },
 
-      // Test generation
+      // Test generation (--caps=testing)
       { "command": "mcp__playwright__browser_generate_locator", "type": "mcp", "description": "Generate test locator" },
 
-      // Tracing
+      // Tracing (--caps=tracing)
       { "command": "mcp__playwright__browser_start_tracing", "type": "mcp", "description": "Start trace recording" },
       { "command": "mcp__playwright__browser_stop_tracing", "type": "mcp", "description": "Stop trace recording" }
     ],

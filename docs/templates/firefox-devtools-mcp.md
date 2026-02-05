@@ -15,8 +15,6 @@ Read-only operations safe for exploration and code review.
 | `mcp__firefox-devtools__get_network_request` | Get network request details |
 | `mcp__firefox-devtools__list_console_messages` | List console messages |
 | `mcp__firefox-devtools__take_snapshot` | Take accessibility snapshot |
-| `mcp__firefox-devtools__get_firefox_info` | Get Firefox browser information |
-| `mcp__firefox-devtools__get_firefox_output` | Get Firefox process output |
 | `mcp__firefox__url_get_current` | Get current page URL |
 | `mcp__firefox__html_extract` | Extract page HTML |
 | `mcp__firefox__text_extract` | Extract page text content |
@@ -47,7 +45,6 @@ Day-to-day development commands. Includes all restrictive commands plus:
 | `mcp__firefox-devtools__close_page` | Close a page/tab |
 | `mcp__firefox-devtools__navigate_history` | Navigate browser history |
 | `mcp__firefox-devtools__set_viewport_size` | Set viewport size |
-| `mcp__firefox-devtools__evaluate_script` | Evaluate JavaScript on page |
 | `mcp__firefox-devtools__resolve_uid_to_selector` | Resolve UID to CSS selector |
 | `mcp__firefox-devtools__screenshot_page` | Take full page screenshot |
 | `mcp__firefox-devtools__screenshot_by_uid` | Take element screenshot |
@@ -76,10 +73,7 @@ Broader access for trusted projects. Includes all standard commands plus:
 | Command | Description |
 |---------|-------------|
 | `mcp__firefox-devtools__clear_console` | Clear console messages |
-| `mcp__firefox-devtools__restart_firefox` | Restart Firefox browser |
-| `mcp__firefox-devtools__list_chrome_contexts` | List Firefox chrome contexts |
-| `mcp__firefox-devtools__select_chrome_context` | Select Firefox chrome context |
-| `mcp__firefox-devtools__evaluate_chrome_script` | Evaluate script in chrome context |
+| `mcp__firefox-devtools__clear_snapshot` | Clear accessibility snapshot |
 | `mcp__firefox__browser_close` | Close Firefox browser |
 | `mcp__firefox__session_close` | Close browser session |
 | `mcp__firefox__debug_buffers_clear` | Clear debug buffers |

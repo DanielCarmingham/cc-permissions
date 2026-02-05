@@ -15,8 +15,6 @@
       { "command": "mcp__firefox-devtools__get_network_request", "type": "mcp", "description": "Get network request details" },
       { "command": "mcp__firefox-devtools__list_console_messages", "type": "mcp", "description": "List console messages" },
       { "command": "mcp__firefox-devtools__take_snapshot", "type": "mcp", "description": "Take accessibility snapshot" },
-      { "command": "mcp__firefox-devtools__get_firefox_info", "type": "mcp", "description": "Get Firefox browser information" },
-      { "command": "mcp__firefox-devtools__get_firefox_output", "type": "mcp", "description": "Get Firefox process output" },
 
       // JediLuke/firefox-mcp-server naming
       // Page inspection (read-only)
@@ -50,7 +48,6 @@
       { "command": "mcp__firefox-devtools__navigate_history", "type": "mcp", "description": "Navigate browser history" },
       // Viewport and scripting
       { "command": "mcp__firefox-devtools__set_viewport_size", "type": "mcp", "description": "Set viewport size" },
-      { "command": "mcp__firefox-devtools__evaluate_script", "type": "mcp", "description": "Evaluate JavaScript on page" },
       { "command": "mcp__firefox-devtools__resolve_uid_to_selector", "type": "mcp", "description": "Resolve UID to CSS selector" },
       // Screenshots and dialogs
       { "command": "mcp__firefox-devtools__screenshot_page", "type": "mcp", "description": "Take full page screenshot" },
@@ -83,11 +80,7 @@
       // Destructive and privileged operations
       // freema/firefox-devtools-mcp naming
       { "command": "mcp__firefox-devtools__clear_console", "type": "mcp", "description": "Clear console messages" },
-      { "command": "mcp__firefox-devtools__restart_firefox", "type": "mcp", "description": "Restart Firefox browser" },
-      // Firefox chrome (privileged) context
-      { "command": "mcp__firefox-devtools__list_chrome_contexts", "type": "mcp", "description": "List Firefox chrome contexts" },
-      { "command": "mcp__firefox-devtools__select_chrome_context", "type": "mcp", "description": "Select Firefox chrome context" },
-      { "command": "mcp__firefox-devtools__evaluate_chrome_script", "type": "mcp", "description": "Evaluate script in chrome context" },
+      { "command": "mcp__firefox-devtools__clear_snapshot", "type": "mcp", "description": "Clear accessibility snapshot" },
 
       // JediLuke/firefox-mcp-server naming
       { "command": "mcp__firefox__browser_close", "type": "mcp", "description": "Close Firefox browser" },

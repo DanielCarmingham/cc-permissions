@@ -11,15 +11,33 @@
   },
   "levels": {
     "restrictive": [
-      { "command": "mcp__azmcp__azmcp_storage_account_get", "type": "mcp", "description": "Get storage account details" },
-      { "command": "mcp__azmcp__azmcp_storage_container_get", "type": "mcp", "description": "Get container details" },
-      { "command": "mcp__azmcp__azmcp_storage_blob_get", "type": "mcp", "description": "Get blob details" }
+      // Storage account
+      { "command": "mcp__azmcp__azmcp_storage_account_list", "type": "mcp", "description": "List storage accounts" },
+      { "command": "mcp__azmcp__azmcp_storage_account_details", "type": "mcp", "description": "Get storage account details" },
+      // Blob containers
+      { "command": "mcp__azmcp__azmcp_storage_blob_container_list", "type": "mcp", "description": "List blob containers" },
+      { "command": "mcp__azmcp__azmcp_storage_blob_container_details", "type": "mcp", "description": "Get blob container details" },
+      // Blobs
+      { "command": "mcp__azmcp__azmcp_storage_blob_list", "type": "mcp", "description": "List blobs in container" },
+      { "command": "mcp__azmcp__azmcp_storage_blob_details", "type": "mcp", "description": "Get blob details" },
+      // Data Lake
+      { "command": "mcp__azmcp__azmcp_storage_datalake_file_system_list_paths", "type": "mcp", "description": "List Data Lake file system paths" },
+      // Tables
+      { "command": "mcp__azmcp__azmcp_storage_table_list", "type": "mcp", "description": "List storage tables" }
     ],
-    "standard": [],
+    "standard": [
+      // Blob tier management
+      { "command": "mcp__azmcp__azmcp_storage_blob_batch_set_tier", "type": "mcp", "description": "Batch set blob access tier" }
+    ],
     "permissive": [
+      // Storage account creation
       { "command": "mcp__azmcp__azmcp_storage_account_create", "type": "mcp", "description": "Create storage account" },
-      { "command": "mcp__azmcp__azmcp_storage_container_create", "type": "mcp", "description": "Create storage container" },
-      { "command": "mcp__azmcp__azmcp_storage_blob_upload", "type": "mcp", "description": "Upload blob" }
+      // Blob container creation
+      { "command": "mcp__azmcp__azmcp_storage_blob_container_create", "type": "mcp", "description": "Create blob container" },
+      // Blob upload
+      { "command": "mcp__azmcp__azmcp_storage_blob_upload", "type": "mcp", "description": "Upload blob" },
+      // Data Lake directory creation
+      { "command": "mcp__azmcp__azmcp_storage_datalake_directory_create", "type": "mcp", "description": "Create Data Lake directory" }
     ]
   }
 }

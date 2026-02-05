@@ -14,8 +14,8 @@
       // Server info
       { "command": "mcp__azmcp__azmcp_sql_server_list", "type": "mcp", "description": "List SQL servers" },
       { "command": "mcp__azmcp__azmcp_sql_server_show", "type": "mcp", "description": "Show SQL server details" },
-      { "command": "mcp__azmcp__azmcp_sql_server_list_admins", "type": "mcp", "description": "List SQL server admins" },
-      { "command": "mcp__azmcp__azmcp_sql_firewall_list", "type": "mcp", "description": "List SQL firewall rules" },
+      { "command": "mcp__azmcp__azmcp_sql_server_auth_list_entra_admins", "type": "mcp", "description": "List SQL server Entra admins" },
+      { "command": "mcp__azmcp__azmcp_sql_firewall_list_rules", "type": "mcp", "description": "List SQL firewall rules" },
 
       // Database info
       { "command": "mcp__azmcp__azmcp_sql_db_list", "type": "mcp", "description": "List SQL databases" },
@@ -30,8 +30,8 @@
       { "command": "mcp__azmcp__azmcp_sql_db_rename", "type": "mcp", "description": "Rename SQL database" },
 
       // Firewall rules
-      { "command": "mcp__azmcp__azmcp_sql_firewall_create", "type": "mcp", "description": "Create SQL firewall rule" },
-      { "command": "mcp__azmcp__azmcp_sql_firewall_delete", "type": "mcp", "description": "Delete SQL firewall rule" }
+      { "command": "mcp__azmcp__azmcp_sql_firewall_create_rule", "type": "mcp", "description": "Create SQL firewall rule" },
+      { "command": "mcp__azmcp__azmcp_sql_firewall_delete_rule", "type": "mcp", "description": "Delete SQL firewall rule" }
     ],
     "permissive": [
       // Database management

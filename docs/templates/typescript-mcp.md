@@ -1,6 +1,6 @@
 # typescript-mcp
 
-TypeScript MCP Server tools for type checking and compilation
+TypeScript MCP Server tools for type checking, compilation, and code analysis
 
 **Category:** MCP Servers
 
@@ -13,6 +13,10 @@ Read-only operations safe for exploration and code review.
 | `mcp__typescript__check_types` | Run type checking |
 | `mcp__typescript__get_diagnostics` | Get TypeScript diagnostics |
 | `mcp__typescript__validate_syntax` | Validate TypeScript syntax |
+| `mcp__typescript__type-check` | Run TypeScript type checking |
+| `mcp__typescript__lint-check` | Run linting checks |
+| `mcp__typescript__suggest-improvements` | Suggest code improvements |
+| `mcp__typescript__load-guidelines` | Load coding guidelines |
 
 ## Standard
 

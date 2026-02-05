@@ -1,6 +1,6 @@
 # playwright-mcp
 
-Playwright MCP Server tools for browser automation
+Playwright MCP Server tools for browser automation (microsoft/playwright-mcp)
 
 **Category:** MCP Servers
 
@@ -41,11 +41,8 @@ Day-to-day development commands. Includes all restrictive commands plus:
 | `mcp__playwright__browser_evaluate` | Execute JavaScript on page |
 | `mcp__playwright__browser_run_code` | Run Playwright code snippet |
 | `mcp__playwright__browser_mouse_click_xy` | Click at coordinates |
-| `mcp__playwright__browser_mouse_down` | Mouse button down |
-| `mcp__playwright__browser_mouse_up` | Mouse button up |
 | `mcp__playwright__browser_mouse_move_xy` | Move mouse to coordinates |
 | `mcp__playwright__browser_mouse_drag_xy` | Drag mouse to coordinates |
-| `mcp__playwright__browser_mouse_wheel` | Scroll mouse wheel |
 | `mcp__playwright__browser_generate_locator` | Generate test locator |
 | `mcp__playwright__browser_start_tracing` | Start trace recording |
 | `mcp__playwright__browser_stop_tracing` | Stop trace recording |

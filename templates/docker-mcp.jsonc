@@ -20,7 +20,9 @@
       // Network inspection
       { "command": "mcp__mcp-server-docker__list_networks", "type": "mcp", "description": "List Docker networks" },
       // Volume inspection
-      { "command": "mcp__mcp-server-docker__list_volumes", "type": "mcp", "description": "List Docker volumes" }
+      { "command": "mcp__mcp-server-docker__list_volumes", "type": "mcp", "description": "List Docker volumes" },
+      // System info
+      { "command": "mcp__mcp-server-docker__docker_info", "type": "mcp", "description": "Get Docker system information" }
     ],
     "standard": [
       // Container lifecycle

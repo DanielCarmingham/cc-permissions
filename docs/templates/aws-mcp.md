@@ -1,6 +1,6 @@
 # aws-mcp
 
-AWS MCP Server tools for cloud infrastructure and serverless development
+AWS MCP Server tools for cloud infrastructure and serverless development (awslabs/mcp)
 
 **Category:** MCP Servers
 
@@ -25,6 +25,17 @@ Read-only operations safe for exploration and code review.
 | `mcp__aws__search_cdk_samples_and_constructs` | Find CDK code examples |
 | `mcp__aws__cdk_best_practices` | Get CDK best practices |
 | `mcp__aws__read_iac_documentation_page` | Read IaC documentation page |
+| `mcp__aws__CDKGeneralGuidance` | Get prescriptive CDK advice |
+| `mcp__aws__GetAwsSolutionsConstructPattern` | Find architecture patterns |
+| `mcp__aws__SearchGenAICDKConstructs` | Discover GenAI CDK constructs |
+| `mcp__aws__GenerateBedrockAgentSchema` | Create OpenAPI schemas for Bedrock |
+| `mcp__aws__LambdaLayerDocumentationProvider` | Get Lambda layer documentation |
+| `mcp__aws__ExplainCDKNagRule` | Get CDK Nag rule guidance |
+| `mcp__aws__CheckCDKNagSuppressions` | Validate CDK Nag suppressions |
+| `mcp__aws__get_resource` | Get AWS resource details |
+| `mcp__aws__list_resources` | List AWS resources |
+| `mcp__aws__get_resource_schema_information` | Get resource schema info |
+| `mcp__aws__get_request_status` | Get mutation request status |
 | `mcp__aws__get_iac_guidance` | Get IaC platform recommendations |
 | `mcp__aws__get_lambda_guidance` | Get Lambda suitability guidance |
 | `mcp__aws__get_lambda_event_schemas` | Get Lambda event schemas |
@@ -49,6 +60,7 @@ Day-to-day development commands. Includes all restrictive commands plus:
 | `mcp__aws__sam_init` | Initialize SAM application |
 | `mcp__aws__sam_build` | Build Lambda code |
 | `mcp__aws__sam_local_invoke` | Run Lambda function locally |
+| `mcp__aws__create_template` | Create CloudFormation template |
 
 ## Permissive
 
@@ -57,6 +69,9 @@ Broader access for trusted projects. Includes all standard commands plus:
 | Command | Description |
 |---------|-------------|
 | `mcp__aws__call_aws` | Execute AWS CLI commands |
+| `mcp__aws__create_resource` | Create CloudFormation resource |
+| `mcp__aws__update_resource` | Update CloudFormation resource |
+| `mcp__aws__delete_resource` | Delete CloudFormation resource |
 | `mcp__aws__sam_deploy` | Deploy application to AWS |
 | `mcp__aws__deploy_webapp` | Deploy web application |
 | `mcp__aws__configure_domain` | Configure custom domain |

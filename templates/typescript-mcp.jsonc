@@ -1,21 +1,33 @@
 {
   "$schema": "template.schema.json",
   "name": "typescript-mcp",
-  "description": "TypeScript MCP Server tools for type checking and compilation",
+  "description": "TypeScript MCP Server tools for type checking, compilation, and code analysis",
   "category": "MCP Servers",
+  // Supports multiple TypeScript MCP servers:
+  // - umutc/mcp-typescript (mcp-typescript-server): compilation and tsconfig management
+  // - catpaladin/mcp-typescript-assistant: linting and code analysis
   "detection": {
-    "mcpServers": ["mcp-typescript-server", "mcp-typescript", "typescript"]
+    "mcpServers": ["mcp-typescript-server", "mcp-typescript", "typescript", "typescript-assistant"]
   },
   "levels": {
     "restrictive": [
+      // umutc/mcp-typescript-server - Type checking
       { "command": "mcp__typescript__check_types", "type": "mcp", "description": "Run type checking" },
       { "command": "mcp__typescript__get_diagnostics", "type": "mcp", "description": "Get TypeScript diagnostics" },
-      { "command": "mcp__typescript__validate_syntax", "type": "mcp", "description": "Validate TypeScript syntax" }
+      { "command": "mcp__typescript__validate_syntax", "type": "mcp", "description": "Validate TypeScript syntax" },
+
+      // catpaladin/mcp-typescript-assistant - Code analysis
+      { "command": "mcp__typescript__type-check", "type": "mcp", "description": "Run TypeScript type checking" },
+      { "command": "mcp__typescript__lint-check", "type": "mcp", "description": "Run linting checks" },
+      { "command": "mcp__typescript__suggest-improvements", "type": "mcp", "description": "Suggest code improvements" },
+      { "command": "mcp__typescript__load-guidelines", "type": "mcp", "description": "Load coding guidelines" }
     ],
     "standard": [
+      // umutc/mcp-typescript-server - Compilation
       { "command": "mcp__typescript__compile_typescript", "type": "mcp", "description": "Compile TypeScript code" }
     ],
     "permissive": [
+      // umutc/mcp-typescript-server - Config management
       { "command": "mcp__typescript__create_tsconfig", "type": "mcp", "description": "Create tsconfig.json" },
       { "command": "mcp__typescript__update_tsconfig", "type": "mcp", "description": "Update tsconfig.json" }
     ]

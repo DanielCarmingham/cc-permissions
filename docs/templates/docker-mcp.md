@@ -17,6 +17,7 @@ Read-only operations safe for exploration and code review.
 | `mcp__mcp-server-docker__list_images` | List Docker images |
 | `mcp__mcp-server-docker__list_networks` | List Docker networks |
 | `mcp__mcp-server-docker__list_volumes` | List Docker volumes |
+| `mcp__mcp-server-docker__docker_info` | Get Docker system information |
 
 ## Standard
 

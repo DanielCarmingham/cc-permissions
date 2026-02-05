@@ -12,8 +12,8 @@ Read-only operations safe for exploration and code review.
 |---------|-------------|
 | `mcp__azmcp__azmcp_sql_server_list` | List SQL servers |
 | `mcp__azmcp__azmcp_sql_server_show` | Show SQL server details |
-| `mcp__azmcp__azmcp_sql_server_list_admins` | List SQL server admins |
-| `mcp__azmcp__azmcp_sql_firewall_list` | List SQL firewall rules |
+| `mcp__azmcp__azmcp_sql_server_auth_list_entra_admins` | List SQL server Entra admins |
+| `mcp__azmcp__azmcp_sql_firewall_list_rules` | List SQL firewall rules |
 | `mcp__azmcp__azmcp_sql_db_list` | List SQL databases |
 | `mcp__azmcp__azmcp_sql_db_show` | Show SQL database details |
 | `mcp__azmcp__azmcp_sql_elastic_pool_list` | List elastic pools |
@@ -26,8 +26,8 @@ Day-to-day development commands. Includes all restrictive commands plus:
 |---------|-------------|
 | `mcp__azmcp__azmcp_sql_db_update` | Update SQL database |
 | `mcp__azmcp__azmcp_sql_db_rename` | Rename SQL database |
-| `mcp__azmcp__azmcp_sql_firewall_create` | Create SQL firewall rule |
-| `mcp__azmcp__azmcp_sql_firewall_delete` | Delete SQL firewall rule |
+| `mcp__azmcp__azmcp_sql_firewall_create_rule` | Create SQL firewall rule |
+| `mcp__azmcp__azmcp_sql_firewall_delete_rule` | Delete SQL firewall rule |
 
 ## Permissive
 
