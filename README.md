@@ -90,6 +90,12 @@ cc-permissions apply nodejs --level permissive
 |----------|-------------|
 | [shell](docs/templates/shell.md) | Basic shell and filesystem commands |
 
+### IDE Integration
+
+| Template | Description |
+|----------|-------------|
+| [vscode-mcp](docs/templates/vscode-mcp.md) | VS Code IDE MCP tools for Claude Code integration |
+
 ### Version Control
 
 | Template | Description |
@@ -206,6 +212,7 @@ All MCP server templates in one place. These are also listed alongside their CLI
 | [postgres-mcp](docs/templates/postgres-mcp.md) | PostgreSQL MCP Server tools for database queries |
 | [sqlite-mcp](docs/templates/sqlite-mcp.md) | SQLite MCP Server tools for database operations |
 | [typescript-mcp](docs/templates/typescript-mcp.md) | TypeScript MCP Server tools for type checking and compilation |
+| [vscode-mcp](docs/templates/vscode-mcp.md) | VS Code IDE MCP tools for Claude Code integration |
 
 Click any template to see the full list of commands at each level.
 

@@ -1,0 +1,22 @@
+{
+  "$schema": "template.schema.json",
+  "name": "vscode-mcp",
+  "description": "VS Code IDE MCP tools for Claude Code integration",
+  "category": "MCP Servers",
+  // Built-in MCP server provided by Claude Code when running in VS Code terminal.
+  // These tools enable IDE integration features like diagnostics and Jupyter execution.
+  "detection": {
+    "mcpServers": ["ide"]
+  },
+  "levels": {
+    "restrictive": [
+      // Language diagnostics (read-only)
+      { "command": "mcp__ide__getDiagnostics", "type": "mcp", "description": "Get language diagnostics from VS Code" }
+    ],
+    "standard": [
+      // Jupyter notebook execution
+      { "command": "mcp__ide__executeCode", "type": "mcp", "description": "Execute Python code in Jupyter kernel" }
+    ],
+    "permissive": []
+  }
+}
